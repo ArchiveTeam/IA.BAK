@@ -114,6 +114,7 @@ else
      # if an installed version exists, check the version-number
     installedVersion=$(./git-annex.linux/git-annex version | grep "version" | sed 's/^.*\([0-9]\+\)\.\([0-9]\{8\}\).*$/\2/' | tr '\n' ' ')
     newVersion=$(wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz.info -o /dev/null -O - | sed 's/.*distributionReleasedate = \([0-9]\{4\}\)-\([0-9]\{2\}\)-\([0-9]\{2\}\).*UTC,.*/\1\2\3/' | tr '\n' ' ')
+  fi
     if [ "$installedVersion" -lt "$newVersion" ]; then
       rm -rf git-annex.linux
     fi
