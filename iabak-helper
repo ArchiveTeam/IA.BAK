@@ -97,11 +97,7 @@ setup () {
 	fi
 }
 
-if [ -d shard1 ]; then
-	cd shard1
-	periodicsync &
-	download
-else
+installgitannex () {
 	if [ ! -d git-annex.linux ]; then
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex-standalone-i386.tar.gz
@@ -111,13 +107,21 @@ else
 		echo "Installed in $(pwd)/git-annex.linux"
 		echo
 	fi
+}
 
+if [ -d shard1 ]; then
+	installgitannex
+	cd shard1
+	periodicsync &
+	download
+else
 	echo "Looks like this is a new IA backup. I'm going to put it in"
 	echo "$(pwd)/shard1"
 	echo "This will use some disk space. :)"
 	printf "Press Enter to confirm, or ctrl-C to cancel."
 	read confirm
 
+	installgitannex
 	checkssh SHARD1@124.6.40.227 shard1
 	cloneshard SHARD1@124.6.40.227 shard1
 	setup
