@@ -102,7 +102,7 @@ if [ -d shard1 ]; then
 	periodicsync &
 	download
 else
-	if [ ! -d git-annex.linux ]; then
+	if [ ! $(find git-annex) -a ! -d git-annex.linux ]; then
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex-standalone-i386.tar.gz
 		wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz
