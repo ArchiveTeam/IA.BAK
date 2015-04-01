@@ -1,0 +1,4 @@
+#!/bin/sh
+collection="$1"
+
+grep "	$collection	"_collection_url.txt.pick1.sorted.uniq > "$collection.list"

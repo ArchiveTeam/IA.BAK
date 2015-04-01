@@ -1,0 +1,7 @@
+#!/bin/sh
+list=$1
+wc -l "$list"
+perl -lne 'my ($md5, $size, $coll, $url)=split("\t", $_,4); $file=$url; $file=~s/https:\/\/archive.org\/download\///; $file="$coll/$file"; print ("MD5-s".$size."--".$md5." ".$file)' < "$list" | git -c annex.alwayscommit=false annex fromkey --force
+perl -lne 'my ($md5, $size, $coll, $url)=split("\t", $_,4); print ("MD5-s".$size."--".$md5." ".$url)' < "$list" | git -c annex.alwayscommit=false annex registerurl
+git annex merge
+echo "Before publishing this repo, you should run: git commit -n -m added; git gc --aggressive"
