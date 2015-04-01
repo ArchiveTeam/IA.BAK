@@ -1,0 +1,19 @@
+#!/bin/sh
+# Prevent pushes except of git-annex branch.
+# TODO: Audit git-annex branch pushes and only allow sane ones.
+
+refname="$1"
+oldrev="$2"
+newrev="$3"
+
+if [ "$refname" = refs/heads/synced/git-annex ]; then
+	exit 0
+else
+	# Allow no-op pushes of master branch, which git annex sync does.
+	if [ "$newrev" = "$(git show-ref -s refs/heads/master)" ]; then
+		exit 0
+	else
+		echo "cannot update ref $refname" >&2
+		exit 1
+	fi
+fi

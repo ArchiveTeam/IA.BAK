@@ -1,0 +1,12 @@
+#!/bin/sh
+# For use in server's .ssh/authorized_keys
+
+set -e
+
+# This prevents uploads of annexed content to the repository.
+# When doing a restore, this can be turned off.
+GIT_ANNEX_SHELL_READONLY=1
+export GIT_ANNEX_SHELL_READONLY
+
+exec git-annex-shell -c "$SSH_ORIGINAL_COMMAND"
+
