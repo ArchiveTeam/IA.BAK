@@ -77,7 +77,7 @@ cloneshard () {
 	cp ../id_rsa .git/annex/id_rsa
 	cp ../id_rsa.pub .git/annex/id_rsa.pub
 	git remote add origin "$user:$dir"
-	git config remote.origin.annex-ssh-options "-i $(pwd)/.git/annex/id_rsa"
+	git config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
 	git annex sync
 }
 
