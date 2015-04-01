@@ -96,6 +96,7 @@ setup () {
 }
 
 if [ -d shard1 ]; then
+	git pull origin || true
 	cd shard1
 	periodicsync &
 	download
