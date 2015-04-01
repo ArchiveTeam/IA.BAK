@@ -5,19 +5,20 @@ set -e
 
 SHARD="$1"
 if [ -z "$SHARD" ]; then
-	echo "Usage: update-authorized_keys SHARDn"
+	echo "Usage: update-authorized_keys SHARDn" >&2
+	exit 1
 fi
 
-base="$(dirname "$0")"
+base="$(dirname $0)"
 
-if [ ! -e "$base/pubkeys/$SHARD/pubkeys ]; then
+if [ ! -e "$base/pubkeys/$SHARD/pubkeys" ]; then
 	echo "No known pubkeys for you" >&2
 	exit 1
 fi
 
 SSH="/home/$SHARD/.ssh"
 mkdir "$SSH"
-TMP=$(tempfile)
+TMP="$(tempfile)"
 
 IFS="
 "
