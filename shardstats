@@ -13,7 +13,7 @@ DIR="/srv/shard/$shard"
 # need a non-bare glone to run git-annex info . in
 if [ ! -d "$DIR" ]; then
 	mkdir -p "$(dirname "$DIR")"
-	(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git)
+	(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git && git config user.email stats@example.com && git config user.name stats)
 else
 	(cd "$DIR" && git fetch origin master git-annex && git merge origin/master)
 fi
