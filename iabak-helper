@@ -29,7 +29,7 @@ download () {
 }
 
 rundownload () {
-	if [ ! -e NOSHUF ] && [ -x /usr/bin/shuf ]; then
+	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
 		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
 		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs -0 git annex get
 	else
