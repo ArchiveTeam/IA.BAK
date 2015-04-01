@@ -10,34 +10,6 @@ echo
 PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
-if [ -d shard1 ]; then
-	cd shard1
-	periodicsync &
-	download
-else
-	if [ ! -d git-annex.linux ]; then
-		echo "Installing a recent version of git-annex ..."
-		rm -f git-annex-standalone-i386.tar.gz
-		wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz
-		tar xf git-annex-standalone-i386.tar.gz
-		rm -f git-annex-standalone-i386.tar.gz
-		echo "Installed in $(pwd)/git-annex.linux"
-		echo
-	fi
-
-	echo "Looks like this is a new IA backup. I'm going to put it in"
-	echo "$(pwd)/shard1"
-	echo "This will use some disk space. :)"
-	printf "Press Enter to confirm, or ctrl-C to cancel."
-	read confirm
-
-	checkssh SHARD1@124.6.40.227
-	cloneshard SHARD1@124.6.40.227 shard1
-	setup
-	periodicsync &
-	download
-fi
-
 download () {
 	echo "Here goes! Downloading from Internet Archive."
 	echo "(This can be safely interrupted at any time with ctrl-C)"
@@ -82,9 +54,10 @@ checkssh () {
 		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
 		echo "Paste the following ssh pubic key when asked:"
 		echo "------------------>8----------------------"
-		cat id_ira.pub
+		cat id_rsa.pub
 		echo "------------------>8----------------------"
 		printf "Hit Enter once you're signed up! "
+		read l
 		checkssh "$user"
 	fi
 }
@@ -120,3 +93,31 @@ setup () {
 		git configure annex.diskreserve "$reserve"
 	fi
 }
+
+if [ -d shard1 ]; then
+	cd shard1
+	periodicsync &
+	download
+else
+	if [ ! -d git-annex.linux ]; then
+		echo "Installing a recent version of git-annex ..."
+		rm -f git-annex-standalone-i386.tar.gz
+		wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz
+		tar xf git-annex-standalone-i386.tar.gz
+		rm -f git-annex-standalone-i386.tar.gz
+		echo "Installed in $(pwd)/git-annex.linux"
+		echo
+	fi
+
+	echo "Looks like this is a new IA backup. I'm going to put it in"
+	echo "$(pwd)/shard1"
+	echo "This will use some disk space. :)"
+	printf "Press Enter to confirm, or ctrl-C to cancel."
+	read confirm
+
+	checkssh SHARD1@124.6.40.227
+	cloneshard SHARD1@124.6.40.227 shard1
+	setup
+	periodicsync &
+	download
+fi
