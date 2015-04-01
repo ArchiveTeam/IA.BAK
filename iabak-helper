@@ -16,10 +16,12 @@ download () {
 	echo "(Also, you can safely run more than one of these at a time, to use more bandwidth!)"
 	echo ""
 	if rundownload; then
+		git annex sync
 		echo
 		echo "Wow! This shard of the IA is fully backed up now!"
 		echo "I know of $NUMCOPIES copies of every file (including one copy at the IA itself)."
 	else
+		git annex sync
 		echo 
 		echo "Download finished, but the backup of this shard is not fully complete."
 		echo "Some files may have failed to download, or all allocated disk space is in use."
