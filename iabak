@@ -42,7 +42,7 @@ periodicsync () {
 }
 
 checkssh () {
-	user="$1"
+	user="$1" "$dir"
 	
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
@@ -58,7 +58,7 @@ checkssh () {
 		echo "------------------>8----------------------"
 		printf "Hit Enter once you're signed up! "
 		read l
-		checkssh "$user"
+		checkssh "$user" "$dir"
 	fi
 }
 
@@ -115,7 +115,7 @@ else
 	printf "Press Enter to confirm, or ctrl-C to cancel."
 	read confirm
 
-	checkssh SHARD1@124.6.40.227
+	checkssh SHARD1@124.6.40.227 shard1
 	cloneshard SHARD1@124.6.40.227 shard1
 	setup
 	periodicsync &
