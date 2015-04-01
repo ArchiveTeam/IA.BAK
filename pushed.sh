@@ -1,4 +1,6 @@
 #!/bin/sh
 # Run as root by pushme.cgi.
-cd "$(dirname $0)"/pubkeys
+base="$(dirname $0")
+cd "$base/pubkeys"
 git pull
+"$base/update-authorized_keys" SHARD1
