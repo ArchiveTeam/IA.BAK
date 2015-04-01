@@ -44,13 +44,13 @@ periodicsync () {
 checkssh () {
 	user="$1"
 	
+	if [ ! -e id_rsa ]; then
+		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
+	fi
+	
 	echo "Checking ssh to server..."
-	if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git annex configlist "$dir"; then
+	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git annex configlist "$dir"; then
 		echo "Seem you have not signed up for access yet. Let's fix that.."
-		if [ ! -e id_rsa ]; then
-			ssh-keygen -q  -P "" -t rsa -f ./id_rsa
-			echo "I have generated a ssh key for you to use."
-		fi
 		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
 		echo "Paste the following ssh pubic key when asked:"
 		echo "------------------>8----------------------"
