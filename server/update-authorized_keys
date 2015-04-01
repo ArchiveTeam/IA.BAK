@@ -1,0 +1,31 @@
+#!/bin/sh
+# Updates a SHARD user's authorized_keys file from the list of keys
+# in this git repo.
+set -e
+
+SHARD="$1"
+if [ -z "$SHARD" ]; then
+	echo "Usage: update-authorized_keys SHARDn"
+fi
+
+base="$(dirname "$0")"
+
+if [ ! -e "$base/pubkeys/$SHARD/pubkeys ]; then
+	echo "No known pubkeys for you" >&2
+	exit 1
+fi
+
+SSH="/home/$SHARD/.ssh"
+mkdir "$SSH"
+TMP=$(tempfile)
+
+IFS="
+"
+for k in $(cat "$base/pubkeys/$SHARD/pubkeys"); do
+	echo "command=\"$base/restricted-shell\",no-agent-forwarding,no-port-forwarding,no-X11-forwarding $k"
+done > "$TMP"
+
+chmod 600 "$TMP"
+chown "$SHARD:$SHARD" "$TMP"
+mv "$TMP" "$SSH/authorized_keys"
+echo "authorized_keys updated for $SHARD"
