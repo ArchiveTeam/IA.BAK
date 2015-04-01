@@ -1,0 +1,22 @@
+#!/bin/sh
+# Gets stats for a specified SHARD
+set -e
+
+SHARD="$1"
+if [ -z "$SHARD" ]; then
+	echo "Usage: shardstats SHARDn" >&2
+	exit 1
+fi
+shard="$(echo "$SHARD" | tr A-Z a-z)"
+
+DIR="/srv/shard/$SHARD"
+# need a non-bare glone to run git-annex info . in
+if [ ! -d "$DIR"D ]; then
+	mkdir -p "$(dirname "$DIR")"
+	(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git)
+else
+	(cd "$DIR" && git fetch origin master git-annex && git merge origin/master)
+fi
+cd "$DIR"
+mkdir -p /var/www/stats/
+git annex info . | grep "numcopies " > /var/www/stats/"$SHARD"
