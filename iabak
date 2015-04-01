@@ -42,7 +42,8 @@ periodicsync () {
 }
 
 checkssh () {
-	user="$1" "$dir"
+	user="$1"
+	dir="$2"
 	
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
