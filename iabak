@@ -90,7 +90,7 @@ setup () {
 	printf "keep free> "
 	read reserve
 	if [ -n "$reserve" ]; then
-		git configure annex.diskreserve "$reserve"
+		git config annex.diskreserve "$reserve"
 	fi
 }
 
