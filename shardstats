@@ -19,4 +19,7 @@ else
 fi
 cd "$DIR"
 mkdir -p /var/www/stats/
-git annex info . | grep "numcopies " > /var/www/stats/"$SHARD"
+TMP="$(tempfile)"
+git annex info . | grep "numcopies " > "$TMP"
+chmod 644 "$TMP"
+mv "$TMP" /var/www/stats/"$SHARD"
