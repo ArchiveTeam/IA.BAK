@@ -17,7 +17,7 @@ if [ ! -e "$base/pubkeys/$SHARD/pubkeys" ]; then
 fi
 
 SSH="/home/$SHARD/.ssh"
-mkdir "$SSH"
+mkdir -p "$SSH"
 TMP="$(tempfile)"
 
 IFS="
