@@ -97,11 +97,27 @@ setup () {
 	fi
 }
 
+checkDeps(){
+  command -v "ssh" >/dev/null 2>&1 || { echo >&2 "ssh not installed"; exit 1; }
+  command -v "wget" >/dev/null 2>&1 || { echo >&2 "wget not installed"; exit 1; }
+  command -v "tar" >/dev/null 2>&1 || { echo >&2 "tar not installed"; exit 1; }
+}
+
+
+checkDeps
 if [ -d shard1 ]; then
 	cd shard1
 	periodicsync &
 	download
 else
+  if [ -d git-annex.linux ]; then
+     # if an installed version exists, check the version-number
+    installedVersion=$(./git-annex.linux/git-annex version | grep "version" | sed 's/^.*\([0-9]\+\)\.\([0-9]\{8\}\).*$/\2/' | tr '\n' ' ')
+    newVersion=$(wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz.info -o /dev/null -O - | sed 's/.*distributionReleasedate = \([0-9]\{4\}\)-\([0-9]\{2\}\)-\([0-9]\{2\}\).*UTC,.*/\1\2\3/' | tr '\n' ' ')
+    if [ "$installedVersion" -lt "$newVersion" ]; then
+      rm -rf git-annex.linux
+    fi
+  fi
 	if [ ! -d git-annex.linux ]; then
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex-standalone-i386.tar.gz
