@@ -18,7 +18,7 @@ else
 	(cd "$DIR" && git fetch origin master git-annex && git merge origin/master)
 fi
 cd "$DIR"
-mkdir -p /var/www/stats/
+mkdir -p /var/www/html/stats/
 TMP="$(tempfile)"
 git annex info . | grep "numcopies " > "$TMP"
 chmod 644 "$TMP"
