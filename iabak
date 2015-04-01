@@ -1,0 +1,122 @@
+#!/bin/sh
+set -e
+
+NUMCOPIES=4
+
+echo "Welcome to iabak version 0.0"
+echo "ALPHA TEST, use with caution"
+echo
+
+PATH=$(pwd)/git-annex.linux:$PATH
+export PATH
+
+if [ -d shard1 ]; then
+	cd shard1
+	periodicsync &
+	download
+else
+	if [ ! -d git-annex.linux ]; then
+		echo "Installing a recent version of git-annex ..."
+		rm -f git-annex-standalone-i386.tar.gz
+		wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz
+		tar xf git-annex-standalone-i386.tar.gz
+		rm -f git-annex-standalone-i386.tar.gz
+		echo "Installed in $(pwd)/git-annex.linux"
+		echo
+	fi
+
+	echo "Looks like this is a new IA backup. I'm going to put it in"
+	echo "$(pwd)/shard1"
+	echo "This will use some disk space. :)"
+	printf "Press Enter to confirm, or ctrl-C to cancel."
+	read confirm
+
+	checkssh SHARD1@124.6.40.227
+	cloneshard SHARD1@124.6.40.227 shard1
+	setup
+	periodicsync &
+	download
+fi
+
+download () {
+	echo "Here goes! Downloading from Internet Archive."
+	echo "(This can be safely interrupted at any time with ctrl-C)"
+	echo "(Also, you can safely run more than one of these at a time, to use more bandwidth!)"
+	echo ""
+	if rundownload; then
+		echo
+		echo "Wow! This shard of the IA is fully backed up now!"
+		echo "I know of $NUMCOPIES copies of every file (including one copy at the IA itself)."
+	else
+		echo 
+		echo "Download finished, but the backup of this shard is not fully complete."
+		echo "Some files may have failed to download, or all allocated disk space is in use."
+	fi
+}
+
+rundownload () {
+	if [ -x /usr/bin/shuf ]; then
+		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
+		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs -0 git annex get
+	else
+		git annex get --not --copies "$NUMCOPIES"
+	fi
+}
+
+periodicsync () {
+	while sleep 1h; do
+		git annex sync
+	done
+}
+
+checkssh () {
+	user="$1"
+	
+	echo "Checking ssh to server..."
+	if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git annex configlist "$dir"; then
+		echo "Seem you have not signed up for access yet. Let's fix that.."
+		if [ ! -e id_rsa ]; then
+			ssh-keygen -q  -P "" -t rsa -f ./id_rsa
+			echo "I have generated a ssh key for you to use."
+		fi
+		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
+		echo "Paste the following ssh pubic key when asked:"
+		echo "------------------>8----------------------"
+		cat id_ira.pub
+		echo "------------------>8----------------------"
+		printf "Hit Enter once you're signed up! "
+		checkssh "$user"
+	fi
+}
+
+cloneshard () {
+	user="$1"
+	dir="$2"
+
+	echo "Cloning $user:dir..."
+
+	# This is slightly weird way to clone, but it allows using our
+	# dedicated ssh key without installing it in ~/.ssh/
+	git init "$dir"
+	cd "$dir"
+	git annex init
+	cp ../id_rsa .git/annex/id_rsa
+	cp ../id_rsa.pub .git/annex/id_rsa.pub
+	git remote add origin "$user:$dir"
+	git config remote.origin.annex-ssh-options "-i $(pwd)/.git/annex/id_rsa"
+	git annex sync
+}
+
+setup () {
+	echo ""
+	df -h .
+	echo "How much of this disk space do you want to keep free, and not use for IA backup?"
+	echo "(You can free up space at any time.)"
+	echo "To use entire disk, just hit Enter, or type in something like"
+	echo "200GB or 1TB"
+	printf "keep free> "
+	read reserve
+	if [ -n "$reserve" ]; then
+		git configure annex.diskreserve "$reserve"
+	fi
+}
