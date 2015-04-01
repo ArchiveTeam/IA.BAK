@@ -29,7 +29,7 @@ download () {
 }
 
 rundownload () {
-	if [ -x /usr/bin/shuf ]; then
+	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
 		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
 		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs -0 git annex get
 	else
@@ -55,7 +55,7 @@ checkssh () {
 	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
 		echo "Seem you have not signed up for access yet. Let's fix that.."
 		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
-		echo "Paste the following ssh pubic key when asked:"
+		echo "Paste the following ssh public key when asked:"
 		echo "------------------>8----------------------"
 		cat id_rsa.pub
 		echo "------------------>8----------------------"
@@ -97,11 +97,7 @@ setup () {
 	fi
 }
 
-if [ -d shard1 ]; then
-	cd shard1
-	periodicsync &
-	download
-else
+installgitannex () {
 	if [ ! $(find git-annex) -a ! -d git-annex.linux ]; then
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex-standalone-i386.tar.gz
@@ -111,15 +107,23 @@ else
 		echo "Installed in $(pwd)/git-annex.linux"
 		echo
 	fi
+}
 
+if [ -d shard1 ]; then
+	installgitannex
+	cd shard1
+	periodicsync &
+	download
+else
 	echo "Looks like this is a new IA backup. I'm going to put it in"
 	echo "$(pwd)/shard1"
 	echo "This will use some disk space. :)"
 	printf "Press Enter to confirm, or ctrl-C to cancel."
 	read confirm
 
-	checkssh SHARD1@124.6.40.227 shard1
-	cloneshard SHARD1@124.6.40.227 shard1
+	installgitannex
+	checkssh SHARD1@iabak.archiveteam.org shard1
+	cloneshard SHARD1@iabak.archiveteam.org shard1
 	setup
 	periodicsync &
 	download
