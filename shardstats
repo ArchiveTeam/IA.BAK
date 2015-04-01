@@ -9,7 +9,7 @@ if [ -z "$SHARD" ]; then
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
-DIR="/srv/shard/$SHARD"
+DIR="/srv/shard/$shard"
 # need a non-bare glone to run git-annex info . in
 if [ ! -d "$DIR"D ]; then
 	mkdir -p "$(dirname "$DIR")"
