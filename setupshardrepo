@@ -1,0 +1,16 @@
+#!/bin/sh
+# Sets up git repo for a specified SHARD
+set -e
+
+SHARD="$1"
+if [ -z "$SHARD" ]; then
+	echo "Usage: setupshardrepo SHARDn" >&2
+	exit 1
+fi
+shard="$(echo "$SHARD" | tr A-Z a-z)"
+
+# TODO create the git repo itself..
+
+GITDIR="/home/$SHARD/$shard.git"
+ln -sf /usr/local/IA.BAK/hooks/update "$GITDIR/hooks/update"
+ln -sf /usr/local/IA.BAK/hooks/post-receive "$GITDIR/hooks/post-receive"
