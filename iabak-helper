@@ -97,6 +97,14 @@ setup () {
 	fi
 }
 
+checkDeps(){
+  command -v "ssh" >/dev/null 2>&1 || { echo >&2 "ssh not installed"; exit 1; }
+  command -v "wget" >/dev/null 2>&1 || { echo >&2 "wget not installed"; exit 1; }
+  command -v "tar" >/dev/null 2>&1 || { echo >&2 "tar not installed"; exit 1; }
+}
+
+
+checkDeps
 if [ -d shard1 ]; then
 	cd shard1
 	periodicsync &
