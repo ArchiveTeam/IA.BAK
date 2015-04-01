@@ -122,8 +122,8 @@ else
 	read confirm
 
 	installgitannex
-	checkssh SHARD1@124.6.40.227 shard1
-	cloneshard SHARD1@124.6.40.227 shard1
+	checkssh SHARD1@iabak.archiveteam.org shard1
+	cloneshard SHARD1@iabak.archiveteam.org shard1
 	setup
 	periodicsync &
 	download
