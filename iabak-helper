@@ -75,6 +75,8 @@ cloneshard () {
 	# dedicated ssh key without installing it in ~/.ssh/
 	git init "$dir"
 	cd "$dir"
+	git config user.name "$(whoami)"
+	git config user.email "$(whoami)@iabak"
 	git annex init
 	cp ../id_rsa .git/annex/id_rsa
 	cp ../id_rsa.pub .git/annex/id_rsa.pub
