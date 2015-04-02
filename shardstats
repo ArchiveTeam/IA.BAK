@@ -33,3 +33,7 @@ for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepte
 done
 chmod 644 "$GEOLIST"
 mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
+
+# git repo grows in size fast while it's filling up; and compresses very
+# well. Save clients the transfer.
+cd /home/"$SHARD"/"$shard".git && git gc --aggressive
