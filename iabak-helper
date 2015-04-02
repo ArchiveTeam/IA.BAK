@@ -38,9 +38,7 @@ rundownload () {
 }
 
 periodicsync () {
-	while sleep 1h; do
-		git annex sync
-	done
+	flock -x -n -E 0 .git/annex/iasyncer.lock ../iabak-hourlysync &
 }
 
 checkssh () {
