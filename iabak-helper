@@ -93,7 +93,12 @@ setup () {
 	printf "keep free> "
 	read reserve
 	if [ -n "$reserve" ]; then
-		git config annex.diskreserve "$reserve"
+		if [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]; then
+			echo "not enough diskspace to reserve"
+			setup
+		else
+			git config annex.diskreserve "$reserve"
+		fi
 	fi
 }
 
