@@ -31,4 +31,5 @@ for ip in $(grep 'ia-bak' /var/log/auth.log.? /var/log/auth.log | grep 'Accepted
 	cat "$TMP" | sed 's/{.*\"country_code\"/{\"country_code\"/g' >> "$GEOLIST"
 	rm -rf "$TMP"
 done
+chmod 644 "$GEOLIST"
 mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
