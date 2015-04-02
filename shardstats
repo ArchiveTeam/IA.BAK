@@ -36,7 +36,7 @@ mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
 
 CONNS="$(tempfile)"
 zgrep -h 'ia-bak' /var/log/auth.log.* /var/log/auth.log  | grep 'Accepted publickey' | grep "$SHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
-chmd 644 "$CONNS"
+chomd 644 "$CONNS"
 mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
 
 # git repo grows in size fast while it's filling up; and compresses very
