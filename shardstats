@@ -25,7 +25,7 @@ chmod 644 "$TMP"
 mv "$TMP" /var/www/html/stats/"$SHARD"
 
 GEOLIST="$(tempfile)"
-for ip in $(grep 'ia-bak' /var/log/auth.log.? /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
+for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
 	TMP="$(tempfile)"
 	wget -q -O "$TMP" "freegeoip.net/json/${ip}"
 	cat "$TMP" | sed 's/{.*\"country_code\"/{\"country_code\"/g' | sed 's/,\"latitude\".*/}/g' >> "$GEOLIST"
