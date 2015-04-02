@@ -1,0 +1,4 @@
+#!/bin/sh
+# This makes some potential shards. Until we hit really big
+# collections, the shards will each have around 100000 total files.
+tac collection_numfiles.list | perl -e '$ln=1; open(OUT,">smallestfirst$ln.lst"); while (<>) { chomp ; s/^ *//; ($n, $coll)= split(" ", $_,2); $t=$t+$n; print OUT "$n\t$coll\n";  if ($t > 100000) { $t=0; close OUT; $ln++; open(OUT,">smallestfirst$ln.lst") } }' 
