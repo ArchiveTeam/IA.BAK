@@ -10,7 +10,7 @@ fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
 DIR="/srv/shard/$shard"
-# need a non-bare glone to run git-annex info . in
+# need a non-bare clone to run git-annex info . in
 if [ ! -d "$DIR" ]; then
 	mkdir -p "$(dirname "$DIR")"
 	(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git && git config user.email stats@example.com && git config user.name stats)
