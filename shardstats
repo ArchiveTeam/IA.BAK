@@ -24,6 +24,8 @@ git annex info . | grep "numcopies " > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" /var/www/html/stats/"$SHARD"
 
+grep 'numcopies +' /var/www/html/stats/"$SHARD" | perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' >> /var/www/html/stats/"$SHARD".filestransferred
+
 GEOLIST="$(tempfile)"
 for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
 	TMP="$(tempfile)"
