@@ -22,4 +22,4 @@ mkdir -p /var/www/html/stats/
 TMP="$(tempfile)"
 git annex info . | grep "numcopies " > "$TMP"
 chmod 644 "$TMP"
-mv "$TMP" /var/www/stats/"$SHARD"
+mv "$TMP" /var/www/html/stats/"$SHARD"
