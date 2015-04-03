@@ -41,30 +41,6 @@ periodicsync () {
 	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
-checkssh () {
-	repourl="$1"
-	
-	if [ ! -e id_rsa ]; then
-		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
-	fi
-	
-	user="$(echo "$repourl" | cut -d : -f 1)"
-	dir="$(echo "$repourl" | cut -d : -f 2)"
-
-	echo "Checking ssh to server at $repourl..."
-	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
-		echo "Seem you have not signed up for access to $repourl yet. Let's fix that.."
-		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
-		echo "Paste the following ssh public key when asked:"
-		echo "------------------>8----------------------"
-		cat id_rsa.pub
-		echo "------------------>8----------------------"
-		printf "Hit Enter once you're signed up! "
-		read l
-		checkssh "$repourl"
-	fi
-}
-
 setup () {
 	echo ""
 	df -h .
@@ -138,7 +114,6 @@ else
 	read confirm
 
 	installgitannex
-	checkssh "$repourl"
 	./checkoutshard "$localdir"
 	cd "$localdir"
 	setup
