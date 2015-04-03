@@ -51,7 +51,7 @@ setup () {
 	printf "keep free> "
 	read reserve
 	if [ -n "$reserve" ]; then
-		if [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]; then
+		if which numfmt && [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]; then
 			echo "not enough diskspace to reserve"
 			setup
 		else
