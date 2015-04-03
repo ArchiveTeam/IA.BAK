@@ -127,7 +127,7 @@ else
 		echo "No active shards are currently available. Please try again later!" >&2
 		exit 1
 	fi
-	set -- "$l"
+	set -- $l
 	localdir="$1"
 	repourl="$2"
 

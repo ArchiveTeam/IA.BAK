@@ -17,7 +17,7 @@ if [ -z "$l" ]; then
 	echo "Shard not found in repolist" >&2
 	exit 1
 fi
-set -- "$l"
+set -- $l
 localdir="$1"
 repourl="$2"
 status="$3"
