@@ -2,6 +2,17 @@
 # Gets stats for a specified SHARD
 set -e
 
+GRAPHITE_HOST=localhost
+GRAPHITE_PORT=2003
+DATE=`date +%s`
+
+function sendStat () {
+    stat=$1
+    value=$2
+    stamp=${3:-$DATE}
+    echo "something.something.${SHARD}.${stat} ${value} ${stamp}" | nc ${GRAPHITE_HOST} ${GRAPHITE_PORT}
+}
+
 SHARD="$1"
 if [ -z "$SHARD" ]; then
 	echo "Usage: shardstats SHARDn" >&2
@@ -24,6 +35,13 @@ git annex info . | grep "numcopies " > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" /var/www/html/stats/"$SHARD"
 
+total=0
+while read mult count; do
+    sendStat "numcopies.${mult}" "${count}"
+    total=((total+(count*mult)))
+done < grep 'numcopies +' "/var/www/html/stats/$SHARD";
+sendStat "numcpoies.total" "${total}"
+
 grep 'numcopies +' /var/www/html/stats/"$SHARD" | perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' >> /var/www/html/stats/"$SHARD".filestransferred
 
 mkdir -p /srv/geoip/cache
@@ -42,7 +60,10 @@ mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
 CONNS="$(tempfile)"
 zgrep -h 'ia-bak' /var/log/auth.log.* /var/log/auth.log  | grep 'Accepted publickey' | grep "$SHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
 chmod 644 "$CONNS"
+IFS='|' read count date < tail -1 "$CONNS" | sed -e 's/^\s*\([0-9]*\) /\1|/g' -e 's/:00$/:59/g'
+sendStat "connections" "${count}" "$(date --date "${date}" +%s)"
 mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
+
 
 # git repo grows in size fast while it's filling up; and compresses very
 # well. Save clients the transfer.
