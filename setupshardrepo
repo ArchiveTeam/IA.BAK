@@ -14,6 +14,12 @@ useradd "$SHARD"
 mkdir /home/"$SHARD"
 cd /home/"$SHARD"
 tar xf "$TAR"
+cat > /home/"$SHARD"/.gitconfig <<EOF
+[user]
+	email = $SHARD@ia-bak
+	name = $SHARD
+EOF
+mkdir /home/"$SHARD"/.ssh
 chown -R "$SHARD:$SHARD" /home/"$SHARD"
 
 GITDIR="/home/$SHARD/$shard.git"
