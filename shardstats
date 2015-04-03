@@ -29,7 +29,7 @@ grep 'numcopies +' /var/www/html/stats/"$SHARD" | perl -le 'while (<>) { ($mult,
 mkdir -p /srv/geoip/cache
 GEOLIST="$(tempfile)"
 for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
-	if [ ! -e /srv/geoip/cache/"$id" ]; then
+	if [ ! -e /srv/geoip/cache/"$ip" ]; then
 		TMP="$(tempfile)"
 		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
 		mv "$TMP" /srv/geoip/cache/"$ip"
