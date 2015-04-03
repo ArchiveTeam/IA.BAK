@@ -43,4 +43,4 @@ mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
 
 # git repo grows in size fast while it's filling up; and compresses very
 # well. Save clients the transfer.
-cd /home/"$SHARD"/"$shard".git && git gc --aggressive
+cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c git gc --aggressive
