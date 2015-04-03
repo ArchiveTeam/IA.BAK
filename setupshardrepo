@@ -3,14 +3,21 @@
 set -e
 
 SHARD="$1"
-if [ -z "$SHARD" ]; then
-	echo "Usage: setupshardrepo SHARDn" >&2
+TAR="$2"
+if [ -z "$SHARD" ] || [ -z "$TAR" ]; then
+	echo "Usage: setupshardrepo SHARDn repo.tar.gz" >&2
 	exit 1
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
-# TODO create the git repo itself..
+useradd "$SHARD"
+mkdir /home/"$SHARD"
+cd /home/"$SHARD"
+tar xf "$TAR"
+chown -R "$SHARD:$SHARD" /home/"$SHARD"
 
 GITDIR="/home/$SHARD/$shard.git"
 ln -sf /usr/local/IA.BAK/hooks/update "$GITDIR/hooks/update"
 ln -sf /usr/local/IA.BAK/hooks/post-receive "$GITDIR/hooks/post-receive"
+
+/usr/local/IA.BAK/update-authorized_keys "$SHARD"

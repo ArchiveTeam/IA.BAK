@@ -12,7 +12,7 @@ fi
 base="$(dirname $0)"
 
 if [ ! -e "$base/pubkeys/$SHARD/pubkeys" ]; then
-	echo "No known pubkeys for you" >&2
+	echo "No known pubkeys for $SHARD" >&2
 	exit 1
 fi
 
