@@ -54,6 +54,7 @@ git init "$localdir"
 cd "$localdir"
 git config user.name "$(whoami)"
 git config user.email "$(whoami)@iabak"
+git config gc.auto 0
 git annex init
 cp ../id_rsa .git/annex/id_rsa
 cp ../id_rsa.pub .git/annex/id_rsa.pub
