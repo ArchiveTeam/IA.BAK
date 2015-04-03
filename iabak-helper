@@ -38,7 +38,7 @@ rundownload () {
 }
 
 periodicsync () {
-	flock -x -n -E 0 .git/annex/iasyncer.lock ../iabak-hourlysync &
+	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
 checkssh () {
