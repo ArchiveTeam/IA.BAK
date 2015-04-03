@@ -26,12 +26,15 @@ mv "$TMP" /var/www/html/stats/"$SHARD"
 
 grep 'numcopies +' /var/www/html/stats/"$SHARD" | perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' >> /var/www/html/stats/"$SHARD".filestransferred
 
+mkdir -p /srv/geoip/cache
 GEOLIST="$(tempfile)"
 for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
-	TMP="$(tempfile)"
-	wget -q -O "$TMP" "freegeoip.net/json/${ip}"
-	cat "$TMP" | sed 's/{.*\"country_code\"/{\"country_code\"/g' | sed 's/,\"latitude\".*/}/g' >> "$GEOLIST"
-	rm -rf "$TMP"
+	if [ ! -e /srv/geoip/cache/"$id" ]; then
+		TMP="$(tempfile)"
+		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
+		mv "$TMP" /srv/geoip/cache/"$ip"
+	fi
+	cat /srv/geoip/cache/"$ip" | sed 's/{.*\"country_code\"/{\"country_code\"/g' | sed 's/,\"latitude\".*/}/g' >> "$GEOLIST"
 done
 chmod 644 "$GEOLIST"
 mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
