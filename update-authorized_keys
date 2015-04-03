@@ -9,7 +9,7 @@ if [ -z "$SHARD" ]; then
 	exit 1
 fi
 
-base="$(dirname $0)"
+base=/usr/local/IA.BAK
 
 if [ ! -e "$base/pubkeys/$SHARD/pubkeys" ]; then
 	echo "No known pubkeys for $SHARD" >&2

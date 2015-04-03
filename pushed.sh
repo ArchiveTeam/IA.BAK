@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run as root by pushme.cgi.
-base="$(dirname $0)"
+base=/usr/local/IA.bak
 cd "$base/pubkeys"
 git pull
 for SHARD in SHARD*; do
