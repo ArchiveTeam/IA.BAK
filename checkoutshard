@@ -1,0 +1,50 @@
+#!/bin/sh
+set -e
+
+shard="$1"
+if [ -z "$shard" ]; then
+	echo "Usage: checkoutshard shardN" >&2
+	exit 1
+fi
+
+PATH=$(pwd)/git-annex.linux:$PATH
+export PATH
+
+top="$(pwd)"
+
+l=$(grep "^$shard " repolist)
+if [ -z "$l" ]; then
+	echo "Shard not found in repolist" >&2
+	exit 1
+fi
+set -- "$l"
+localdir="$1"
+repourl="$2"
+status="$3"
+
+# This is slightly weird way to clone, but it allows using our
+# dedicated ssh key without installing it in ~/.ssh/
+git init "$localdir"
+cd "$localdir"
+git config user.name "$(whoami)"
+git config user.email "$(whoami)@iabak"
+git annex init
+cp ../id_rsa .git/annex/id_rsa
+cp ../id_rsa.pub .git/annex/id_rsa.pub
+git remote add origin "$repourl"
+git config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
+git annex sync
+
+# Copy over any user configuration from a previous shard.
+cd "$top"
+prevshard="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n" | head -n 1)"
+if [ -n "$prevshard" ]; then
+	for c in annex.diskreserve annex.web-options; do
+		val="$(cd "$prevshard" && git config "$c" || true)"
+		if [ -n "$val" ]; then
+			(cd "$localdir" && git config "$c" "$val")
+		fi
+	done
+fi
+
+echo "Checked out $localdir for $shard (from $repourl). Current status: $status"

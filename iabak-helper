@@ -3,7 +3,7 @@ set -e
 
 NUMCOPIES=4
 
-echo "Welcome to iabak version 0.0"
+echo "Welcome to iabak version 0.1"
 echo "ALPHA TEST, use with caution"
 echo
 
@@ -42,16 +42,18 @@ periodicsync () {
 }
 
 checkssh () {
-	user="$1"
-	dir="$2"
+	repourl="$1"
 	
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
 	fi
 	
-	echo "Checking ssh to server..."
+	user="$(echo "$repourl" | cut -d : -f 1)"
+	dir="$(echo "$repourl" | cut -d : -f 2)"
+
+	echo "Checking ssh to server at $repourl..."
 	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
-		echo "Seem you have not signed up for access yet. Let's fix that.."
+		echo "Seem you have not signed up for access to $repourl yet. Let's fix that.."
 		echo "** Go on IRC #internetarchive.bak and ask to sign up. **"
 		echo "Paste the following ssh public key when asked:"
 		echo "------------------>8----------------------"
@@ -59,28 +61,8 @@ checkssh () {
 		echo "------------------>8----------------------"
 		printf "Hit Enter once you're signed up! "
 		read l
-		checkssh "$user" "$dir"
+		checkssh "$repourl"
 	fi
-}
-
-cloneshard () {
-	user="$1"
-	dir="$2"
-
-	echo "Cloning $user:dir..."
-
-	# This is slightly weird way to clone, but it allows using our
-	# dedicated ssh key without installing it in ~/.ssh/
-	git init "$dir"
-	cd "$dir"
-	git config user.name "$(whoami)"
-	git config user.email "$(whoami)@iabak"
-	git annex init
-	cp ../id_rsa .git/annex/id_rsa
-	cp ../id_rsa.pub .git/annex/id_rsa.pub
-	git remote add origin "$user:$dir"
-	git config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
-	git annex sync
 }
 
 setup () {
@@ -123,21 +105,42 @@ installgitannex () {
 	fi
 }
 
-if [ -d shard1 ]; then
-	installgitannex
-	cd shard1
+handleshard () {
+	shard="$1"
+
+	echo "========= $shard ========="
+
+	cd "$shard"
 	periodicsync &
 	download
+}
+
+sharddirs="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n")"
+if [ -n "$sharddirs" ]; then
+	installgitannex
+	for d in $(sharddirs); do
+		( handleshard "$d" )
+	done
 else
+	l="$(grep " active$" repolist | head -n 1 | cut -d ' ' -f 1)"
+	if [ -z "$l" ]; then
+		echo "No active shards are currently available. Please try again later!" >&2
+		exit 1
+	fi
+	set -- "$l"
+	localdir="$1"
+	repourl="$2"
+
 	echo "Looks like this is a new IA backup. I'm going to put it in"
-	echo "$(pwd)/shard1"
+	echo "$(pwd)/$localdir"
 	echo "This will use some disk space. :)"
 	printf "Press Enter to confirm, or ctrl-C to cancel."
 	read confirm
 
 	installgitannex
-	checkssh SHARD1@iabak.archiveteam.org shard1
-	cloneshard SHARD1@iabak.archiveteam.org shard1
+	checkssh "$repourl"
+	./checkoutshard "$localdir"
+	cd "$localdir"
 	setup
 	periodicsync &
 	download
