@@ -118,7 +118,7 @@ handleshard () {
 sharddirs="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n")"
 if [ -n "$sharddirs" ]; then
 	installgitannex
-	for d in $(sharddirs); do
+	for d in $sharddirs; do
 		( handleshard "$d" )
 	done
 else
