@@ -11,6 +11,7 @@ PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
 top="$(pwd)"
+prevshard="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n" | head -n 1)"
 
 checkssh () {
 	repourl="$1"
@@ -64,7 +65,6 @@ git annex sync
 
 # Copy over any user configuration from a previous shard.
 cd "$top"
-prevshard="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n" | head -n 1)"
 if [ -n "$prevshard" ]; then
 	for c in annex.diskreserve annex.web-options; do
 		val="$(cd "$prevshard" && git config "$c" || true)"
