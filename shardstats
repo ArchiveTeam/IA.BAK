@@ -36,9 +36,12 @@ else
 	STATTMP="$(tempfile)"
 	echo "numcopies stats: " > "$STATTMP"
 	for n in $(seq 1 10); do
-		perl -le 'BEGIN { $want=shift }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total\n" }' $n "$NUMTMP"
+		perl -le 'BEGIN { $want=shift }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total\n" }' $n "$NUMTMP" >> "$STATTMP"
 	done
+	chmod 644 "$STATTMP"
+	mv "$STATTMP" /var/www/html/stats/ALL
 fi
+
 perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> /var/www/html/stats/"$SHARD".filestransferred
 
 mkdir -p /srv/geoip/cache
