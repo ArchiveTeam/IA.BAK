@@ -20,10 +20,16 @@ if [ "$SHARD" != ALL ]; then
 	fi
 	cd "$DIR"
 	mkdir -p /var/www/html/stats/
+	INFOTMP="$(tempfile)"
+	git annex info . > "$INFOTMP"
 	TMP="$(tempfile)"
-	git annex info . | grep "numcopies " > "$TMP"
+	grep "numcopies " "$INFOTMP" > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" /var/www/html/stats/"$SHARD"
+	TMP="$(tempfile)"
+	perl -ne 'if (/local annex size: ([.0-9]+) tera/) { print "$1\n" }' < "$INFOTMP" > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" /var/www/html/stats/"$SHARD".size
 fi
 
 NUMTMP="$(tempfile)"
@@ -40,6 +46,10 @@ else
 	done
 	chmod 644 "$STATTMP"
 	mv "$STATTMP" /var/www/html/stats/ALL
+	TMP="$(tempfile)"
+	perl -e '$n.=$_; END { print "$n\n" }' /var/www/html/stats/SHARD[0-9]*.size > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" /var/www/html/stats/ALL.size
 fi
 
 perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> /var/www/html/stats/"$SHARD".filestransferred
