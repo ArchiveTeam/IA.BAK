@@ -36,7 +36,7 @@ else
 	STATTMP="$(tempfile)"
 	echo "numcopies stats: " > "$STATTMP"
 	for n in $(seq 1 10); do
-		perl -le 'BEGIN { $want=shift }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total\n" }' $n "$NUMTMP" >> "$STATTMP"
+		perl -le 'BEGIN { $want=shift; $total=0 }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total" }' $n "$NUMTMP" >> "$STATTMP"
 	done
 	chmod 644 "$STATTMP"
 	mv "$STATTMP" /var/www/html/stats/ALL
