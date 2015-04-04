@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-shard="$(echo "$1" | tr A-Z a-z)"
+shard="$1"
 if [ -z "$shard" ]; then
 	echo "Usage: checkoutshard shardN" >&2
 	exit 1
@@ -36,7 +36,7 @@ checkssh () {
 	fi
 }
 
-l=$(grep "^$shard " repolist)
+l=$(grep -i "^$shard " repolist)
 if [ -z "$l" ]; then
 	echo "Shard not found in repolist" >&2
 	exit 1
