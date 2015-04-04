@@ -33,7 +33,7 @@ checkssh () {
 		echo "------------------>8----------------------"
 		printf "Hit Enter once you're signed up! "
 		read l
-		runshell wget -q -O- http://http://iabak.archiveteam.org/cgi-bin/pushme.cgi
+		runshell wget -q -O- http://iabak.archiveteam.org/cgi-bin/pushme.cgi >/dev/null 2>&1 || true
 		checkssh "$repourl"
 	fi
 }
