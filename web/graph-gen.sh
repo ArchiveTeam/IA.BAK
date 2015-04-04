@@ -17,6 +17,7 @@ fi
 HTMLTMP="$(tempfile)"
 
 rm -f $SHARD
+rm -f $SHARD.size
 rm -f $SHARD.geolist
 rm -f $SHARD.clientconnsperhour
 
