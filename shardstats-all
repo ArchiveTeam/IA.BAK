@@ -5,3 +5,4 @@ git pull
 for SHARD in SHARD*; do
 	"$base/shardstats" "$SHARD"
 done
+"$base/shardstats" ALL
