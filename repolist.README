@@ -1,0 +1,36 @@
+Format of repolist is:
+
+shardN user@host:repodir state
+
+Eg:
+
+shard1 SHARD2@iabak.archiveteam.org:shard1 active
+shard2 SHARD2@iabak.archiveteam.org:shard2 reserve
+
+States:
+
+active
+	Shard is being downloaded, new clients are sought.
+
+reserve
+	Shard is ready for download, but new clients not actively sought.
+
+maint
+	Shard should have enough copies to be safe, and is in
+	maintenance mode. Clients are expected to run periodic fsks
+	to verify they still have the data, and confirm they are still alive.
+	
+	If a client loses data, a shard will move from maint back to active.
+
+restore
+	Clients are requested to upload some of their stored files.
+	The files to upload will be those --not --in web
+
+	This may be a fire drill, or an actual disaster recovery
+	scenario.
+
+	This is the only state in which clients are allowed to copy
+	files to origin.
+
+	Once all needed files are restored, a shard will be returned
+	to its previous state.
