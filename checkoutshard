@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-shard="$1"
+shard="$(echo "$1" | tr A-Z a-z)"
 if [ -z "$shard" ]; then
 	echo "Usage: checkoutshard shardN" >&2
 	exit 1
