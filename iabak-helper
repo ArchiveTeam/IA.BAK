@@ -18,8 +18,7 @@ download () {
 	if rundownload; then
 		git annex sync
 		echo
-		echo "Wow! This shard of the IA is fully backed up now!"
-		echo "I know of $NUMCOPIES copies of every file (including one copy at the IA itself)."
+		echo "Wow! I'm done downloading this shard of the IA!"
 	else
 		git annex sync
 		echo 
