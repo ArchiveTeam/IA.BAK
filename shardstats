@@ -28,11 +28,16 @@ fi
 
 NUMTMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
-	grep 'numcopies +' /var/www/html/stats/"$SHARD" > "$NUMTMP"
 	GREPSHARD="$SHARD"
+	grep 'numcopies +' /var/www/html/stats/"$SHARD" > "$NUMTMP"
 else
-	grep 'numcopies +' /var/www/html/stats/SHARD[0-9]* > "$NUMTMP"
 	GREPSHARD="SHARD"
+	grep -h 'numcopies +' /var/www/html/stats/SHARD[0-9]* > "$NUMTMP"
+	STATTMP="$(tempfile)"
+	echo "numcopies stats: " > "$STATTMP"
+	for n in $(seq 1 10); do
+		perl -le 'BEGIN { $want=shift }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total\n" }' $n "$NUMTMP"
+	done
 fi
 perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> /var/www/html/stats/"$SHARD".filestransferred
 
