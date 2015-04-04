@@ -27,7 +27,8 @@ if [ "$SHARD" != ALL ]; then
 	chmod 644 "$TMP"
 	mv "$TMP" /var/www/html/stats/"$SHARD"
 	TMP="$(tempfile)"
-	perl -ne 'if (/local annex size: ([.0-9]+) tera/) { print "$1\n" }' < "$INFOTMP" > "$TMP"
+	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+) tera/) { print "$1\n" }' < "$INFOTMP" > "$TMP"
+	rm -f "$INFOTMP"
 	chmod 644 "$TMP"
 	mv "$TMP" /var/www/html/stats/"$SHARD".size
 fi
