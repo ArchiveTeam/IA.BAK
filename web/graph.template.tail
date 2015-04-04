@@ -16,13 +16,18 @@
   </head>
   <body>
     <center>
-    <font size=+1><b>CURRENT BACKUP STATUS OF IA.BAK SHARD</b><br>
-    <i>Virtual Drive is currently: 2.91 Terabytes</i><p>
+    <font size=+1><b>CURRENT BACKUP STATUS OF IA.BAK SHARDNAME</b><br>
+    <i>Virtual Drive is currently: SIZE Terabytes</i><p>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
     <p>
     <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
     <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
      <div id="regions_div" style="width: 900px; height: 500px;"></div>
+    <p>
+     <div id="us_div" style="width: 900px; height: 500px;"></div>
+    <p>
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iaconnected-day.png">
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-day.png">
     <p>
      <div id="us_div" style="width: 900px; height: 500px;"></div>
     <p>
