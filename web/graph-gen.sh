@@ -6,6 +6,16 @@ SHARD="SHARD1"
 
 cd /home/closure
 
+for SHARD in $(seq 0 2); do
+
+if [ "$SHARD" = 0 ]; then
+	SHARD=ALL
+else
+	SHARD="SHARD$SHARD"
+fi
+
+HTMLTMP="$(tempfile)"
+
 rm -f $SHARD
 rm -f $SHARD.geolist
 rm -f $SHARD.clientconnsperhour
@@ -31,7 +41,7 @@ if [ -f $SHARD ]
 
 # Head!
 
-   cat html/graph.template.head | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" > html/graph.html
+   cat html/graph.template.head | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" > "$HTMLTMP"
 
 # Let's do GEO.....
     
@@ -42,16 +52,16 @@ if [ -f $SHARD ]
        do
        PUNKY=`echo ${country} | sed 's/_/ /g'`
        COUNT=`grep "\"country_name\":\"${PUNKY}" $SHARD.geolist | wc -l `
-       echo "['${PUNKY}', ${COUNT}]," >> html/graph.html
+       echo "['${PUNKY}', ${COUNT}]," >> "$HTMLTMP"
        done
 
-       cat html/graph.template.middle >> html/graph.html
+       cat html/graph.template.middle >> "$HTMLTMP"
 
    for city in `cat $SHARD.geolist | grep "United States" | sed 's/.*\"zip_code\":\"//g' | sed 's/ /_/g' | cut -f1 -d'"' | sort -u`
        do
        PUNKY=`echo ${city} | sed 's/_/ /g'`
        COUNT=`grep "\"zip_code\":\"${PUNKY}" $SHARD.geolist | wc -l `
-       echo "['${PUNKY}', ${COUNT}]," >> html/graph.html
+       echo "['${PUNKY}', ${COUNT}]," >> "$HTMLTMP"
        done
 
 cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "Z", $1}'  | sed "s/^/['/g" | sed "s/ Z /', /g" | sed "s/$/],/g" | tail -24 > $SHARD.clientday
@@ -61,6 +71,11 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 
    SIZE="$(cat $SHARD.size)"
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> html/graph.html
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
 
 fi
+
+chmod 644 "$HTMLTMP"
+mv "$HTMLTMP" "html/$SHARD.html"
+
+done
