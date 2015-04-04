@@ -48,7 +48,7 @@ else
 	chmod 644 "$STATTMP"
 	mv "$STATTMP" /var/www/html/stats/ALL
 	TMP="$(tempfile)"
-	perl -e '$n.=$_; END { print "$n\n" }' /var/www/html/stats/SHARD[0-9]*.size > "$TMP"
+	perl -ne '$n+=$_; END { print "$n\n" }' /var/www/html/stats/SHARD[0-9]*.size > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" /var/www/html/stats/ALL.size
 fi
