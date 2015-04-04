@@ -1,5 +1,5 @@
 #!/bin/sh
-# Gets stats for a specified SHARD
+# Gets stats for a specified SHARD, or ALL
 set -e
 
 SHARD="$1"
@@ -9,26 +9,36 @@ if [ -z "$SHARD" ]; then
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
-DIR="/srv/shard/$shard"
-# need a non-bare clone to run git-annex info . in
-if [ ! -d "$DIR" ]; then
-	mkdir -p "$(dirname "$DIR")"
-	(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git && git config user.email stats@example.com && git config user.name stats)
-else
-	(cd "$DIR" && git fetch origin master git-annex && git merge origin/master)
+if [ "$SHARD" != ALL ]; then
+	DIR="/srv/shard/$shard"
+	# need a non-bare clone to run git-annex info . in
+	if [ ! -d "$DIR" ]; then
+		mkdir -p "$(dirname "$DIR")"
+		(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git && git config user.email stats@example.com && git config user.name stats)
+	else
+		(cd "$DIR" && git fetch origin master git-annex && git merge origin/master)
+	fi
+	cd "$DIR"
+	mkdir -p /var/www/html/stats/
+	TMP="$(tempfile)"
+	git annex info . | grep "numcopies " > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" /var/www/html/stats/"$SHARD"
 fi
-cd "$DIR"
-mkdir -p /var/www/html/stats/
-TMP="$(tempfile)"
-git annex info . | grep "numcopies " > "$TMP"
-chmod 644 "$TMP"
-mv "$TMP" /var/www/html/stats/"$SHARD"
 
-grep 'numcopies +' /var/www/html/stats/"$SHARD" | perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' >> /var/www/html/stats/"$SHARD".filestransferred
+NUMTMP="$(tempfile)"
+if [ "$SHARD" != ALL ]; then
+	grep 'numcopies +' /var/www/html/stats/"$SHARD" > "$NUMTMP"
+	GREPSHARD="$SHARD"
+else
+	grep 'numcopies +' /var/www/html/stats/SHARD[0-9]* > "$NUMTMP"
+	GREPSHARD="SHARD"
+fi
+perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> /var/www/html/stats/"$SHARD".filestransferred
 
 mkdir -p /srv/geoip/cache
 GEOLIST="$(tempfile)"
-for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$SHARD" | awk '{print $11}' | sort -u); do
+for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$GREPSHARD" | awk '{print $11}' | sort -u); do
 	if [ ! -e /srv/geoip/cache/"$ip" ]; then
 		TMP="$(tempfile)"
 		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
@@ -40,10 +50,12 @@ chmod 644 "$GEOLIST"
 mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
 
 CONNS="$(tempfile)"
-zgrep -h 'ia-bak' /var/log/auth.log.* /var/log/auth.log  | grep 'Accepted publickey' | grep "$SHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
+zgrep -h 'ia-bak' /var/log/auth.log.* /var/log/auth.log  | grep 'Accepted publickey' | grep "$GREPSHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
 chmod 644 "$CONNS"
 mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
 
-# git repo grows in size fast while it's filling up; and compresses very
-# well. Save clients the transfer.
-cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive'
+if [ "$SHARD" != ALL ]; then
+	# git repo grows in size fast while it's filling up; and compresses very
+	# well. Save clients the transfer.
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive'
+fi
