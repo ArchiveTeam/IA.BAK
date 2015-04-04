@@ -56,8 +56,8 @@ git config user.name "$(whoami)"
 git config user.email "$(whoami)@iabak"
 git config gc.auto 0
 git annex init
-cp ../id_rsa .git/annex/id_rsa
-cp ../id_rsa.pub .git/annex/id_rsa.pub
+cp -a ../id_rsa .git/annex/id_rsa
+cp -a ../id_rsa.pub .git/annex/id_rsa.pub
 git remote add origin "$repourl"
 git config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
 git annex sync
