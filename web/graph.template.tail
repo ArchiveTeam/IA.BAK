@@ -26,9 +26,6 @@
     <p>
      <div id="us_div" style="width: 900px; height: 500px;"></div>
     <p>
-    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iaconnected-day.png">
-    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-day.png">
-    <p>
      <font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
     <table width=900><tr><td>
     <blockquote>
@@ -43,6 +40,9 @@
     As time progresses, the client that sets up your environment will become easier and more intutive to use - right
     now, many things are still unclear or in need of clarification. Join #internetarchive.bak on EFNet (IRC) to get help.
     </blockquote></table>
+    <p>
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iaconnected-day.png">
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-day.png">
     <p>
     Script Last Run: TIME <br>
     <i>Script is run automatically every ten minutes</i>
