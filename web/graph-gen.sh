@@ -6,6 +6,11 @@ NUMSHARDS=2
 
 cd /home/closure
 
+CHRONOS=`date`
+
+wget -q  http://iabak.archiveteam.org/stats.tar.gz
+tar xf stats.tar.gz
+
 for SHARD in $(seq 0 $NUMSHARDS); do
 
 if [ "$SHARD" = 0 ]; then
@@ -16,23 +21,12 @@ fi
 
 HTMLTMP="$(tempfile)"
 
-rm -f $SHARD
-rm -f $SHARD.size
-rm -f $SHARD.geolist
-rm -f $SHARD.clientconnsperhour
-
-wget -q  http://iabak.archiveteam.org/stats/$SHARD
-wget -q  http://iabak.archiveteam.org/stats/$SHARD.size
-wget -q  http://iabak.archiveteam.org/stats/$SHARD.geolist
-wget -q  http://iabak.archiveteam.org/stats/$SHARD.clientconnsperhour       
-
 if [ -f $SHARD ]
    then
    IA1=`cat $SHARD | grep 'numcopies +0:' | cut -f2 -d':'`
    IA2=`cat $SHARD | grep 'numcopies +1:' | cut -f2 -d':'`
    IA3=`cat $SHARD | grep 'numcopies +2:' | cut -f2 -d':'`
    IA4=`cat $SHARD | grep 'numcopies +[3-9]:' | cut -f2 -d':' | awk '{ sum+=$1} END {print sum}'`
-   CHRONOS=`date`
 
    # Fix color problem for missing numbers.
    if [ -z "$IA1" ]; then IA1=0.001; fi
