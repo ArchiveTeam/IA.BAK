@@ -8,6 +8,7 @@ cd /home/closure
 
 CHRONOS=`date`
 
+rm -f stats.tar.gz
 wget -q  http://iabak.archiveteam.org/stats.tar.gz
 tar xf stats.tar.gz
 
