@@ -1,5 +1,12 @@
 <html>
   <head>
+    <style type="text/css">
+      .charts-tooltip {
+        color: black;
+        background-color: white;
+        border: thin solid #ccc;
+      }
+    </style>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["treemap"]});
