@@ -22,7 +22,8 @@
           maxColor: '#0d0',
           headerHeight: 15,
           fontColor: 'black',
-          showScale: true
+          showScale: true,
+	  generateTooltip: function (row) { return data.getValue(row, 2) +" files each have "+ data.getValue(row, 3) +" known copies."; }
         });
 
       }
