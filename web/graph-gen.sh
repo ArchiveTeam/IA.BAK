@@ -2,11 +2,11 @@
 
 # Quick and dirty graph generator. Should be rewritten at some point.
 
-SHARD="SHARD1"
+NUMSHARDS=2
 
 cd /home/closure
 
-for SHARD in $(seq 0 2); do
+for SHARD in $(seq 0 $NUMSHARDS); do
 
 if [ "$SHARD" = 0 ]; then
 	SHARD=ALL
@@ -28,10 +28,10 @@ wget -q  http://iabak.archiveteam.org/stats/$SHARD.clientconnsperhour
 
 if [ -f $SHARD ]
    then
-   IA1=`cat $SHARD | grep 'numcopies +0' | cut -f2 -d':'`
-   IA2=`cat $SHARD | grep 'numcopies +1' | cut -f2 -d':'`
-   IA3=`cat $SHARD | grep 'numcopies +2' | cut -f2 -d':'`
-   IA4=`cat $SHARD | grep 'numcopies +[3-6]' | cut -f2 -d':' | awk '{ sum+=$1} END {print sum}'`
+   IA1=`cat $SHARD | grep 'numcopies +0:' | cut -f2 -d':'`
+   IA2=`cat $SHARD | grep 'numcopies +1:' | cut -f2 -d':'`
+   IA3=`cat $SHARD | grep 'numcopies +2:' | cut -f2 -d':'`
+   IA4=`cat $SHARD | grep 'numcopies +[3-9]:' | cut -f2 -d':' | awk '{ sum+=$1} END {print sum}'`
    CHRONOS=`date`
 
    # Fix color problem for missing numbers.
