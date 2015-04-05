@@ -1,0 +1,51 @@
+      ]);
+
+      var options = {
+        region: 'US',
+        displayMode: 'markers',
+        resolution: 'provinces',
+                legend: 'none',
+       colorAxis: {colors:['red','red']}
+
+      };
+
+      var chart = new google.visualization.GeoChart(document.getElementById('us_div'));
+      chart.draw(data, options);
+    };
+    </script>
+  </head>
+  <body>
+    <center>
+    <font size=+1><b>CURRENT BACKUP STATUS OF IA.BAK SHARDNAME</b><br>
+    <i>Virtual Drive is currently: SIZE Terabytes</i><p>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <p>
+    <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
+    <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
+     <div id="regions_div" style="width: 900px; height: 500px;"></div>
+    <p>
+     <div id="us_div" style="width: 900px; height: 500px;"></div>
+    <p>
+     <font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
+    <table width=900><tr><td>
+    <blockquote>
+    This is an experimental project to see the feasibility and issues with making a backup of the
+    <a href="http://archive.org">Internet Archive</a>. This project should be considered to be in
+    an alpha state. To read the original document suggesting the research, click 
+    <a href="http://archiveteam.org/index.php?title=INTERNETARCHIVE.BAK">here</a>. Implementation
+    ideas are discussed on <a href="http://archiveteam.org/index.php?title=Talk:INTERNETARCHIVE.BAK">this page</a>.
+    <p>
+    If you have (at least) hundreds of gigabytes of disk space, are comfortable with a linux/unix variant, and
+    wish to take part in the project, the information to do so is <a href="http://archiveteam.org/index.php?title=INTERNETARCHIVE.BAK/git-annex_implementation">here</a>.
+    As time progresses, the client that sets up your environment will become easier and more intutive to use - right
+    now, many things are still unclear or in need of clarification. Join #internetarchive.bak on EFNet (IRC) to get help.
+    </blockquote></table>
+    <p>
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iaconnected-day.png">
+    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-day.png">
+    <p>
+    Script Last Run: TIME <br>
+    <i>Script is run automatically every ten minutes</i>
+    </center>
+  </body>
+</html>

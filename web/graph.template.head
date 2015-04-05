@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <style type="text/css">
+      .charts-tooltip {
+        padding: .25em;
+        color: black;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: .1em;
+      }
+    </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["treemap"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Location', 'Parent', '(size)', '(color)'],
+          ['Global',    null,                                 0,         0],
+          ['IA Only',   'Global',                             IA1,     1],
+          ['2 Copies (IA+External)',    'Global',             IA2,     2],
+          ['3 Copies (IA+2 Externals)', 'Global',             IA3,        3],
+          ['4 Copies (IA+3 Externals)', 'Global',             IA4,         4],
+        ]);
+
+        tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+
+        tree.draw(data, {
+          minColor: '#f00',
+          midColor: '#ddd',
+          maxColor: '#0d0',
+          headerHeight: 15,
+          fontColor: 'black',
+          showScale: true,
+	  generateTooltip: function (row) { return data.getValue(row, 2) +" files each have "+ data.getValue(row, 3) +" known copies."; }
+        });
+
+      }
+    </script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["geochart"]});
+      google.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Clients'],
