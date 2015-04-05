@@ -79,4 +79,5 @@ if [ "$SHARD" != ALL ]; then
 	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive'
 fi
 
-(cd /var/www/html/stats && tar czf ../stats.tar.gz .)
+(cd /var/www/html/stats && tar czf ../stats.tar.gz.new .)
+mv /var/www/html/stats.tar.gz.new /var/www/html/stats.tar.gz
