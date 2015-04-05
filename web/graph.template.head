@@ -2,9 +2,11 @@
   <head>
     <style type="text/css">
       .charts-tooltip {
+        padding: .25em;
         color: black;
         background-color: white;
-        border: thin solid #ccc;
+        border: 2px solid #ccc;
+        border-radius: .1em;
       }
     </style>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
