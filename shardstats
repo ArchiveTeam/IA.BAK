@@ -81,6 +81,9 @@ else
 	for s in $(grep ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
 		cat /var/www/html/stats/"$s".collections >> "$CTMP"
 	done
+	for s in $(grep -v ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
+		cat /var/www/html/stats/"$s".collections >> "$CTMP"
+	done
 fi
 chmod 644 "$CTMP"
 mv "$CTMP" /var/www/html/stats/"$SHARD".collections
