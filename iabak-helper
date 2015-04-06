@@ -40,8 +40,8 @@ rundownloaddirs () {
 }
 
 rundownloadfiles () {
+	echo "Checking for any files that still need to be downloaded..."
 	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
-		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
 		# don't use dirname here, because in maint mode,
 		# only 1 file from a dir might go missing and we 
 		# don't want to download the whole dir then
