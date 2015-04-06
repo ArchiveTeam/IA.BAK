@@ -7,6 +7,11 @@ if [ -z "$shard" ]; then
 	exit 1
 fi
 
+if [ -d "$shard" ]; then
+	echo "$shard already checked out"
+	exit 0
+fi
+
 PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
