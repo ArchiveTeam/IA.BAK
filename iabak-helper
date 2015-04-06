@@ -93,7 +93,13 @@ handleshard () {
 	cd "$shard"
 	case state in
 		active)
+			periodicsync &
+			download
+		;;
 		reserve)
+			periodicsync &
+			download
+		;;
 		restore)
 			periodicsync &
 			download
