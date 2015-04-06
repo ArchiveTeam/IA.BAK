@@ -68,7 +68,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    SIZE="$(cat $SHARD.size)"
 
    # TODO link to collections or something
-   COLLECTIONS="$(cat $SHARD.collections)"
+   COLLECTIONS="$(echo $(cat $SHARD.collections))"
 
    cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s/COLLECTIONS/${COLLECTIONS}/g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
 
