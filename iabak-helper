@@ -91,7 +91,7 @@ handleshard () {
 	state="$3"
 
 	cd "$shard"
-	case state of
+	case state in
 		active)
 		reserve)
 		restore)
