@@ -2,9 +2,12 @@
 # Gets stats for a specified SHARD, or ALL
 set -e
 
-GRAPHITE_HOST=localhost
-GRAPHITE_PORT=2003
-DATE=`date +%s`
+: ${STATS_DIR:=/var/www/html/stats}
+: ${GEOIP_DIR:=/srv/geoip}
+: ${SHARD_DIR:=/srv/shard}
+: ${GRAPHITE_HOST:=127.0.0.1}
+: ${GRAPHITE_PORT:=2003}
+DATE=$(date +%s)
 
 function sendStat () {
     stat=$1
@@ -21,47 +24,47 @@ fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
 if [ "$SHARD" != ALL ]; then
-	DIR="/srv/shard/$shard"
+	DIR="${SHARD_DIR}/$shard"
 	# need a non-bare clone to run git-annex info . in
 	if [ ! -d "$DIR" ]; then
 		mkdir -p "$(dirname "$DIR")"
-		(cd "$(dirname "$DIR")" && git clone /home/"$SHARD"/"$shard".git && git config user.email stats@example.com && git config user.name stats)
+		(cd "$(dirname "$DIR")" && git clone "/home/$SHARD/$shard.git" && git config user.email stats@example.com && git config user.name stats)
 	else
 		(cd "$DIR" && git config gc.auto 0 && git fetch origin master git-annex && git merge origin/master)
 	fi
 	cd "$DIR"
-	mkdir -p /var/www/html/stats/
+	mkdir -p ${STATS_DIR}/
 	INFOTMP="$(tempfile)"
 	git annex info . > "$INFOTMP"
 	TMP="$(tempfile)"
 	grep "numcopies " "$INFOTMP" > "$TMP"
 	chmod 644 "$TMP"
-	mv "$TMP" /var/www/html/stats/"$SHARD"
+	mv "$TMP" "${STATS_DIR}/$SHARD"
 	TMP="$(tempfile)"
 	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+) tera/) { print "$1\n" }' < "$INFOTMP" > "$TMP"
 	rm -f "$INFOTMP"
 	chmod 644 "$TMP"
-	mv "$TMP" /var/www/html/stats/"$SHARD".size
+	mv "$TMP" "${STATS_DIR}/$SHARD.size"
 fi
 
 NUMTMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
 	GREPSHARD="$SHARD"
-	grep 'numcopies +' /var/www/html/stats/"$SHARD" > "$NUMTMP"
+	grep 'numcopies +' "${STATS_DIR}/$SHARD" > "$NUMTMP"
 else
 	GREPSHARD="SHARD"
-	grep -h 'numcopies +' /var/www/html/stats/SHARD[0-9]* > "$NUMTMP"
+	grep -h 'numcopies +' ${STATS_DIR}/SHARD[0-9]* > "$NUMTMP"
 	STATTMP="$(tempfile)"
 	echo "numcopies stats: " > "$STATTMP"
 	for n in $(seq 0 10); do
 		perl -le 'BEGIN { $want=shift; $total=0 }; while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+$cnt if $mult == $want } END { print "\tnumcopies +$want: $total" }' $n "$NUMTMP" >> "$STATTMP"
 	done
 	chmod 644 "$STATTMP"
-	mv "$STATTMP" /var/www/html/stats/ALL
+	mv "$STATTMP" "${STATS_DIR}/ALL"
 	TMP="$(tempfile)"
-	perl -ne '$n+=$_; END { print "$n\n" }' /var/www/html/stats/SHARD[0-9]*.size > "$TMP"
+	perl -ne '$n+=$_; END { print "$n\n" }' "${STATS_DIR}/SHARD[0-9]*.size" > "$TMP"
 	chmod 644 "$TMP"
-	mv "$TMP" /var/www/html/stats/ALL.size
+	mv "$TMP" "${STATS_DIR}/ALL.size"
 fi
 
 total=0
@@ -71,33 +74,33 @@ while read mult count; do
 done < grep 'numcopies +' "/var/www/html/stats/$SHARD";
 sendStat "numcpoies.total" "${total}"
 
-perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> /var/www/html/stats/"$SHARD".filestransferred
+perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> "${STATS_DIR}/$SHARD.filestransferred"
 
-mkdir -p /srv/geoip/cache
+mkdir -p "${GEOIP_DIR}/cache"
 GEOLIST="$(tempfile)"
 for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$GREPSHARD" | awk '{print $11}' | sort -u); do
-	if [ ! -e /srv/geoip/cache/"$ip" ]; then
+	if [ ! -e "${GEOIP_DIR}/cache/$ip" ]; then
 		TMP="$(tempfile)"
 		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
-		mv "$TMP" /srv/geoip/cache/"$ip"
+		mv "$TMP" "${GEOIP_DIR}/$ip"
 	fi
-	cat /srv/geoip/cache/"$ip" | sed 's/{.*\"country_code\"/{\"country_code\"/g' | sed 's/,\"latitude\".*/}/g' >> "$GEOLIST"
+	cat "${GEOIP_DIR}/$ip" | sed 's/{.*\"country_code\"/{\"country_code\"/g' | sed 's/,\"latitude\".*/}/g' >> "$GEOLIST"
 done
 chmod 644 "$GEOLIST"
-mv "$GEOLIST" /var/www/html/stats/"$SHARD".geolist
+mv "$GEOLIST" "${STATS_DIR}/$SHARD.geolist"
 
 CONNS="$(tempfile)"
 zgrep -h 'ia-bak' /var/log/auth.log.* /var/log/auth.log  | grep 'Accepted publickey' | grep "$GREPSHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
 chmod 644 "$CONNS"
 IFS='|' read count date < tail -1 "$CONNS" | sed -e 's/^\s*\([0-9]*\) /\1|/g' -e 's/:00$/:59/g'
 sendStat "connections" "${count}" "$(date --date "${date}" +%s)"
-mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
+mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
 
 if [ "$SHARD" != ALL ]; then
 	# git repo grows in size fast while it's filling up; and compresses very
 	# well. Save clients the transfer.
-	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive'
+	cd "/home/$SHARD/$shard.git" && su "$SHARD" -c -- 'git gc --aggressive'
 fi
 
-(cd /var/www/html/stats && tar czf ../stats.tar.gz.new .)
-mv /var/www/html/stats.tar.gz.new /var/www/html/stats.tar.gz
+(cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
+mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
