@@ -41,9 +41,6 @@ periodicsync () {
 	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
-maint () {
-}
-
 setup () {
 	echo ""
 	df -h .
