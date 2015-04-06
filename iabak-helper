@@ -91,7 +91,7 @@ handleshard () {
 	state="$3"
 
 	cd "$shard"
-	case state in
+	case "$state" in
 		active)
 			periodicsync &
 			download
