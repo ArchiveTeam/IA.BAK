@@ -1,2 +1,2 @@
-shard1 SHARD1@iabak.archiveteam.org:shard1 active
-shard2 SHARD2@iabak.archiveteam.org:shard2 reserve
+shard1 SHARD1@iabak.archiveteam.org:shard1 maint
+shard2 SHARD2@iabak.archiveteam.org:shard2 active
