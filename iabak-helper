@@ -37,7 +37,11 @@ rundownload () {
 }
 
 periodicsync () {
+	git annex sync
 	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
+}
+
+maint () {
 }
 
 setup () {
@@ -84,10 +88,29 @@ handleshard () {
 	shard="$1"
 
 	echo "========= $shard ========="
+	
+	l="$(grep "^$shard " repolist | head -n 1)"
+	set -- $l
+	state="$3"
 
 	cd "$shard"
-	periodicsync &
-	download
+	case state of
+		active)
+		reserve)
+		restore)
+			periodicsync &
+			download
+		;;
+		maint)
+			periodicsync &
+			rundownload
+			# disabled until we're ready to start fscking
+			#git annex fsck
+		;;
+		*)
+			echo "unknown state $state for shard $shard" >&2
+		;;
+	esac
 }
 
 # Order with newest checked out shards first.
@@ -99,14 +122,11 @@ if [ -n "$sharddirs" ]; then
 		( handleshard "$d" )
 	done
 else
-	l="$(grep " active$" repolist | head -n 1 | cut -d ' ' -f 1)"
-	if [ -z "$l" ]; then
+	localdir="$(grep " active$" repolist | head -n 1 | cut -d ' ' -f 1)"
+	if [ -z "$localdir" ]; then
 		echo "No active shards are currently available. Please try again later!" >&2
 		exit 1
 	fi
-	set -- $l
-	localdir="$1"
-	repourl="$2"
 
 	echo "Looks like this is a new IA backup. I'm going to put it in"
 	echo "$(pwd)/$localdir"
