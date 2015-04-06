@@ -31,6 +31,11 @@ if [ "$SHARD" != ALL ]; then
 	rm -f "$INFOTMP"
 	chmod 644 "$TMP"
 	mv "$TMP" /var/www/html/stats/"$SHARD".size
+
+	TMP="$(tempfile)"
+	ln -1 > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" /var/www/html/stats/"$SHARD".collections
 fi
 
 NUMTMP="$(tempfile)"
