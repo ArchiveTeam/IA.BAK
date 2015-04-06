@@ -11,6 +11,9 @@ PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
 download () {
+	git annex sync
+	periodicsync &
+
 	echo "Here goes! Downloading from Internet Archive."
 	echo "(This can be safely interrupted at any time with ctrl-C)"
 	echo "(Also, you can safely run more than one of these at a time, to use more bandwidth!)"
@@ -37,7 +40,6 @@ rundownload () {
 }
 
 periodicsync () {
-	git annex sync
 	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
@@ -93,22 +95,18 @@ handleshard () {
 	cd "$shard"
 	case "$state" in
 		active)
-			periodicsync &
 			download
 		;;
 		reserve)
-			periodicsync &
-			download
-		;;
-		restore)
-			periodicsync &
 			download
 		;;
 		maint)
-			periodicsync &
-			rundownload
+			download
 			# disabled until we're ready to start fscking
 			#git annex fsck
+		;;
+		restore)
+			echo "TODO: upload" >&2
 		;;
 		*)
 			echo "unknown state $state for shard $shard" >&2
