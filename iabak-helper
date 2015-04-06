@@ -39,6 +39,23 @@ rundownload () {
 	fi
 }
 
+maint () {
+	echo "This shard is in maintenance mode; checking it."
+	# disabled until we're ready to start fscking
+	#git annex fsck
+	git annex sync
+	periodicsync &
+	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
+		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
+		# don't use dirname here, because in maint mode,
+		# only 1 file from a dir might go missing and we 
+		# don't want to download the whole dir then
+		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get --
+	else
+		git annex get --not --copies "$NUMCOPIES"
+	fi
+}
+
 periodicsync () {
 	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
@@ -101,9 +118,7 @@ handleshard () {
 			download
 		;;
 		maint)
-			download
-			# disabled until we're ready to start fscking
-			#git annex fsck
+			maint
 		;;
 		restore)
 			echo "TODO: upload" >&2
