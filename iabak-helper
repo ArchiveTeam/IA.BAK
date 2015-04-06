@@ -116,7 +116,9 @@ installgitannex () {
 handleshard () {
 	shard="$1"
 
+	echo
 	echo "========= $shard ========="
+	echo
 	
 	l="$(grep "^$shard " repolist | head -n 1)"
 	set -- $l
@@ -143,17 +145,19 @@ handleshard () {
 }
 
 # Order with newest checked out shards first.
-sharddirs="$(find . -maxdepth 1 -name shard\* -type d -printf '%C@ %P\n' | sort -rn | cut -d ' ' -f 2)"
+sharddirs () {
+	find . -maxdepth 1 -name shard\* -type d -printf '%C@ %P\n' | sort -rn | cut -d ' ' -f 2
+}
 
-if [ -n "$sharddirs" ]; then
+if [ -n "$(sharddirs)" ]; then
 	installgitannex
-
+	
 	# move clients on to next shard. TODO: dehardcode
 	if ! [ -e NOMORE ]; then
 		./checkoutshard shard2
 	fi
 
-	for d in $sharddirs; do
+	for d in $(sharddirs); do
 		( handleshard "$d" )
 	done
 else
