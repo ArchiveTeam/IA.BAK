@@ -117,7 +117,7 @@ handleshard () {
 }
 
 # Order with newest checked out shards first.
-sharddirs="$(find . -maxdepth 1 -name shard\* -type d -printf '%C@ %p\n' | sort -rn | cut -d ' ' -f 2)"
+sharddirs="$(find . -maxdepth 1 -name shard\* -type d -printf '%C@ %P\n' | sort -rn | cut -d ' ' -f 2)"
 
 if [ -n "$sharddirs" ]; then
 	installgitannex
