@@ -13,13 +13,21 @@ enough. Just hit ctrl-C at any time.
 
 ## checking out additional shards
 
-Running `iabak` will check out one shard of the IA. If you have more disk
-space, you may want to add additional shards later. To do so, run the
+Running `iabak` will check out one shard of the IA at a time. If you have
+more disk space, you may want to add additional shards. To do so, run the
 `checkoutshard` script, passing it the name of a shard, such as "shard2".
 See the `repolist` file for a list of shards and their status.
 
 Once you have multiple shards checked out, the next time you run iabak,
 it will process all the shards.
+
+## control files
+
+You can touch these files to control iabak.
+
+NOSHUF	Prevents shuffling files before downloading.
+NOMORE	Prevents iabak from checking out additional shards as existing
+	shard complete.
 
 ## instructions for earlier users
 

@@ -149,7 +149,9 @@ if [ -n "$sharddirs" ]; then
 	installgitannex
 
 	# move clients on to next shard. TODO: dehardcode
-	./checkoutshard shard2
+	if ! [ -e NOMORE ]; then
+		./checkoutshard shard2
+	fi
 
 	for d in $sharddirs; do
 		( handleshard "$d" )
