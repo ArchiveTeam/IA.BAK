@@ -81,7 +81,7 @@ mv "$CONNS" /var/www/html/stats/"$SHARD".clientconnsperhour
 if [ "$SHARD" != ALL ]; then
 	# git repo grows in size fast while it's filling up; and compresses very
 	# well. Save clients the transfer.
-	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive'
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
 fi
 
 (cd /var/www/html/stats && tar czf ../stats.tar.gz.new .)
