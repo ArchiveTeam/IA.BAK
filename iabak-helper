@@ -147,6 +147,10 @@ sharddirs () {
 	find . -maxdepth 1 -name shard\* -type d -printf '%C@ %P\n' | sort -rn | cut -d ' ' -f 2
 }
 
+randomactive () {
+	grep " active$" repolist | cut -d ' ' -f 1 | perl -e '@l=<>; print $l[rand @l]'
+}
+
 if [ -n "$(sharddirs)" ]; then
 	installgitannex
 
@@ -168,7 +172,7 @@ if [ -n "$(sharddirs)" ]; then
 		( handleshard "$d" )
 	done
 else
-	localdir="$(grep " active$" repolist | head -n 1 | cut -d ' ' -f 1)"
+	localdir="$(randomactive)"
 	if [ -z "$localdir" ]; then
 		echo "No active shards are currently available. Please try again later!" >&2
 		exit 1
