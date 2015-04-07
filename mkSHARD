@@ -11,12 +11,8 @@ fi
 rm -f 
 IFS="
 "
-for c in $(cat "$1"); do
-	./extract_collection "$c"
-	cat "$c.list" >> "SHARD$num.list"
-	rm -f "$c.list"
-done
-
+./extract_collection "$1" > "SHARD$num.list"
+wc -l "SHARD$num.list"
 git init "SHARD$num"
 cd "SHARD$num"
 git annex init
