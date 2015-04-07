@@ -5,6 +5,7 @@ set -e
 : ${STATS_DIR:=/var/www/html/stats}
 : ${GEOIP_DIR:=/srv/geoip}
 : ${SHARD_DIR:=/srv/shard}
+: ${CLIENT_DIR:=/usr/local/IA.BAK/client}
 : ${GRAPHITE_HOST:=127.0.0.1}
 : ${GRAPHITE_PORT:=2003}
 DATE=$(date +%s)
@@ -54,7 +55,7 @@ if [ "$SHARD" != ALL ]; then
 	EXPIRETMP="$(tempfile)"
 	git annex expire --no-act 7d web:never origin:never > "$EXPIRETMP"
 	chmod 644 "$EXPIRETMP"
-	mv "$EXPIRETMP" /var/www/html/stats/"$SHARD".expire
+	mv "$EXPIRETMP" "${STATS_DIR}/$SHARD".expire
 fi
 
 NUMTMP="$(tempfile)"
@@ -118,16 +119,16 @@ CTMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
 	ls -1 > "$CTMP"
 else
-	(cd /usr/local/IA.BAK/client; git pull)
-	for s in $(grep ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
-		cat /var/www/html/stats/"$s".collections >> "$CTMP"
+	(cd "${CLIENT_DIR}"; git pull)
+	for s in $(grep ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
+		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
 	done
-	for s in $(grep -v ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
-		cat /var/www/html/stats/"$s".collections >> "$CTMP"
+	for s in $(grep -v ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
+		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
 	done
 fi
 chmod 644 "$CTMP"
-mv "$CTMP" /var/www/html/stats/"$SHARD".collections
+mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
 mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
