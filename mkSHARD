@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+list=$1
+num=$2
+if [ -z "$list" ] || [ -z "$num" ]; then
+	echo "usage: mkSHARD collection-list N" >&2
+	exit 1
+fi
+
+rm -f 
+IFS="
+"
+./extract_collection "$1" > "SHARD$num.list"
+wc -l "SHARD$num.list"
+git init "SHARD$num"
+cd "SHARD$num"
+git annex init
+../importlist ../"SHARD$num.list"
+git commit -a -m "creating SHARD$num"
+git annex dead .
+git gc --aggressive
+git annex info .
+cd ..
+git clone "SHARD$num" "SHARD$num".git --bare
+rm -rf "SHARD$num"

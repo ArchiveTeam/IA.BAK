@@ -51,6 +51,10 @@ if [ "$SHARD" != ALL ]; then
 	rm -f "$INFOTMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
+	EXPIRETMP="$(tempfile)"
+	git annex expire --no-act 7d web:never origin:never > "$EXPIRETMP"
+	chmod 644 "$EXPIRETMP"
+	mv "$EXPIRETMP" /var/www/html/stats/"$SHARD".expire
 fi
 
 NUMTMP="$(tempfile)"
@@ -110,11 +114,26 @@ date="$(echo "$data" | cut -f 2)"
 sendStat "connections" "${count}" "$(date --date "${date}" +%s)"
 mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
 
+CTMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
-	# git repo grows in size fast while it's filling up; and compresses very
-	# well. Save clients the transfer.
-	cd "/home/$SHARD/$shard.git" && su "$SHARD" -c -- 'git gc --aggressive'
+	ls -1 > "$CTMP"
+else
+	(cd /usr/local/IA.BAK/client; git pull)
+	for s in $(grep ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
+		cat /var/www/html/stats/"$s".collections >> "$CTMP"
+	done
+	for s in $(grep -v ' active$' /usr/local/IA.BAK/client/repolist | cut -d ' ' -f 1 | tr a-z A-Z); do
+		cat /var/www/html/stats/"$s".collections >> "$CTMP"
+	done
 fi
+chmod 644 "$CTMP"
+mv "$CTMP" /var/www/html/stats/"$SHARD".collections
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
 mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
+
+# git repo grows in size fast while it's filling up; and compresses very
+# well. Save clients the transfer.
+if [ "$SHARD" != ALL ]; then
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
+fi

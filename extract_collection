@@ -1,4 +1,4 @@
 #!/bin/sh
-collection="$1"
-
-grep "	$collection	" md5_collection_url.txt.pick1.sorted.uniq > "$collection.list"
+list="$1"
+collections="$(cut -d '	' -f 2 "$list" | perl -pe 's/\n/|/g')"
+egrep "	($collections)	" md5_collection_url.txt.pick1.sorted.uniq
