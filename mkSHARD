@@ -24,4 +24,7 @@ git annex init
 git commit -a -m "creating SHARD$num"
 git annex dead .
 git gc --aggressive
-
+git annex info .
+cd ..
+git clone "SHARD$num" "SHARD$num".git --bare
+rm -rf "SHARD$num"
