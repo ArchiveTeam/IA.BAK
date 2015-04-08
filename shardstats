@@ -38,12 +38,12 @@ if [ "$SHARD" != ALL ]; then
 		(cd "$(dirname "$DIR")" && git clone "/home/$SHARD/$shard.git" && git config user.email stats@example.com && git config user.name stats && git config gc.auto 0)
 		chown -R "$SHARD:$SHARD" "$DIR"
 	else
-		(cd "$DIR" && su "$SHARD" -c -- git fetch origin master git-annex && su "$SHARD" -c -- git merge origin/master)
+		(cd "$DIR" && su "$SHARD" -c -- "git fetch origin master git-annex" && su "$SHARD" -c -- "git merge origin/master")
 	fi
 	cd "$DIR"
 	mkdir -p ${STATS_DIR}/
 	INFOTMP="$(tempfile)"
-	su "$SHARD" -c -- git annex info . > "$INFOTMP"
+	su "$SHARD" -c -- "git annex info ." > "$INFOTMP"
 	TMP="$(tempfile)"
 	grep "numcopies " "$INFOTMP" > "$TMP"
 	chmod 644 "$TMP"
@@ -54,7 +54,7 @@ if [ "$SHARD" != ALL ]; then
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
 	EXPIRETMP="$(tempfile)"
-	su "$SHARD" -c -- git annex expire --no-act 7d web:never origin:never > "$EXPIRETMP"
+	su "$SHARD" -c -- "git annex expire --no-act 7d web:never origin:never" > "$EXPIRETMP"
 	chmod 644 "$EXPIRETMP"
 	mv "$EXPIRETMP" "${STATS_DIR}/$SHARD".expire
 fi
