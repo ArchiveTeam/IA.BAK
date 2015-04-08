@@ -80,15 +80,25 @@ fi
 
 sendStat "filesize" "$(<${STATS_DIR}/${SHARD}.size)"
 
+counts=()
 total=0
 filecount=0
+maxcopies=0
 while read mult count; do
-	sendStat "numcopies.${mult}" "${count}"
+	counts[$mult]=$count
 	total=$(($total+($count*$mult)))
 	filecount=$(($filecount+$count))
+	if (($mult>$maxcopies)); then
+		maxcopies=$mult
+	fi
 done < <(tail -n +2 "${STATS_DIR}/$SHARD" | sed -e "s/\s*numcopies [+]\([0-9]*\):/\1/g")
 sendStat "numcopies.total" "${total}"
 sendStat "filecount" "${filecount}"
+i=0
+while (($i<=$maxcopies)); do
+	sendStat "numcopies.${i}" "${counts[$i]:-0}"
+	i=$(($i+1))
+done
 
 perl -le 'while (<>) { ($mult, $cnt) = m/.*numcopies \+(\d+):\s+(\d+)/; $total=$total+($cnt*$mult) }; print localtime()."\t".$total' < "$NUMTMP" >> "${STATS_DIR}/$SHARD.filestransferred"
 data=$(tail -1 "${STATS_DIR}/$SHARD.filestransferred")
