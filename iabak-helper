@@ -62,7 +62,7 @@ fsckme () {
 }
 
 fastfsck () {
-	flock -x -n .git/annex/fastfsck.lock git annex fsck --fast --quiet >/dev/null 2>/dev/null || true
+	flock -x -n .git/annex/fastfsck.lock git annex fsck --fast --in here --quiet >/dev/null 2>/dev/null || true
 	git annex sync
 }
 
