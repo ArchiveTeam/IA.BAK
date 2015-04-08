@@ -94,7 +94,7 @@ setup () {
 	echo "How much of this disk space do you want to keep free, and not use for IA backup?"
 	echo "(You can free up space at any time.)"
 	echo "To use entire disk, just hit Enter, or type in something like"
-	echo "200GB or 1TB"
+	echo "200G or 1T"
 	printf "keep free> "
 	read reserve
 	if [ -n "$reserve" ]; then
