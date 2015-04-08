@@ -96,10 +96,10 @@ date="$(echo "$data" | cut -f 1)"
 count="$(echo "$data" | cut -f 2)"
 sendStat "filestransfered" "${count}" "$(date --date "${date}" +%s)"
 
-mkdir -p "${GEOIP_DIR}/cache"
+mkdir -p "${GEOIP_DIR}"
 GEOLIST="$(tempfile)"
 for ip in $(zgrep 'ia-bak' /var/log/auth.log.* /var/log/auth.log | grep 'Accepted publickey' | grep "$GREPSHARD" | awk '{print $11}' | sort -u); do
-	if [ ! -e "${GEOIP_DIR}/cache/$ip" ]; then
+	if [ ! -e "${GEOIP_DIR}/$ip" ]; then
 		TMP="$(tempfile)"
 		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
 		mv "$TMP" "${GEOIP_DIR}/$ip"
