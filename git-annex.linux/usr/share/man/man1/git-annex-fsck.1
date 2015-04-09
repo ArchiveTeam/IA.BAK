@@ -1,0 +1,79 @@
+.TH git-annex-fsck 1
+.SH NAME
+git\-annex fsck \- check for problems
+.PP
+.SH SYNOPSIS
+git annex fsck \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+With no parameters, this command checks the whole annex for consistency,
+and warns about or fixes any problems found. This is a good complement to
+\fBgit fsck\fP.
+.PP
+With parameters, only the specified files are checked.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-from=remote\fP"
+.IP
+Check a remote, rather than the local repository.
+.IP
+Note that by default, files will be copied from the remote to check
+their contents. To avoid this expensive transfer, and only
+verify that the remote still has the files that are expected to be on it,
+add the \fB\-\-fast\fP option.
+.IP
+.IP "\fB\-\-fast\fP"
+Avoids expensive checksum calculations (and expensive transfers when
+fscking a remote).
+.IP
+.IP "\fB\-\-incremental\fP"
+Start a new incremental fsck pass. An incremental fsck can be interrupted
+at any time, with eg ctrl\-c.
+.IP
+.IP "\fB\-\-more\fP"
+Continue the last incremental fsck pass, where it left off.
+.IP
+.IP "\fB\-\-incremental\-schedule=time\fP"
+This makes a new incremental fsck be started only a specified
+time period after the last incremental fsck was started.
+.IP
+The time is in the form "10d" or "300h".
+.IP
+Maybe you'd like to run a fsck for 5 hours at night, picking up each
+night where it left off. You'd like this to continue until all files
+have been fscked. And once it's done, you'd like a new fsck pass to start,
+but no more often than once a month. Then put this in a nightly cron job:
+.IP
+ git annex fsck \-\-incremental\-schedule 30d \-\-time\-limit 5h
+.IP
+.IP "\fB\-\-numcopies=N\fP"
+Override the normally configured number of copies. 
+.IP
+To verify data integrity only while disregarding required number of copies,
+use \fB\-\-numcopies=1\fP.
+.IP
+.IP "\fB\-\-all\fP"
+Normally only the files in the currently checked out branch
+are fscked. This option causes all versions of all files to be fscked.
+.IP
+This is the default behavior when running git\-annex in a bare repository.
+.IP
+.IP "\fB\-\-unused\fP"
+Operate on files found by last run of git\-annex unused.
+.IP
+.IP "\fB\-\-key=keyname\fP"
+Use this option to fsck a specified key.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to fsck.
+.IP
+.SH OPTIONS
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

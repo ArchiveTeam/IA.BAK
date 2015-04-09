@@ -1,0 +1,43 @@
+.TH git-annex-importfeed 1
+.SH NAME
+git\-annex importfeed \- import files from podcast feeds
+.PP
+.SH SYNOPSIS
+git annex importfeed \fB[url ...]\fP
+.PP
+.SH DESCRIPTION
+Imports the contents of podcast feeds. Only downloads files whose
+content has not already been added to the repository before, so you can
+delete, rename, etc the resulting files and repeated runs won't duplicate
+them.
+.PP
+When quvi is installed, links in the feed are tested to see if they
+are on a video hosting site, and the video is downloaded. This allows
+importing e.g., youtube playlists.
+.PP
+To make the import process add metadata to the imported files from the feed,
+\fBgit config annex.genmetadata true\fP
+.PP
+.SH OPTIONS
+.IP "\fB\-\-force\fP"
+.IP
+Force downoading items it's seen before.
+.IP
+.IP "\fB\-\-template\fP"
+Controls where the files are stored.
+.IP
+The default template is '${feedtitle}/${itemtitle}${extension}'
+.IP
+Other available variables for templates: feedauthor, itemauthor, itemsummary, itemdescription, itemrights, itemid, itempubdate, title, author
+.IP
+.IP "\fB\-\-relaxed\fP, \fB\-\-fast\fP, \fB\-\-raw\fP, \fB\-\-template\fP"
+These options behave the same as when using git\-annex\-addurl(1).
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

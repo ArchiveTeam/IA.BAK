@@ -1,0 +1,35 @@
+.TH git-annex-log 1
+.SH NAME
+git\-annex log \- shows location log
+.PP
+.SH SYNOPSIS
+git annex log \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Displays the location log for the specified file or files,
+showing each repository they were added to ("+") and removed from ("\-").
+.PP
+.SH OPTIONS
+.IP "\fB\-\-since=date\fP, \fB\-\-after=date\fP, \fB\-\-until=date\fP, \fB\-\-before=date\fP, \fB\-\-max\-count=N\fP"
+.IP
+These options are passed through to \fBgit log\fP, and can be used to limit
+how far back to search for location log changes.
+.IP
+For example: \fB\-\-since "1 month ago"\fP
+.IP
+.IP "\fB\-\-gource\fP"
+Generates output suitable for the \fBgource\fP visualization program.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to act on.
+.IP
+.SH OPTIONS
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

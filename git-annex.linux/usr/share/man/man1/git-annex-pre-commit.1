@@ -1,0 +1,24 @@
+.TH git-annex-pre-commit 1
+.SH NAME
+git\-annex pre\-commit \- run by git pre\-commit hook
+.PP
+.SH SYNOPSIS
+git annex  \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+This is meant to be called from git's pre\-commit hook. \fBgit annex init\fP
+automatically creates a pre\-commit hook using this.
+.PP
+Fixes up symlinks that are staged as part of a commit, to ensure they
+point to annexed content. Also handles injecting changes to unlocked
+files into the annex. When in a view, updates metadata to reflect changes
+made to files in the view.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

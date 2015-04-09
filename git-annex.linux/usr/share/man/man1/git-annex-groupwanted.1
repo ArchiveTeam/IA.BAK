@@ -1,0 +1,29 @@
+.TH git-annex-groupwanted 1
+.SH NAME
+git\-annex groupwanted \- get or set groupwanted expression
+.PP
+.SH SYNOPSIS
+git annex groupwanted \fBgroupname [expression]\fP
+.PP
+.SH DESCRIPTION
+Sets or displays the groupwanted expression. This will be used by
+repositories that are in the group, and that have their preferred
+content expression set to "groupwanted".
+.PP
+For example, to configure a group named redundantarchive, and
+make repositories in the group want to contain 3 copies of every file:
+.PP
+ git annex groupwanted redundantarchive "not (copies=redundantarchive:3)"
+ for repo in foo bar baz; do
+ 	git annex group $repo redundantarchive
+ 	git annex wanted $repo groupwanted
+ done
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

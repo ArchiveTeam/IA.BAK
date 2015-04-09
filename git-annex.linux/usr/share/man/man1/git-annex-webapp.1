@@ -1,0 +1,44 @@
+.TH git-annex-webapp 1
+.SH NAME
+git\-annex webapp \- launch webapp
+.PP
+.SH SYNOPSIS
+git annex webapp
+.PP
+.SH DESCRIPTION
+Opens a web app, that allows easy setup of a git\-annex repository,
+and control of the git\-annex assistant. If the assistant is not
+already running, it will be started.
+.PP
+By default, the webapp can only be accessed from localhost, and running
+it opens a browser window.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-listen=address\fP"
+.IP
+Useful for using the webapp on a remote computer. This makes the webapp
+listen on the specified address.
+.IP
+This disables running a local web browser, and outputs the url you
+can use to open the webapp.
+.IP
+Set annex.listen in the git config to make the webapp always
+listen on an address.
+.IP
+.SH USING HTTPS
+When using the webapp on a remote computer, you'll almost certainly
+want to enable HTTPS. The webapp will use HTTPS if it finds
+a .git/annex/privkey.pem and .git/annex/certificate.pem. Here's
+one way to generate those files, using a self\-signed certificate:
+.PP
+ openssl genrsa \-out .git/annex/privkey.pem 4096
+ openssl req \-new \-x509 \-key .git/annex/privkey.pem > .git/annex/certificate.pem
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

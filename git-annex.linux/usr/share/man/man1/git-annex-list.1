@@ -1,0 +1,29 @@
+.TH git-annex-list 1
+.SH NAME
+git\-annex list \- show which remotes contain files
+.PP
+.SH SYNOPSIS
+git annex list \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Displays a table of remotes that contain the contents of the specified
+files. This is similar to \fBgit annex whereis\fP but a more compact display.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-allrepos\fP"
+.IP
+Only configured remotes are shown by default; this option
+adds all known repositories to the list.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to list.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

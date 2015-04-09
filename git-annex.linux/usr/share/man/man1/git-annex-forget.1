@@ -1,0 +1,33 @@
+.TH git-annex-forget 1
+.SH NAME
+git\-annex forget \- prune git\-annex branch history
+.PP
+.SH SYNOPSIS
+git annex forget
+.PP
+.SH DESCRIPTION
+Causes the git\-annex branch to be rewritten, throwing away historical
+data about past locations of files. The resulting branch will use less
+space, but \fBgit annex log\fP will not be able to show where
+files used to be located.
+.PP
+When this rewritten branch is merged into other clones of
+the repository, \fBgit\-annex\fP will automatically perform the same rewriting
+to their local \fBgit\-annex\fP branches. So the forgetfulness will automatically
+propagate out from its starting point until all repositories running
+git\-annex have forgotten their old history. (You may need to force
+git to push the branch to any git repositories not running git\-annex.)
+.PP
+.SH OPTIONS
+.IP "\fB\-\-drop\-dead\fP"
+.IP
+Also prune references to repositories that have been marked as dead.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

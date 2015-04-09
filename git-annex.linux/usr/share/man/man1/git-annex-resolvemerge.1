@@ -1,0 +1,24 @@
+.TH git-annex-resolvemerge 1
+.SH NAME
+git\-annex resolvemerge \- resolve merge conflicts
+.PP
+.SH SYNOPSIS
+git annex resolvemerge
+.PP
+.SH DESCRIPTION
+Resolves a conflicted merge, by adding both conflicting versions of the
+file to the tree, using variants of their filename. This is done
+automatically when using \fBgit annex sync\fP or \fBgit annex merge\fP.
+.PP
+Note that only merge conflicts that involve an annexed file are resolved.
+Merge conflicts between two files that are not annexed will not be
+automatically resolved.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

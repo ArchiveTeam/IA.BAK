@@ -1,0 +1,58 @@
+.TH git-annex-find 1
+.SH NAME
+git\-annex find \- lists available files
+.PP
+.SH SYNOPSIS
+git annex find \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Outputs a list of annexed files in the specified path. With no path,
+finds files in the current directory and its subdirectories.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-print0\fP"
+.IP
+Output filenames terminated with nulls, for use with \fBxargs \-0\fP
+.IP
+.IP "\fB\-\-format=value\fP"
+Use custom output formatting.
+.IP
+The value is a format string, in which '${var}' is expanded to the
+value of a variable. To right\-justify a variable with whitespace,
+use '${var;width}' ; to left\-justify a variable, use '${var;\-width}';
+to escape unusual characters in a variable, use '${escaped_var}'
+.IP
+These variables are available for use in formats: file, key, backend,
+bytesize, humansize, keyname, hashdirlower, hashdirmixed, mtime (for
+the mtime field of a WORM key).
+.IP
+Also, '\\n' is a newline, '\\000' is a NULL, etc.
+.IP
+The default output format is the same as \fB\-\-format='${file}\\n'\fP
+.IP
+.IP "\fB\-\-json\fP"
+Output the list of files in JSON format.
+.IP
+This is intended to be parsed by programs that use
+git\-annex. Each line of output is a JSON object.
+.IP
+.IP "matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to list.
+.IP
+By default, the find command only lists annexed files whose content is
+currently present. Specifying any of the matching options will override
+this default behavior.
+.IP
+To list all annexed files, present or not, specify \fB\-\-include "*"\fP.
+.IP
+To list annexed files whose content is not present, specify \fB\-\-not \-\-in=here\fP
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

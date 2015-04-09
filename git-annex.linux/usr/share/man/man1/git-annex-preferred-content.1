@@ -1,0 +1,47 @@
+.TH git-annex-preferred-content 1
+.SH NAME
+git\-annex\-preferred\-content \- 
+.PP
+.SH DESCRIPTION
+Each repository has a preferred content setting, which specifies content
+that the repository wants to have present. These settings can be configured
+using \fBgit annex vicfg\fP or \fBgit annex wanted\fP.
+They are used by the \fB\-\-auto\fP option, by \fBgit annex sync \-\-content\fP,
+and by the git\-annex assistant.
+.PP
+Preferred content expressions are similar, but not identical to
+the git\-annex\-matching\-options(1), just without the dashes.
+For example:
+.PP
+ exclude=archive/* and (include=*.mp3 or smallerthan=1mb)
+.PP
+The main differences are that \fBexclude=\fP and \fBinclude=\fP always
+match relative to the top of the git repository, and that there is
+no equivilant to \fB\-\-in\fP.
+.PP
+For more details about preferred content expressions, see
+See <https://git\-annex.branchable.com/preferred_content/>
+.PP
+When a repository is in one of the standard predefined groups, like "backup"
+and "client", setting its preferred content to "standard" will use a
+built\-in preferred content expression developed for that group. 
+See <https://git\-annex.branchable.com/preferred_content/standard_groups/>
+.PP
+If you have set a groupwanted expression for a group, it will be used
+when a repository in the group has its preferred content set to
+"groupwanted".
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+git\-annex\-vicfg(1)
+.PP
+git\-annex\-wanted(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+<http://git\-annex.branchable.com/>
+.PP
+.PP
+

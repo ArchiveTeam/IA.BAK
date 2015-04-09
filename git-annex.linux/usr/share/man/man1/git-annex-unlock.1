@@ -1,0 +1,28 @@
+.TH git-annex-unlock 1
+.SH NAME
+git\-annex unlock \- unlock files for modification
+.PP
+.SH SYNOPSIS
+git annex unlock \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Normally, the content of annexed files is protected from being changed.
+Unlocking an annexed file allows it to be modified. This replaces the
+symlink for each specified file with a copy of the file's content.
+You can then modify it and \fBgit annex add\fP (or \fBgit commit\fP) to inject
+it back into the annex.
+.PP
+.SH OPTIONS
+.IP "file matching options"
+.IP
+The git\-annex\-matching\-options(1)
+can be used to specify files to unlock.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

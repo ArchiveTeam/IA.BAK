@@ -1,0 +1,53 @@
+.TH git-annex-enableremote 1
+.SH NAME
+git\-annex enableremote \- enables use of an existing special remote
+.PP
+.SH SYNOPSIS
+git annex enableremote \fBname [param=value ...]\fP
+.PP
+.SH DESCRIPTION
+Enables use of an existing special remote in the current repository,
+which may be a different repository than the one in which it was
+originally created with the initremote command.
+.PP
+The name of the remote is the same name used when originally
+creating that remote with \fBgit annex initremote\fP. Run 
+\fBgit annex enableremote\fP without any name to get a list of
+special remote names.
+.PP
+Some special remotes may need parameters to be specified every time they are
+enabled. For example, the directory special remote requires a directory=
+parameter.
+.PP
+This command can also be used to modify the configuration of an existing
+special remote, by specifying new values for parameters that were
+originally set when using initremote. (However, some settings such as
+the as the encryption scheme cannot be changed once a special remote
+has been created.)
+.PP
+The GPG keys that an encrypted special remote is encrypted with can be
+changed using the keyid+= and keyid\-= parameters. These respectively
+add and remove keys from the list. However, note that removing a key
+does NOT necessarily prevent the key's owner from accessing data
+in the encrypted special remote
+(which is by design impossible, short of deleting the remote).
+.PP
+One use\-case of keyid\-= is to replace a revoked key with
+a new key:
+.PP
+ git annex enableremote mys3 keyid\-=revokedkey keyid+=newkey
+.PP
+Also, note that for encrypted special remotes using plain public\-key
+encryption (encryption=pubkey), adding or removing a key has NO effect
+on files that have already been copied to the remote. Hence using
+keyid+= and keyid\-= with such remotes should be used with care, and
+make little sense except in cases like the revoked key example above.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

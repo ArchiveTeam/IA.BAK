@@ -1,0 +1,38 @@
+.TH git-annex-unannex 1
+.SH NAME
+git\-annex unannex \- undo accidental add command
+.PP
+.SH SYNOPSIS
+git annex unannex \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Use this to undo an accidental \fBgit annex add\fP command. It puts the
+file back how it was before the add.
+.PP
+Note that for safety, the content of the file remains in the annex,
+until you use \fBgit annex unused\fP and \fBgit annex dropunused\fP.
+.PP
+This is not the command you should use if you intentionally annexed a
+file and don't want its contents any more. In that case you should use
+\fBgit annex drop\fP instead, and you can also \fBgit rm\fP the file.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Normally this does a slow copy of the file. In \fB\-\-fast\fP mode, it
+instead makes a hard link from the file to the content in the annex.
+But use \-\-fast mode with caution, because editing the file will
+change the content in the annex.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to unannex.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

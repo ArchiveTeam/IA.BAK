@@ -1,0 +1,56 @@
+.TH git-annex-copy 1
+.SH NAME
+git\-annex copy \- copy content of files to/from another repository
+.PP
+.SH SYNOPSIS
+git annex copy \fB[path ...] [\-\-from=remote|\-\-to=remote]\fP
+.PP
+.SH DESCRIPTION
+Copies the content of files from or to another remote.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-from=remote\fP"
+.IP
+Use this option to copy the content of files from the specified
+remote to the local repository.
+.IP
+.IP "\fB\-\-to=remote\fP"
+Use this option to copy the content of files from the local repository
+to the specified remote.
+.IP
+.IP "\fB\-\-auto\fP"
+Rather than copying all files, only copy files that don't yet have
+the desired number of copies, or that are preferred content of the
+destination repository. See git\-annex\-preferred\-content(1)
+.IP
+.IP "\fB\-\-fast\fP"
+Avoid contacting the remote to check if it has every file when copying
+\-\-to it.
+.IP
+.IP "\fB\-\-force\fP"
+Force checking the remote for every file when copying \-\-from it.
+.IP
+.IP "\fB\-\-all\fP"
+Rather than specifying a filename or path to copy, this option can be
+used to copy all available versions of all files.
+.IP
+This is the default behavior when running git\-annex in a bare repository.
+.IP
+.IP "\fB\-\-unused\fP"
+Operate on files found by last run of git\-annex unused.
+.IP
+.IP "\fB\-\-key=keyname\fP"
+Use this option to move a specified key.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to copy.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

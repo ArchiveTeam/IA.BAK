@@ -1,0 +1,1083 @@
+.TH git-annex 1
+.SH NAME
+git\-annex \- manage files with git, without checking their contents in
+.PP
+.SH SYNOPSIS
+git annex command [params ...]
+.PP
+.SH DESCRIPTION
+git\-annex allows managing files with git, without checking the file
+contents into git. While that may seem paradoxical, it is useful when
+dealing with files larger than git can currently easily handle, whether due
+to limitations in memory, checksumming time, or disk space.
+.PP
+Even without file content tracking, being able to manage files with git,
+move files around and delete files with versioned directory trees, and use
+branches and distributed clones, are all very handy reasons to use git. And
+annexed files can co\-exist in the same git repository with regularly
+versioned files, which is convenient for maintaining documents, Makefiles,
+etc that are associated with annexed files but that benefit from full
+revision control.
+.PP
+When a file is annexed, its content is moved into a key\-value store, and
+a symlink is made that points to the content. These symlinks are checked into
+git and versioned like regular files. You can move them around, delete
+them, and so on. Pushing to another git repository will make git\-annex
+there aware of the annexed file, and it can be used to retrieve its
+content from the key\-value store.
+.PP
+.SH EXAMPLES
+ # git annex get video/hackity_hack_and_kaxxt.mov
+ get video/hackity_hack_and_kaxxt.mov (not available)
+   I was unable to access these remotes: server
+   Try making some of these repositories available:
+   	5863d8c0\-d9a9\-11df\-adb2\-af51e6559a49  \-\- my home file server
+    	58d84e8a\-d9ae\-11df\-a1aa\-ab9aa8c00826  \-\- portable USB drive
+    	ca20064c\-dbb5\-11df\-b2fe\-002170d25c55  \-\- backup SATA drive
+ failed
+ # sudo mount /media/usb
+ # git remote add usbdrive /media/usb
+ # git annex get video/hackity_hack_and_kaxxt.mov
+ get video/hackity_hack_and_kaxxt.mov (from usbdrive...) ok
+ 
+ # git annex add iso
+ add iso/Debian_5.0.iso ok
+ 
+ # git annex drop iso/Debian_4.0.iso
+ drop iso/Debian_4.0.iso ok
+ 
+ # git annex move iso \-\-to=usbdrive
+ move iso/Debian_5.0.iso (moving to usbdrive...) ok
+.PP
+.SH COMMONLY USED COMMANDS
+Like many git commands, git\-annex can be passed a path that
+is either a file or a directory. In the latter case it acts on all relevant
+files in the directory. When no path is specified, most git\-annex commands
+default to acting on all relevant files in the current directory (and
+subdirectories).
+.PP
+.IP "\fBhelp\fP"
+Display built\-in help.
+.IP
+For help on a specific command, use \fBgit annex help command\fP
+.IP
+.IP "\fBadd [path ...]\fP"
+Adds files in the path to the annex. If no path is specified, adds
+files from the current directory and below. 
+.IP
+See git\-annex\-add(1) for details.
+.IP
+.IP "\fBget [path ...]\fP"
+Makes the content of annexed files available in this repository.
+.IP
+See git\-annex\-get(1) for details.
+.IP
+.IP "\fBdrop [path ...]\fP"
+Drops the content of annexed files from this repository.
+.IP
+See git\-annex\-drop(1) for details.
+.IP
+.IP "\fBmove [path ...] [\-\-from=remote|\-\-to=remote]\fP"
+Moves the content of files from or to another remote.
+.IP
+See git\-annex\-move(1) for details.
+.IP
+.IP "\fBcopy [path ...] [\-\-from=remote|\-\-to=remote]\fP"
+Copies the content of files from or to another remote.
+.IP
+See git\-annex\-copy(1) for details.
+.IP
+.IP "\fBstatus [path ...]\fP"
+Similar to \fBgit status \-\-short\fP, displays the status of the files in the
+working tree. Particularly useful in direct mode.
+.IP
+See git\-annex\-status(1) for details.
+.IP
+.IP "\fBunlock [path ...]\fP"
+Unlock annexed files for modification.
+.IP
+See git\-annex\-unlock(1) for details.
+.IP
+.IP "\fBedit [path ...]\fP"
+This is an alias for the unlock command. May be easier to remember,
+if you think of this as allowing you to edit an annexed file.
+.IP
+.IP "\fBlock [path ...]\fP"
+Use this to undo an unlock command if you don't want to modify
+the files, or have made modifications you want to discard.
+.IP
+See git\-annex\-lock(1) for details.
+.IP
+.IP "\fBsync [remote ...]\fP"
+Synchronize local repository with remotes.
+.IP
+See git\-annex\-sync(1) for details.
+.IP
+.IP "\fBmirror [path ...] [\-\-to=remote|\-\-from=remote]\fP"
+Mirror content of files to/from another repository.
+.IP
+See git\-annex\-mirror(1) for details.
+.IP
+.IP "\fBaddurl [url ...]\fP"
+Downloads each url to its own file, which is added to the annex.
+.IP
+See git\-annex\-addurl(1) for details.
+.IP
+.IP "\fBrmurl file url\fP"
+Record that the file is no longer available at the url.
+.IP
+See git\-annex\-rmurl(1) for details.
+.IP
+.IP "\fBimport [path ...]\fP"
+Move and add files from outside git working copy into the annex.
+.IP
+See git\-annex\-import(1) for details.
+.IP
+.IP "\fBimportfeed [url ...]\fP"
+Imports the contents of podcast feeds into the annex.
+.IP
+See git\-annex\-importfeed(1) for details.
+.IP
+.IP "\fBundo [filename|directory] ...\fP"
+Undo last change to a file or directory.
+.IP
+See git\-annex\-undo(1) for details.
+.IP
+.IP "\fBwatch\fP"
+Watch for changes and autocommit.
+.IP
+See git\-annex\-watch(1) for details.
+.IP
+.IP "\fBassistant\fP"
+Automatically sync folders between devices.
+.IP
+See git\-annex\-assistant(1) for details.
+.IP
+.IP "\fBwebapp\fP"
+Opens a web app, that allows easy setup of a git\-annex repository,
+and control of the git\-annex assistant. If the assistant is not
+already running, it will be started.
+.IP
+See git\-annex\-webapp(1) for details.
+.IP
+.SH REPOSITORY SETUP COMMANDS
+.IP "\fBinit [description]\fP"
+.IP
+Until a repository (or one of its remotes) has been initialized,
+git\-annex will refuse to operate on it, to avoid accidentally
+using it in a repository that was not intended to have an annex.
+.IP
+See git\-annex\-init(1) for details.
+.IP
+.IP "\fBdescribe repository description\fP"
+Changes the description of a repository.
+.IP
+See git\-annex\-describe(1) for details.
+.IP
+.IP "\fBinitremote name type=value [param=value ...]\fP"
+Creates a new special remote, and adds it to \fB.git/config\fP.
+.IP
+See git\-annex\-initremote(1) for details.
+.IP
+.IP "\fBenableremote name [param=value ...]\fP"
+Enables use of an existing special remote in the current repository.
+.IP
+See git\-annex\-enableremote(1) for details.
+.IP
+.IP "\fBnumcopies [N]\fP"
+Configure desired number of copies.
+.IP
+See git\-annex\-numcopies(1) for details.
+.IP
+.IP "\fBtrust [repository ...]\fP"
+Records that a repository is trusted to not unexpectedly lose
+content. Use with care.
+.IP
+See git\-annex\-trust(1) for details.
+.IP
+.IP "\fBuntrust [repository ...]\fP"
+Records that a repository is not trusted and could lose content
+at any time.
+.IP
+See git\-annex\-untrust(1) for details.
+.IP
+.IP "\fBsemitrust [repository ...]\fP"
+Returns a repository to the default semi trusted state.
+.IP
+See git\-annex\-semitrust(1) for details.
+.IP
+.IP "\fBdead [repository ...]\fP"
+Indicates that the repository has been irretrievably lost.
+.IP
+See git\-annex\-dead(1) for details.
+.IP
+.IP "\fBgroup repository groupname\fP"
+Add a repository to a group.
+.IP
+See git\-annex\-group(1) for details.
+.IP
+.IP "\fBungroup repository groupname\fP"
+Removes a repository from a group.
+.IP
+See git\-annex\-ungroup(1) for details.
+.IP
+.IP "\fBwanted repository [expression]\fP"
+Get or set preferred content expression.
+.IP
+See git\-annex\-wanted(1) for details.
+.IP
+.IP "\fBgroupwanted groupname [expression]\fP"
+See git\-annex\-groupwanted(1) for details.
+.IP
+.IP "\fBschedule repository [expression]\fP"
+Get or set scheduled jobs.
+.IP
+See git\-annex\-schedule(1) for details.
+.IP
+.IP "\fBvicfg\fP"
+Opens EDITOR on a temp file containing most of the above configuration
+settings, as well as a few others, and when it exits, stores any changes
+made back to the git\-annex branch.
+.IP
+See git\-annex\-vicfg(1) for details.
+.IP
+.IP "\fBdirect\fP"
+Switches a repository to use direct mode, where rather than symlinks to
+files, the files are directly present in the repository.
+.IP
+See git\-annex\-direct(1) for details.
+.IP
+.IP "\fBindirect\fP"
+Switches a repository back from direct mode to the default, indirect mode.
+.IP
+See git\-annex\-indirect(1) for details.
+.IP
+.SH REPOSITORY MAINTENANCE COMMANDS
+.IP "\fBfsck [path ...]\fP"
+.IP
+Checks the annex consistency, and warns about or fixes any problems found. 
+This is a good complement to \fBgit fsck\fP.
+.IP
+See git\-annex\-fsck(1) for details.
+.IP
+.IP "\fBexpire [repository:]time ...\fP"
+Expires repositories that have not recently performed an activity
+(such as a fsck).
+.IP
+.IP "\fBunused\fP"
+Checks the annex for data that does not correspond to any files present
+in any tag or branch, and prints a numbered list of the data.
+.IP
+See git\-annex\-unused(1) for details.
+.IP
+.IP "\fBdropunused [number|range ...]\fP"
+Drops the data corresponding to the numbers, as listed by the last
+\fBgit annex unused\fP
+.IP
+See git\-annex\-dropunused(1) for details.
+.IP
+.IP "\fBaddunused [number|range ...]\fP"
+Adds back files for the content corresponding to the numbers or ranges,
+as listed by the last \fBgit annex unused\fP.
+.IP
+See git\-annex\-addunused(1) for details.
+.IP
+.IP "\fBfix [path ...]\fP"
+Fixes up symlinks that have become broken to again point to annexed content.
+.IP
+See git\-annex\-fix(1) for details.
+.IP
+.IP "\fBmerge\fP"
+Automatically merge changes from remotes.
+.IP
+See git\-annex\-merge(1) for details.
+.IP
+.IP "\fBupgrade\fP"
+Upgrades the repository to current layout.
+.IP
+See git\-annex\-upgrade(1) for details.
+.IP
+.IP "\fBforget\fP"
+Causes the git\-annex branch to be rewritten, throwing away historical
+data about past locations of files.
+.IP
+See git\-annex\-forget(1) for details.
+.IP
+.IP "\fBrepair\fP"
+This can repair many of the problems with git repositories that \fBgit fsck\fP
+detects, but does not itself fix. It's useful if a repository has become
+badly damaged. One way this can happen is if a repository used by git\-annex
+is on a removable drive that gets unplugged at the wrong time.
+.IP
+See git\-annex\-repair(1) for details.
+.IP
+.SH QUERY COMMANDS
+.IP "\fBfind [path ...]\fP"
+.IP
+Outputs a list of annexed files in the specified path. With no path,
+finds files in the current directory and its subdirectories.
+.IP
+See git\-annex\-find(1) for details.
+.IP
+.IP "\fBwhereis [path ...]\fP"
+Displays information about where the contents of files are located.
+.IP
+See git\-annex\-whereis(1) for details.
+.IP
+.IP "\fBlist [path ...]\fP"
+Displays a table of remotes that contain the contents of the specified
+files. This is similar to whereis but a more compact display.
+.IP
+See git\-annex\-list(1) for details.
+.IP
+.IP "\fBlog [path ...]\fP"
+Displays the location log for the specified file or files,
+showing each repository they were added to ("+") and removed from ("\-").
+.IP
+See git\-annex\-log(1) for details.
+.IP
+.IP "\fBinfo [directory|file|remote|uuid ...]\fP"
+Displays statistics and other information for the specified item,
+which can be a directory, or a file, or a remote, or the uuid of a
+repository. 
+.IP
+When no item is specified, displays statistics and information
+for the repository as a whole.
+.IP
+See git\-annex\-info(1) for details.
+.IP
+.IP "\fBversion\fP"
+Shows the version of git\-annex, as well as repository version information.
+.IP
+See git\-annex\-version(1) for details.
+.IP
+.IP "\fBmap\fP"
+Generate map of repositories.
+.IP
+See git\-annex\-map(1) for details.
+.IP
+.SH METADATA COMMANDS
+.IP "\fBmetadata [path ...]\fP"
+.IP
+The content of an annexed file can have any number of metadata fields
+attached to it to describe it. Each metadata field can in turn
+have any number of values.
+.IP
+This command can be used to set metadata, or show the currently set
+metadata.
+.IP
+See git\-annex\-metadata(1) for details.
+.IP
+.IP "\fBview [tag ...] [field=value ...] [field=glob ...] [!tag ...] [field!=value ...]\fP"
+Uses metadata to build a view branch of the files in the current branch,
+and checks out the view branch. Only files in the current branch whose
+metadata matches all the specified field values and tags will be
+shown in the view.
+.IP
+See git\-annex\-view(1) for details.
+.IP
+.IP "\fBvpop [N]\fP"
+Switches from the currently active view back to the previous view.
+Or, from the first view back to original branch.
+.IP
+See git\-annex\-vpop(1) for details.
+.IP
+.IP "\fBvfilter [tag ...] [field=value ...] [!tag ...] [field!=value ...]\fP"
+Filters the current view to only the files that have the
+specified field values and tags.
+.IP
+See git\-annex\-vfilter(1) for details.
+.IP
+.IP "\fBvadd [field=glob ...] [field=value ...] [tag ...]\fP"
+Changes the current view, adding an additional level of directories
+to categorize the files.
+.IP
+See git\-annex\-vfilter(1) for details.
+.IP
+.IP "\fBvcycle\fP"
+When a view involves nested subdirectories, this cycles the order.
+.IP
+See git\-annex\-vcycle(1) for details.
+.IP
+.SH UTILITY COMMANDS
+.IP "\fBmigrate [path ...]\fP"
+.IP
+Changes the specified annexed files to use a different key\-value backend.
+.IP
+See git\-annex\-migrate(1) for details.
+.IP
+.IP "\fBreinject src dest\fP"
+Moves the src file into the annex as the content of the dest file.
+This can be useful if you have obtained the content of a file from
+elsewhere and want to put it in the local annex.
+.IP
+See git\-annex\-reinject(1) for details.
+.IP
+.IP "\fBunannex [path ...]\fP"
+Use this to undo an accidental \fBgit annex add\fP command. It puts the
+file back how it was before the add.
+.IP
+See git\-annex\-unannex(1) for details.
+.IP
+.IP "\fBuninit\fP"
+De\-initialize git\-annex and clean out repository.
+.IP
+See git\-annex\-unannex(1) for details.
+.IP
+.IP "\fBreinit uuid|description\fP"
+Initialize repository, reusing old UUID.
+.IP
+See git\-annex\-reinit(1) for details.
+.IP
+.SH PLUMBING COMMANDS
+.IP "\fBpre\-commit [path ...]\fP"
+.IP
+This is meant to be called from git's pre\-commit hook. \fBgit annex init\fP
+automatically creates a pre\-commit hook using this.
+.IP
+See git\-annex\-pre\-commit(1) for details.
+.IP
+.IP "\fBlookupkey [file ...]\fP"
+Looks up key used for file.
+.IP
+See git\-annex\-lookupkey(1) for details.
+.IP
+.IP "\fBexaminekey [key ...]\fP"
+Print information that can be determined purely by looking at the key.
+.IP
+See git\-annex\-examinekey(1) for details.
+.IP
+.IP "\fBfromkey [key file]\fP"
+Manually set up a file in the git repository to link to a specified key.
+.IP
+See git\-annex\-fromkey(1) for details.
+.IP
+.IP "\fBregisterurl [key url]\fP"
+Registers an url for a key.
+.IP
+See git\-annex\-registerurl(1) for details.
+.IP
+.IP "\fBdropkey [key ...]\fP"
+Drops annexed content for specified keys.
+.IP
+See git\-annex\-dropkey(1) for details.
+.IP
+.IP "\fBtransferkey key [\-\-from=remote|\-\-to=remote]\fP"
+Transfers a key from or to a remote.
+.IP
+See git\-annex\-transferkey(1) for details.
+.IP
+.IP "\fBtransferkeys\fP"
+Used internally by the assistant.
+.IP
+See git\-annex\-transferkey(1) for details.
+.IP
+.IP "\fBsetpresentkey key uuid [1|0]\fP"
+This plumbing\-level command changes git\-annex's records about whether
+the specified key's content is present in a remote with the specified uuid.
+.IP
+See git\-annex\-setpresentkey(1) for details.
+.IP
+.IP "\fBreadpresentkey key uuid\fP"
+Read records of where key is present.
+.IP
+See git\-annex\-readpresentkey(1) for details.
+.IP
+.IP "\fBcheckpresentkey key remote\fP"
+Check if key is present in remote.
+.IP
+See git\-annex\-checkpresentkey(1) for details.
+.IP
+.IP "\fBrekey [file key ...]\fP"
+Change keys used for files.
+.IP
+See git\-annex\-rekey(1) for details.
+.IP
+.IP "\fBfindref [ref]\fP"
+Lists files in a git ref.
+.IP
+See git\-annex\-findref(1) for details.
+.IP
+.IP "\fBproxy \-\- git cmd [options]\fP"
+Only useful in a direct mode repository, this runs the specified git
+command with a temporary work tree, and updates the working tree to
+reflect any changes staged or committed by the git command.
+.IP
+See git\-annex\-proxy(1) for details.
+.IP
+.IP "\fBresolvemerge\fP"
+Resolves a conflicted merge, by adding both conflicting versions of the
+file to the tree, using variants of their filename. This is done
+automatically when using \fBgit annex sync\fP or \fBgit annex merge\fP.
+.IP
+See git\-annex\-resolvemerge(1) for details.
+.IP
+.IP "\fBdiffdriver\fP"
+This can be used to make \fBgit diff\fP use an external diff driver with
+annexed files.
+.IP
+See git\-annex\-diffdriver(1) for details.
+.IP
+.IP "\fBremotedaemon\fP"
+Detects when network remotes have received git pushes and fetches from them.
+.IP
+See git\-annex\-remotedaemon(1) for details.
+.IP
+.IP "\fBxmppgit\fP"
+This command is used internally by the assistant to perform git pulls
+over XMPP.
+.IP
+See git\-annex\-xmppgit(1) for details.
+.IP
+.SH TESTING COMMANDS
+.IP "\fBtest\fP"
+.IP
+This runs git\-annex's built\-in test suite.
+.IP
+See git\-annex\-test(1) for details.
+.IP
+.IP "\fBtestremote remote\fP"
+This tests a remote by generating some random objects and sending them to
+the remote, then redownloading them, removing them from the remote, etc.
+.IP
+It's safe to run in an existing repository (the repository contents are
+not altered), although it may perform expensive data transfers.
+.IP
+See git\-annex\-testremote(1) for details.
+.IP
+.IP "\fBfuzztest\fP"
+Generates random changes to files in the current repository,
+for use in testing the assistant.
+.IP
+See git\-annex\-fuzztest(1) for details.
+.IP
+.SH COMMON OPTIONS
+These common options are accepted by all git\-annex commands, and
+may not be explicitly listed on their individual man pages.
+(Many commands also accept the git\-annex\-matching\-options(1).)
+.PP
+.IP "\fB\-\-force\fP"
+Force unsafe actions, such as dropping a file's content when no other
+source of it can be verified to still exist, or adding ignored files.
+Use with care.
+.IP
+.IP "\fB\-\-fast\fP"
+Enable less expensive, but also less thorough versions of some commands.
+What is avoided depends on the command.
+.IP
+.IP "\fB\-\-quiet\fP"
+Avoid the default verbose display of what is done; only show errors.
+.IP
+.IP "\fB\-\-verbose\fP"
+Enable verbose display.
+.IP
+.IP "\fB\-\-debug\fP"
+Show debug messages.
+.IP
+.IP "\fB\-\-no\-debug\fP"
+Disable debug messages.
+.IP
+.IP "\fB\-\-numcopies=n\fP"
+Overrides the numcopies setting, forcing git\-annex to ensure the
+specified number of copies exist.
+.IP
+Note that setting numcopies to 0 is very unsafe.
+.IP
+.IP "\fB\-\-time\-limit=time\fP"
+Limits how long a git\-annex command runs. The time can be something
+like "5h", or "30m" or even "45s" or "10d".
+.IP
+Note that git\-annex may continue running a little past the specified
+time limit, in order to finish processing a file.
+.IP
+Also, note that if the time limit prevents git\-annex from doing all it
+was asked to, it will exit with a special code, 101.
+.IP
+.IP "\fB\-\-trust=repository\fP"
+.IP "\fB\-\-semitrust=repository\fP"
+.IP "\fB\-\-untrust=repository\fP"
+Overrides trust settings for a repository. May be specified more than once.
+.IP
+The repository should be specified using the name of a configured remote,
+or the UUID or description of a repository.
+.IP
+.IP "\fB\-\-trust\-glacier\-inventory\fP"
+Amazon Glacier inventories take hours to retrieve, and may not represent
+the current state of a repository. So git\-annex does not trust that
+files that the inventory claims are in Glacier are really there.
+This switch can be used to allow it to trust the inventory.
+.IP
+Be careful using this, especially if you or someone else might have recently
+removed a file from Glacier. If you try to drop the only other copy of the
+file, and this switch is enabled, you could lose data!
+.IP
+.IP "\fB\-\-backend=name\fP"
+Specifies which key\-value backend to use. This can be used when
+adding a file to the annex, or migrating a file. Once files
+are in the annex, their backend is known and this option is not
+necessary.
+.IP
+.IP "\fB\-\-user\-agent=value\fP"
+Overrides the User\-Agent to use when downloading files from the web.
+.IP
+.IP "\fB\-\-notify\-finish\fP"
+Caused a desktop notification to be displayed after each successful
+file download and upload.
+.IP
+(Only supported on some platforms, e.g. Linux with dbus. A no\-op when
+not supported.)
+.IP
+.IP "\fB\-\-notify\-start\fP"
+Caused a desktop notification to be displayed when a file upload
+or download has started, or when a file is dropped.
+.IP
+.IP "\fB\-c name=value\fP"
+Overrides git configuration settings. May be specified multiple times.
+.IP
+.SH CONFIGURATION VIA .git/config
+Like other git commands, git\-annex is configured via \fB.git/config\fP.
+Here are all the supported configuration settings.
+.PP
+.IP "\fBannex.uuid\fP"
+A unique UUID for this repository (automatically set).
+.IP
+.IP "\fBannex.backends\fP"
+Space\-separated list of names of the key\-value backends to use.
+The first listed is used to store new files by default.
+.IP
+.IP "\fBannex.diskreserve\fP"
+Amount of disk space to reserve. Disk space is checked when transferring
+content to avoid running out, and additional free space can be reserved
+via this option, to make space for more important content (such as git
+commit logs). Can be specified with any commonly used units, for example,
+"0.5 gb", "500M", or "100 KiloBytes"
+.IP
+The default reserve is 1 megabyte.
+.IP
+.IP "\fBannex.largefiles\fP"
+Allows configuring which files \fBgit annex add\fP and the assistant consider
+to be large enough to need to be added to the annex. By default,
+all files are added to the annex.
+.IP
+The value is a preferred content expression. See PREFERRED CONTENT
+for details.
+.IP
+Example:
+.IP
+ annex.largefiles = largerthan=100kb and not (include=*.c or include=*.h)
+.IP
+.IP "\fBannex.numcopies\fP"
+This is a deprecated setting. You should instead use the
+\fBgit annex numcopies\fP command to configure how many copies of files
+are kept across all repositories.
+.IP
+This config setting is only looked at when \fBgit annex numcopies\fP has
+never been configured.
+.IP
+Note that setting numcopies to 0 is very unsafe.
+.IP
+.IP "\fBannex.genmetadata\fP"
+Set this to \fBtrue\fP to make git\-annex automatically generate some metadata
+when adding files to the repository.
+.IP
+In particular, it stores year and month metadata, from the file's
+modification date.
+.IP
+When importfeed is used, it stores additional metadata from the feed,
+such as the author, title, etc.
+.IP
+.IP "\fBannex.queuesize\fP"
+git\-annex builds a queue of git commands, in order to combine similar
+commands for speed. By default the size of the queue is limited to
+10240 commands; this can be used to change the size. If you have plenty
+of memory and are working with very large numbers of files, increasing
+the queue size can speed it up.
+.IP
+.IP "\fBannex.bloomcapacity\fP"
+The \fBgit annex unused\fP command uses a bloom filter to determine
+what data is no longer used. The default bloom filter is sized to handle
+up to 500000 keys. If your repository is larger than that,
+you can adjust this to avoid \fBgit annex unused\fP not noticing some unused
+data files. Increasing this will make \fBgit\-annex unused\fP consume more memory;
+run \fBgit annex info\fP for memory usage numbers.
+.IP
+.IP "\fBannex.bloomaccuracy\fP"
+Adjusts the accuracy of the bloom filter used by
+\fBgit annex unused\fP. The default accuracy is 1000 \-\-
+1 unused file out of 1000 will be missed by \fBgit annex unused\fP. Increasing
+the accuracy will make \fBgit annex unused\fP consume more memory;
+run \fBgit annex info\fP for memory usage numbers.
+.IP
+.IP "\fBannex.sshcaching\fP"
+By default, git\-annex caches ssh connections using ssh's
+ControlMaster and ControlPersist settings
+(if built using a new enough ssh). To disable this, set to \fBfalse\fP.
+.IP
+.IP "\fBannex.alwayscommit\fP"
+By default, git\-annex automatically commits data to the git\-annex branch
+after each command is run. If you have a series
+of commands that you want to make a single commit, you can
+run the commands with \fB\-c annex.alwayscommit=false\fP. You can later
+commit the data by running \fBgit annex merge\fP (or by automatic merges)
+or \fBgit annex sync\fP.
+.IP
+.IP "\fBannex.hardlink\fP"
+Set this to \fBtrue\fP to make file contents be hard linked into the
+repository when possible, instead of a more expensive copy.
+.IP
+Use with caution \-\- This can invalidate numcopies counting, since
+with hard links, fewer copies of a file can exist. So, it is a good
+idea to mark a repository using this setting as untrusted.
+.IP
+When a repository is set up using \fBgit clone \-\-shared\fP, git\-annex init
+will automatically set annex.hardlink and mark the repository as
+untrusted.
+.IP
+.IP "\fBannex.delayadd\fP"
+Makes the watch and assistant commands delay for the specified number of
+seconds before adding a newly created file to the annex. Normally this
+is not needed, because they already wait for all writers of the file
+to close it. On Mac OSX, when not using direct mode this defaults to
+1 second, to work around a bad interaction with software there.
+.IP
+.IP "\fBannex.expireunused\fP"
+Controls what the assistant does about unused file contents
+that are stored in the repository.
+.IP
+The default is \fBfalse\fP, which causes
+all old and unused file contents to be retained, unless the assistant
+is able to move them to some other repository (such as a backup repository).
+.IP
+Can be set to a time specification, like "7d" or "1m", and then
+file contents that have been known to be unused for a week or a
+month will be deleted.
+.IP
+.IP "\fBannex.fscknudge\fP"
+When set to false, prevents the webapp from reminding you when using
+repositories that lack consistency checks.
+.IP
+.IP "\fBannex.autoupgrade\fP"
+When set to ask (the default), the webapp will check for new versions
+and prompt if they should be upgraded to. When set to true, automatically
+upgrades without prompting (on some supported platforms). When set to
+false, disables any upgrade checking.
+.IP
+Note that upgrade checking is only done when git\-annex is installed
+from one of the prebuilt images from its website. This does not
+bypass e.g., a Linux distribution's own upgrade handling code.
+.IP
+This setting also controls whether to restart the git\-annex assistant
+when the git\-annex binary is detected to have changed. That is useful
+no matter how you installed git\-annex.
+.IP
+.IP "\fBannex.autocommit\fP"
+Set to false to prevent the git\-annex assistant from automatically
+committing changes to files in the repository.
+.IP
+.IP "\fBannex.startupscan\fP"
+Set to false to prevent the git\-annex assistant from scanning the
+repository for new and changed files on startup. This will prevent it
+from noticing changes that were made while it was not running, but can be
+a useful performance tweak for a large repository.
+.IP
+.IP "\fBannex.listen\fP"
+Configures which address the webapp listens on. The default is localhost.
+Can be either an IP address, or a hostname that resolves to the desired
+address.
+.IP
+.IP "\fBannex.debug\fP"
+Set to true to enable debug logging by default.
+.IP
+.IP "\fBannex.version\fP"
+Automatically maintained, and used to automate upgrades between versions.
+.IP
+.IP "\fBannex.direct\fP"
+Set to true when the repository is in direct mode. Should not be set
+manually; use the "git annex direct" and "git annex indirect" commands
+instead.
+.IP
+.IP "\fBannex.crippledfilesystem\fP"
+Set to true if the repository is on a crippled filesystem, such as FAT,
+which does not support symbolic links, or hard links, or unix permissions.
+This is automatically probed by "git annex init".
+.IP
+.IP "\fBremote.<name>.annex\-cost\fP"
+When determining which repository to
+transfer annexed files from or to, ones with lower costs are preferred.
+The default cost is 100 for local repositories, and 200 for remote
+repositories.
+.IP
+.IP "\fBremote.<name>.annex\-cost\-command\fP"
+If set, the command is run, and the number it outputs is used as the cost.
+This allows varying the cost based on e.g., the current network. The
+cost\-command can be any shell command line.
+.IP
+.IP "\fBremote.<name>.annex\-start\-command\fP"
+A command to run when git\-annex begins to use the remote. This can
+be used to, for example, mount the directory containing the remote.
+.IP
+The command may be run repeatedly when multiple git\-annex processes
+are running concurrently.
+.IP
+.IP "\fBremote.<name>.annex\-stop\-command\fP"
+A command to run when git\-annex is done using the remote.
+.IP
+The command will only be run once *all* running git\-annex processes
+are finished using the remote.
+.IP
+.IP "\fBremote.<name>.annex\-shell\fP"
+Specify an alternative git\-annex\-shell executable on the remote
+instead of looking for "git\-annex\-shell" on the PATH.
+.IP
+This is useful if the git\-annex\-shell program is outside the PATH
+or has a non\-standard name.
+.IP
+.IP "\fBremote.<name>.annex\-ignore\fP"
+If set to \fBtrue\fP, prevents git\-annex
+from storing file contents on this remote by default.
+(You can still request it be used by the \fB\-\-from\fP and \fB\-\-to\fP options.)
+.IP
+This is, for example, useful if the remote is located somewhere
+without git\-annex\-shell. (For example, if it's on GitHub).
+Or, it could be used if the network connection between two
+repositories is too slow to be used normally.
+.IP
+This does not prevent git\-annex sync (or the git\-annex assistant) from
+syncing the git repository to the remote.
+.IP
+.IP "\fBremote.<name>.annex\-sync\fP"
+If set to \fBfalse\fP, prevents git\-annex sync (and the git\-annex assistant)
+from syncing with this remote.
+.IP
+.IP "\fBremote.<name>.annex\-readonly\fP"
+If set to \fBtrue\fP, prevents git\-annex from making changes to a remote.
+This both prevents git\-annex sync from pushing changes, and prevents
+storing or removing files from read\-only remote.
+.IP
+.IP "\fBremote.<name>.annexUrl\fP"
+Can be used to specify a different url than the regular \fBremote.<name>.url\fP
+for git\-annex to use when talking with the remote. Similar to the \fBpushUrl\fP
+used by git\-push.
+.IP
+.IP "\fBremote.<name>.annex\-uuid\fP"
+git\-annex caches UUIDs of remote repositories here.
+.IP
+.IP "\fBremote.<name>.annex\-trustlevel\fP"
+Configures a local trust level for the remote. This overrides the value
+configured by the trust and untrust commands. The value can be any of
+"trusted", "semitrusted" or "untrusted".
+.IP
+.IP "\fBremote.<name>.annex\-availability\fP"
+Can be used to tell git\-annex whether a remote is LocallyAvailable
+or GloballyAvailable. Normally, git\-annex determines this automatically.
+.IP
+.IP "\fBremote.<name>.annex\-bare\fP"
+Can be used to tell git\-annex if a remote is a bare repository
+or not. Normally, git\-annex determines this automatically.
+.IP
+.IP "\fBremote.<name>.annex\-ssh\-options\fP"
+Options to use when using ssh to talk to this remote.
+.IP
+.IP "\fBremote.<name>.annex\-rsync\-options\fP"
+Options to use when using rsync
+to or from this remote. For example, to force ipv6, and limit
+the bandwidth to 100Kbyte/s, set it to \fB\-6 \-\-bwlimit 100\fP
+.IP
+.IP "\fBremote.<name>.annex\-rsync\-upload\-options\fP"
+Options to use when using rsync to upload a file to a remote.
+.IP
+These options are passed after other applicable rsync options,
+so can be used to override them. For example, to limit upload bandwidth
+to 10Kbyte/s, set \fB\-\-bwlimit 10\fP.
+.IP
+.IP "\fBremote.<name>.annex\-rsync\-download\-options\fP"
+Options to use when using rsync to download a file from a remote.
+.IP
+These options are passed after other applicable rsync options,
+so can be used to override them.
+.IP
+.IP "\fBremote.<name>.annex\-rsync\-transport\fP"
+The remote shell to use to connect to the rsync remote. Possible
+values are \fBssh\fP (the default) and \fBrsh\fP, together with their
+arguments, for instance \fBssh \-p 2222 \-c blowfish\fP; Note that the
+remote hostname should not appear there, see rsync(1) for details.
+When the transport used is \fBssh\fP, connections are automatically cached
+unless \fBannex.sshcaching\fP is unset.
+.IP
+.IP "\fBremote.<name>.annex\-bup\-split\-options\fP"
+Options to pass to bup split when storing content in this remote.
+For example, to limit the bandwidth to 100Kbyte/s, set it to \fB\-\-bwlimit 100k\fP
+(There is no corresponding option for bup join.)
+.IP
+.IP "\fBremote.<name>.annex\-gnupg\-options\fP"
+Options to pass to GnuPG for symmetric encryption. For instance, to
+use the AES cipher with a 256 bits key and disable compression, set it
+to \fB\-\-cipher\-algo AES256 \-\-compress\-algo none\fP. (These options take
+precedence over the default GnuPG configuration, which is otherwise
+used.)
+.IP
+.IP "\fBannex.ssh\-options\fP, \fBannex.rsync\-options\fP,"
+\fBannex.rsync\-upload\-options\fP, \fBannex.rsync\-download\-options\fP,
+\fBannex.bup\-split\-options\fP, \fBannex.gnupg\-options\fP
+.IP
+Default options to use if a remote does not have more specific options
+as described above.
+.IP
+.IP "\fBannex.web\-options\fP"
+Options to pass when running wget or curl.
+For example, to force ipv4 only, set it to "\-4"
+.IP
+.IP "\fBannex.quvi\-options\fP"
+Options to pass to quvi when using it to find the url to download for a
+video.
+.IP
+.IP "\fBannex.aria\-torrent\-options\fP"
+Options to pass to aria2c when using it to download a torrent.
+.IP
+.IP "\fBannex.http\-headers\fP"
+HTTP headers to send when downloading from the web. Multiple lines of
+this option can be set, one per header.
+.IP
+.IP "\fBannex.http\-headers\-command\fP"
+If set, the command is run and each line of its output is used as a HTTP
+header. This overrides annex.http\-headers.
+.IP
+.IP "\fBannex.web\-download\-command\fP"
+Use to specify a command to run to download a file from the web.
+(The default is to use wget or curl.)
+.IP
+In the command line, %url is replaced with the url to download,
+and %file is replaced with the file that it should be saved to.
+.IP
+.IP "\fBannex.secure\-erase\-command\fP"
+This can be set to a command that should be run whenever git\-annex
+removes the content of a file from the repository.
+.IP
+In the command line, %file is replaced with the file that should be
+erased.
+.IP
+For example, to use the wipe command, set it to \fBwipe \-f %file\fP.
+.IP
+.IP "\fBremote.<name>.rsyncurl\fP"
+Used by rsync special remotes, this configures
+the location of the rsync repository to use. Normally this is automatically
+set up by \fBgit annex initremote\fP, but you can change it if needed.
+.IP
+.IP "\fBremote.<name>.buprepo\fP"
+Used by bup special remotes, this configures
+the location of the bup repository to use. Normally this is automatically
+set up by \fBgit annex initremote\fP, but you can change it if needed.
+.IP
+.IP "\fBremote.<name>.ddarrepo\fP"
+Used by ddar special remotes, this configures
+the location of the ddar repository to use. Normally this is automatically
+set up by \fBgit annex initremote\fP, but you can change it if needed.
+.IP
+.IP "\fBremote.<name>.directory\fP"
+Used by directory special remotes, this configures
+the location of the directory where annexed files are stored for this
+remote. Normally this is automatically set up by \fBgit annex initremote\fP,
+but you can change it if needed.
+.IP
+.IP "\fBremote.<name>.s3\fP"
+Used to identify Amazon S3 special remotes.
+Normally this is automatically set up by \fBgit annex initremote\fP.
+.IP
+.IP "\fBremote.<name>.glacier\fP"
+Used to identify Amazon Glacier special remotes.
+Normally this is automatically set up by \fBgit annex initremote\fP.
+.IP
+.IP "\fBremote.<name>.webdav\fP"
+Used to identify webdav special remotes.
+Normally this is automatically set up by \fBgit annex initremote\fP.
+.IP
+.IP "\fBremote.<name>.tahoe\fP"
+Used to identify tahoe special remotes.
+Points to the configuration directory for tahoe.
+.IP
+.IP "\fBremote.<name>.annex\-xmppaddress\fP"
+Used to identify the XMPP address of a Jabber buddy.
+Normally this is set up by the git\-annex assistant when pairing over XMPP.
+.IP
+.IP "\fBremote.<name>.gcrypt\fP"
+Used to identify gcrypt special remotes.
+Normally this is automatically set up by \fBgit annex initremote\fP.
+.IP
+It is set to "true" if this is a gcrypt remote.
+If the gcrypt remote is accessible over ssh and has git\-annex\-shell
+available to manage it, it's set to "shell".
+.IP
+.IP "\fBremote.<name>.hooktype\fP, \fBremote.<name>.externaltype\fP"
+Used by hook special remotes and external special remotes to record
+the type of the remote.
+.IP
+.IP "\fBannex.tune.objecthash1\fP, \fBannex.tune.objecthashlower\fP, \fBannex.tune.branchhash1\fP"
+These can be passed to \fBgit annex init\fP to tune the repository.
+They cannot be safely changed in a running repository.
+For details, see <http://git\-annex.branchable.com/tuning/>.
+.IP
+.SH CONFIGURATION VIA .gitattributes
+The key\-value backend used when adding a new file to the annex can be
+configured on a per\-file\-type basis via \fB.gitattributes\fP files. In the file,
+the \fBannex.backend\fP attribute can be set to the name of the backend to
+use. For example, this here's how to use the WORM backend by default,
+but the SHA256E backend for ogg files:
+.PP
+ * annex.backend=WORM
+ *.ogg annex.backend=SHA256E
+.PP
+The numcopies setting can also be configured on a per\-file\-type basis via
+the \fBannex.numcopies\fP attribute in \fB.gitattributes\fP files. This overrides
+other numcopies settings.
+For example, this makes two copies be needed for wav files and 3 copies
+for flac files:
+.PP
+ *.wav annex.numcopies=2
+ *.flac annex.numcopies=3
+.PP
+Note that setting numcopies to 0 is very unsafe.
+.PP
+These settings are honored by git\-annex whenever it's operating on a
+matching file. However, when using \-\-all, \-\-unused, or \-\-key to specify
+keys to operate on, git\-annex is operating on keys and not files, so will
+not honor the settings from .gitattributes.
+.PP
+Also note that when using views, only the toplevel .gitattributes file is
+preserved in the view, so other settings in other files won't have any
+effect.
+.PP
+.SH FILES
+These files are used by git\-annex:
+.PP
+\fB.git/annex/objects/\fP in your git repository contains the annexed file
+contents that are currently available. Annexed files in your git
+repository symlink to that content.
+.PP
+\fB.git/annex/\fP in your git repository contains other run\-time information
+used by git\-annex.
+.PP
+\fB~/.config/git\-annex/autostart\fP is a list of git repositories
+to start the git\-annex assistant in.
+.PP
+\fB.git/hooks/pre\-commit\-annex\fP in your git repository will be run whenever
+a commit is made to the HEAD branch, either by git commit, git\-annex
+sync, or the git\-annex assistant.
+.PP
+\fB.git/hooks/post\-update\-annex\fP in your git repository will be run
+whenever the git\-annex branch is updated. You can make this hook run
+\fBgit update\-server\-info\fP when publishing a git\-annex repository by http.
+.PP
+.SH SEE ALSO
+More git\-annex documentation is available on its web site,
+<http://git\-annex.branchable.com/>
+.PP
+If git\-annex is installed from a package, a copy of its documentation
+should be included, in, for example, \fB/usr/share/doc/git\-annex/\fP.
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+<http://git\-annex.branchable.com/>
+.PP
+.PP
+

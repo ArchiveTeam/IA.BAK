@@ -1,0 +1,36 @@
+.TH git-annex-map 1
+.SH NAME
+git\-annex map \- generate map of repositories
+.PP
+.SH SYNOPSIS
+git annex map
+.PP
+.SH DESCRIPTION
+Helps you keep track of your repositories, and the connections between them,
+by going out and looking at all the ones it can get to, and generating a
+Graphviz file displaying it all. If the \fBdot\fP command is available, it is
+used to display the file to your screen (using x11 backend).
+.PP
+This command only connects to hosts that the host it's run on can
+directly connect to. It does not try to tunnel through intermediate hosts.
+So it might not show all connections between the repositories in the network
+.PP
+Also, if connecting to a host requires a password, you might have to enter
+it several times as the map is being built.
+.PP
+Note that this subcommand can be used to graph any git repository; it
+is not limited to git\-annex repositories.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Disable using \fBdot\fP to display the generated Graphviz file.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

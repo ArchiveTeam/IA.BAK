@@ -1,0 +1,58 @@
+.TH git-annex-addurl 1
+.SH NAME
+git\-annex addurl \- add urls to annex
+.PP
+.SH SYNOPSIS
+git annex addurl \fB[url ...]\fP
+.PP
+.SH DESCRIPTION
+Downloads each url to its own file, which is added to the annex.
+.PP
+When \fBquvi\fP is installed, urls are automatically tested to see if they
+point to a video hosting site, and the video is downloaded instead.
+.PP
+Urls to torrent files (including magnet links) will cause the content of
+the torrent to be downloaded, using \fBaria2c\fP.
+.PP
+Normally the filename is based on the full url, so will look like
+"www.example.com_dir_subdir_bigfile". In some cases, addurl is able to
+come up with a better filename based on other information. Options can also
+be used to get better filenames.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Avoid immediately downloading the url.
+.IP
+.IP "\fB\-\-relaxed\fP"
+Avoid storing the size of the url's content, and accept whatever
+content is there at a future point. (Implies \fB\-\-fast\fP.)
+.IP
+.IP "\fB\-\-raw\fP"
+Prevent special handling of urls by quvi, bittorrent, and other
+special remotes. This will for example, make addurl
+download the .torrent file and not the contents it points to.
+.IP
+.IP "\fB\-\-file=name\fP"
+Use with a filename that does not yet exist to add a new file
+with the specified name and the content downloaded from the url.
+.IP
+If the file already exists, addurl will record that it can be downloaded
+from the specified url(s).
+.IP
+.IP "\fB\-\-pathdepth=N\fP"
+This causes a shorter filename to be used. For example,
+\fB\-\-pathdepth=1\fP will use "dir/subdir/bigfile",
+while \fB\-\-pathdepth=3\fP will use "bigfile". 
+.IP
+It can also be negative; \fB\-\-pathdepth=\-2\fP will use the last
+two parts of the url.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

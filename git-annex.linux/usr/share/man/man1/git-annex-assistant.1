@@ -1,0 +1,40 @@
+.TH git-annex-assistant 1
+.SH NAME
+git\-annex assistant \- automatically sync changes
+.PP
+.SH SYNOPSIS
+git annex assistant
+.PP
+.SH DESCRIPTION
+Watches for changes to files in the current directory and its subdirectories,
+and automatically syncs them to other remotes.
+.PP
+For more details about the git\-annex assistant, see
+<https://git\-annex.branchable.com/assistant/>
+.PP
+.SH OPTIONS
+.IP "\fB\-\-autostart\fP"
+.IP
+Automatically starts the assistant running in each repository listed
+in the file \fB~/.config/git\-annex/autostart\fP
+.IP
+This is typically started at boot, or when you log in.
+.IP
+.IP "\fB\-\-startdelay=N\fP"
+Wait N seconds before running the startup scan. This process can
+be expensive and you may not want to run it immediately upon login.
+.IP
+.IP "\fB\-\-foreground\fP"
+Avoid forking to the background.
+.IP
+.IP "\fB\-\-stop\fP"
+Stop a running daemon.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

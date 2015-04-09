@@ -1,0 +1,33 @@
+.TH git-annex-vadd 1
+.SH NAME
+git\-annex vadd \- add subdirs to current view
+.PP
+.SH SYNOPSIS
+git annex vadd \fB[field=glob ...] [field=value ...] [tag ...]\fP
+.PP
+.SH DESCRIPTION
+Changes the current view, adding an additional level of directories
+to categorize the files.
+.PP
+For example, when the view is by author/tag, \fBvadd year=*\fP will
+change it to year/author/tag.
+.PP
+So will \fBvadd year=2014 year=2013\fP, but limiting the years in view
+to only those two.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+git\-annex\-view(1)
+.PP
+git\-annex\-vpop(1)
+.PP
+git\-annex\-vfilter(1)
+.PP
+git\-annex\-vcycle(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

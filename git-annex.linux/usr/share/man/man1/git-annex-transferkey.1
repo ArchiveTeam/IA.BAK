@@ -1,0 +1,31 @@
+.TH git-annex-transferkey 1
+.SH NAME
+git\-annex transferkey \- transfers a key from or to a remote
+.PP
+.SH SYNOPSIS
+git annex transferkey \fBkey [\-\-from=remote|\-\-to=remote]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command is used to request a single key be
+transferred.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-from=remote\fP"
+.IP
+Download the content of the key from the remote.
+.IP
+.IP "\fB\-\-to=remote\fP"
+Upload the content of the key to the remote.
+.IP
+.IP "\fB\-\-file=name\fP"
+Provides a hint about the name of the file associated with the key.
+(This name is only used in progress displays.)
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

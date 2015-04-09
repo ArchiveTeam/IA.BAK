@@ -1,0 +1,48 @@
+.TH git-annex-view 1
+.SH NAME
+git\-annex view \- enter a view branch
+.PP
+.SH SYNOPSIS
+git annex view \fB[tag ...] [field=value ...] [field=glob ...] [!tag ...] [field!=value ...]\fP
+.PP
+.SH DESCRIPTION
+Uses metadata to build a view branch of the files in the current branch,
+and checks out the view branch. Only files in the current branch whose
+metadata matches all the specified field values and tags will be
+shown in the view.
+.PP
+Multiple values for a metadata field can be specified, either by using
+a glob (\fBfield="*"\fP) or by listing each wanted value. The resulting view
+will put files in subdirectories according to the value of their fields.
+.PP
+Once within such a view, you can make additional directories, and
+copy or move files into them. When you commit, the metadata will
+be updated to correspond to your changes.
+.PP
+There are fields corresponding to the path to the file. So a file
+"foo/bar/baz/file" has fields "/=foo", "foo/=bar", and "foo/bar/=baz".
+These location fields can be used the same as other metadata to construct
+the view.
+.PP
+For example, \fB/=podcasts\fP will only include files from the podcasts
+directory in the view, while \fBpodcasts/=*\fP will preserve the
+subdirectories of the podcasts directory in the view.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+git\-annex\-metadata(1)
+.PP
+git\-annex\-vpop(1)
+.PP
+git\-annex\-vfilter(1)
+.PP
+git\-annex\-vadd(1)
+.PP
+git\-annex\-vcycle(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

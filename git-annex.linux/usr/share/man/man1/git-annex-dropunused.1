@@ -1,0 +1,34 @@
+.TH git-annex-dropunused 1
+.SH NAME
+git\-annex dropunused \- drop unused file content
+.PP
+.SH SYNOPSIS
+git annex dropunused \fB[number|range ...]\fP
+.PP
+.SH DESCRIPTION
+Drops the data corresponding to the numbers, as listed by the last
+git annex unused
+.PP
+You can also specify ranges of numbers, such as "1\-1000".
+Or, specify "all" to drop all unused data.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-from=remote\fP"
+.IP
+Rather than dropping the unused files from the local repository,
+drop them from the remote repository.
+.IP
+.IP "\fB\-\-force\fP"
+Use this option with care! It bypasses safety checks, and forces
+git\-annex to delete the content of the specified files, even from
+the last repository that is storing their content. Data loss can
+result from using this option.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

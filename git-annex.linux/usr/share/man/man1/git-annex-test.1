@@ -1,0 +1,28 @@
+.TH git-annex-test 1
+.SH NAME
+git\-annex test \- run built\-in test suite
+.PP
+.SH SYNOPSIS
+git annex test
+.PP
+.SH DESCRIPTION
+This runs git\-annex's built\-in test suite.
+.PP
+The test suite runs in the \fB.t\fP subdirectory of the current directory
+(it refuses to run if \fB.t\fP already exists).
+.PP
+It can be useful to run the test suite on different filesystems,
+or to verify your local installation of git\-annex.
+.PP
+.SH OPTIONS
+There are several options, provided by Haskell's tasty test
+framework. Pass \-\-help for details.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

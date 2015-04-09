@@ -1,0 +1,57 @@
+.TH git-annex-sync 1
+.SH NAME
+git\-annex sync \- synchronize local repository with remotes
+.PP
+.SH SYNOPSIS
+git annex sync \fB[remote ...]\fP
+.PP
+.SH DESCRIPTION
+Use this command when you want to synchronize the local repository with
+one or more of its remotes. You can specify the remotes (or remote
+groups) to sync with by name; the default if none are specified is to
+sync with all remotes.
+.PP
+The sync process involves first committing any local changes to files
+that have previously been added to the repository,
+then fetching and merging the \fBsynced/master\fP and the \fBgit\-annex\fP branch
+from the remote repositories, and finally pushing the changes back to
+those branches on the remote repositories. You can use standard git
+commands to do each of those steps by hand, or if you don't want to
+worry about the details, you can use sync.
+.PP
+Merge conflicts are automatically handled by sync. When two conflicting
+versions of a file have been committed, both will be added to the tree,
+under different filenames. For example, file "foo" would be replaced
+with "foo.somekey" and "foo.otherkey".
+.PP
+Note that syncing with a remote will not update the remote's working
+tree with changes made to the local repository. However, those changes
+are pushed to the remote, so they can be merged into its working tree
+by running "git annex sync" on the remote.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Only sync with the remotes with the lowest annex\-cost value configured.
+.IP
+.IP "\fB\-\-content\fP"
+Normally, syncing does not transfer the contents of annexed files.
+This option causes the file contents to also be uploaded and downloaded
+as necessary.  
+.IP
+By default, this tries to get each annexed file that the local repository 
+does not yet have, and then copies each file to every remote that it is
+syncing with. This behavior can be overridden by configuring the preferred
+content of a repository. See [git\-annex\-preferred\-content](1)
+.IP
+.IP "\fB\-\-message=msg\fP"
+Use this option to specify a commit message.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

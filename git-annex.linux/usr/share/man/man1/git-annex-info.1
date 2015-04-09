@@ -1,0 +1,44 @@
+.TH git-annex-info 1
+.SH NAME
+git\-annex info \- shows information about the specified item or the repository as a whole
+.PP
+.SH SYNOPSIS
+git annex info \fB[directory|file|remote|uuid ...]\fP
+.PP
+.SH DESCRIPTION
+Displays statistics and other information for the specified item,
+which can be a directory, or a file, or a remote, or the uuid of a
+repository.
+.PP
+When no item is specified, displays statistics and information
+for the repository as a whole.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Only show the data that can be gathered quickly.
+.IP
+.IP "\fB\-\-json\fP"
+Enable JSON output. This is intended to be parsed by programs that use
+git\-annex. Each line of output is a JSON object.
+.IP
+.IP "file matching options"
+When a directory is specified, the git\-annex\-matching\-options(1)
+can be used to select the files in the directory that are included
+in the statistics.
+.IP
+.SH EXAMPLES
+Suppose you want to run "git annex get .", but
+would first like to see how much disk space that will use.
+Then run:
+.PP
+ git annex info \-\-fast . \-\-not \-\-in here
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

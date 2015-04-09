@@ -1,0 +1,25 @@
+.TH git-annex-reinit 1
+.SH NAME
+git\-annex reinit \- initialize repository, reusing old UUID
+.PP
+.SH SYNOPSIS
+git annex reinit \fBuuid|description\fP
+.PP
+.SH DESCRIPTION
+Normally, initializing a repository generates a new, unique identifier
+(UUID) for that repository. Occasionally it may be useful to reuse a
+UUID \-\- for example, if a repository got deleted, and you're
+setting it back up.
+.PP
+Use this with caution; it can be confusing to have two existing
+repositories with the same UUID. Also, you will probably want to run
+a fsck.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

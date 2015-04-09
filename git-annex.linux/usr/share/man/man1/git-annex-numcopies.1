@@ -1,0 +1,28 @@
+.TH git-annex-numcopies 1
+.SH NAME
+git\-annex numcopies \- configure desired number of copies
+.PP
+.SH SYNOPSIS
+git annex numcopies \fBN\fP
+.PP
+.SH DESCRIPTION
+Tells git\-annex how many copies it should preserve of files, over all
+repositories. The default is 1.
+.PP
+Run without a number to get the current value.
+.PP
+When git\-annex is asked to drop a file, it first verifies that the
+required number of copies can be satisfied among all the other
+repositories that have a copy of the file.
+.PP
+This can be overridden on a per\-file basis by the annex.numcopies setting
+in .gitattributes files.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

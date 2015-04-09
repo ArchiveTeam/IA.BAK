@@ -1,0 +1,28 @@
+.TH git-annex-fix 1
+.SH NAME
+git\-annex fix \- fix up symlinks to point to annexed content
+.PP
+.SH SYNOPSIS
+git annex fix \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Fixes up symlinks that have become broken to again point to annexed
+content.
+.PP
+This is useful to run if you have been moving the symlinks around,
+but is done automatically when committing a change with git too.
+.PP
+.SH OPTIONS
+.IP "file matching options"
+.IP
+The git\-annex\-matching\-options(1)
+can be used to specify files to fix.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

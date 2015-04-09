@@ -1,0 +1,40 @@
+.TH git-annex-add 1
+.SH NAME
+git\-annex add \- adds files to the git annex
+.PP
+.SH SYNOPSIS
+git annex add \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Adds files in the path to the annex. If no path is specified, adds
+files from the current directory and below.
+.PP
+Normally, files that are already checked into git, or that git has been
+configured to ignore will be silently skipped.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-include\-dotfiles\fP"
+.IP
+Dotfiles are skipped unless explicitly listed, or unless this option is
+used.
+.IP
+.IP "\fB\-\-force\fP"
+Add gitignored files.
+.IP
+.IP "\fB\-\-backend\fP"
+Specifies which key\-value backend to use.
+.IP
+.IP "file matching options"
+Many of the git\-annex\-matching\-options(1)
+can be used to specify files to add.
+.IP
+For example: \fB\-\-largerthan=1GB\fP
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+
