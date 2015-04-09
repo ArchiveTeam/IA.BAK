@@ -20,6 +20,7 @@
     <i>Virtual Drive is currently: SIZE Terabytes</i><p>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
     Included collections: COLLECTIONS
+    <img src="PROGRESS_GRAPHURL" width="900" height="500"/>
     <p>
     <p>
     <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>

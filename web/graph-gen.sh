@@ -72,18 +72,20 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	   COLLECTIONS="$COLLECTIONS <a href=\"https://archive.org/collection/$c\">$c</a>"
    done
 
-   if [ "$SHARD" = ALL ]; then  
+   if [ "$SHARD" = ALL ]; then
 	SHARDSTATMATCH='*'
+	PROGRESS_GRAPHURL="http://iabak.archiveteam.org:8080/render/?width=900&height=500&_salt=1428621391.124&target=legendValue(alias(color(scale(divideSeries(diffSeries(sumSeries(keepLastValue(iabak.shardstats.filecount.*))%2CsumSeries(keepLastValue(iabak.shardstats.numcopies.0.*)%2CkeepLastValue(iabak.shardstats.numcopies.1.*)%2CkeepLastValue(iabak.shardstats.numcopies.2.*)))%2CsumSeries(keepLastValue(iabak.shardstats.filecount.*)))%2C100)%2C'%2300dd00')%2C'>%3D3 backups')%2C'last')&target=legendValue(alias(color(scale(divideSeries(sumSeries(keepLastValue(iabak.shardstats.numcopies.2.*))%2CsumSeries(keepLastValue(iabak.shardstats.filecount.*)))%2C100)%2C'%2393dd93')%2C'2 backups')%2C'last')&target=legendValue(alias(color(scale(divideSeries(sumSeries(keepLastValue(iabak.shardstats.numcopies.1.*))%2CsumSeries(keepLastValue(iabak.shardstats.filecount.*)))%2C100)%2C'%23e89393')%2C'1 backup')%2C'last')&target=legendValue(alias(color(scale(divideSeries(sumSeries(keepLastValue(iabak.shardstats.numcopies.0.*))%2CsumSeries(keepLastValue(iabak.shardstats.filecount.*)))%2C100)%2C'red')%2C'IA only')%2C'last')&areaMode=stacked&from=-1weeks&vtitle=%25&yMax=100&yMin=0&title=Overall progress%2C %25"
    else
 	SHARDSTATMATCH="shard$SHARDNUM"
+	PROGRESS_GRAPHURL="http://iabak.archiveteam.org:8080/render/?width=900&height=500&_salt=1428622253.322&areaMode=stacked&from=-1weeks&vtitle=%25&yMax=100&yMin=0&title=SHARD$SHARDNUM%20progress%2C%20%25&target=legendValue%28alias%28color%28scale%28divideSeries%28diffSeries%28keepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%2CsumSeries%28keepLastValue%28iabak.shardstats.numcopies.0.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.numcopies.1.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.numcopies.2.shard$SHARDNUM%29%29%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%2300dd00%22%29%2C%22%3E%3D3%20backups%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.2.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%2393dd93%22%29%2C%222%20backups%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.1.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%23e89393%22%29%2C%221%20backup%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.0.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22red%22%29%2C%22IA%20only%22%29%2C%22last%22%29"
    fi
    CONNECTIONSGRAPHURL="http://iabak.archiveteam.org:8080/render/?width=497&height=400&_salt=1428538747.86&tz=UTC&target=keepLastValue%28iabak.shardstats.connections.${SHARDSTATMATCH}%29&from=-2weeks"
    
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
 
 fi
 
 chmod 644 "$HTMLTMP"
-mv -f "$HTMLTMP" "html/$SHARD.html"
+mv -f "$HTMLTMP" "$SHARD.html"
 
 done
