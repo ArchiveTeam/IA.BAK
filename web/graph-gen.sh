@@ -12,12 +12,12 @@ rm -f stats.tar.gz
 wget -q  http://iabak.archiveteam.org/stats.tar.gz
 tar xf stats.tar.gz
 
-for SHARD in $(seq 0 $NUMSHARDS); do
+for SHARDNUM in $(seq 0 $NUMSHARDS); do
 
-if [ "$SHARD" = 0 ]; then
+if [ "$SHARDNUM" = 0 ]; then
 	SHARD=ALL
 else
-	SHARD="SHARD$SHARD"
+	SHARD="SHARD$SHARDNUM"
 fi
 
 HTMLTMP="$(tempfile)"
@@ -72,7 +72,14 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	   COLLECTIONS="$COLLECTIONS <a href=\"https://archive.org/collection/$c\">$c</a>"
    done
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
+   if [ "$SHARD" = ALL ]; then  
+	SHARDSTATMATCH='*'
+   else
+	SHARDSTATMATCH="shard$SHARDNUM"
+   fi
+   CONNECTIONSGRAPHURL="http://iabak.archiveteam.org:8080/render/?width=497&height=400&_salt=1428538747.86&tz=UTC&target=keepLastValue%28iabak.shardstats.connections.${SHARDSTATMATCH}%29&from=-2weeks"
+   
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | sed "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
 
 fi
 
