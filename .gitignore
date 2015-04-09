@@ -1,2 +1,7 @@
 id_rsa
 id_rsa.pub
+.iabak-install-git-annex
+/shard*
+git-annex.linux/
+*~
+\#*\#
