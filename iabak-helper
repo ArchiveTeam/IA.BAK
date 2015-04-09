@@ -10,6 +10,12 @@ echo
 PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
+if FLOCK=$(which flock); then
+	FLOCK="${FLOCK} -x -n"
+else
+	FLOCK=$(readlink -f ./flock.pl)
+fi
+
 download () {
 	git annex sync
 	periodicsync &
@@ -85,7 +91,7 @@ maint () {
 }
 
 periodicsync () {
-	flock -x -n .git/annex/iasyncer.lock ../iabak-hourlysync || true
+	${FLOCK} .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
 setup () {
@@ -108,7 +114,7 @@ setup () {
 }
 
 installgitannex () {
-	flock -x .iabak-install-git-annex ./install-git-annex || true
+	${FLOCK} .iabak-install-git-annex ./install-git-annex || true
 }
 
 handleshard () {
