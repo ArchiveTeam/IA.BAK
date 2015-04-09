@@ -1,0 +1,32 @@
+.TH git-annex-version 1
+.SH NAME
+git\-annex version \- show version info
+.PP
+.SH SYNOPSIS
+git annex version
+.PP
+.SH DESCRIPTION
+Shows the version of git\-annex, as well as repository version information.
+.PP
+git\-annex's version is in the form MAJOR.DATE, where MAJOR is a number
+like 5, which corresponds to the current repository version, and DATE
+is the date of the last release, like 20150320.
+.PP
+Daily builds of git\-annex will append a "\-gREF" to the version, which
+corresponds to the git ref from git\-annex's source repository that was
+built. Therefore, "5.20150320\-gdd35cf3" is a daily build, and
+"5.20150401" is an April 1st release made a bit later.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-raw\fP"
+.IP
+Causes only git\-annex's version to be output, and nothing else.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

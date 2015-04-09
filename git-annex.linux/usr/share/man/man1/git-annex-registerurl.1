@@ -1,0 +1,25 @@
+.TH git-annex-registerurl 1
+.SH NAME
+git\-annex registerurl \- registers an url for a key
+.PP
+.SH SYNOPSIS
+git annex registerurl \fB[key url]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command can be used to register urls where a
+key can be downloaded from.
+.PP
+No verification is performed of the url's contents.
+.PP
+If the key and url are not specified on the command line, they are
+instead read from stdin. Any number of lines can be provided in this
+mode, each containing a key and url, separated by whitespace.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

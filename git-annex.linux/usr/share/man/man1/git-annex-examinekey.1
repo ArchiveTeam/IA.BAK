@@ -1,0 +1,45 @@
+.TH git-annex-examinekey 1
+.SH NAME
+git\-annex examinekey \- prints information from a key
+.PP
+.SH SYNOPSIS
+git annex examinekey \fB[key ...]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command is given a key, and prints information
+that can be determined purely by looking at the key.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-format=value\fP"
+.IP
+Use custom output formatting.
+.IP
+The value is a format string, in which '${var}' is expanded to the
+value of a variable. To right\-justify a variable with whitespace,
+use '${var;width}' ; to left\-justify a variable, use '${var;\-width}';
+to escape unusual characters in a variable, use '${escaped_var}'
+.IP
+These variables are available for use in formats: key, backend,
+bytesize, humansize, keyname, hashdirlower, hashdirmixed, mtime (for
+the mtime field of a WORM key).
+.IP
+Also, '\\n' is a newline, '\\000' is a NULL, etc.
+.IP
+.IP "\fB\-\-json\fP"
+Enable JSON output. This is intended to be parsed by programs that use
+git\-annex. Each line of output is a JSON object.
+.IP
+.SH EXAMPLES
+The location a key's value is stored (in indirect mode)
+can be looked up by running:
+.PP
+ git annex examinekey $KEY \-\-format='.git/annex/objects/${hashdirmixed}${key}/${key}'
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

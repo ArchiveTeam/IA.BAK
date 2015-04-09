@@ -1,0 +1,26 @@
+.TH git-annex-wanted 1
+.SH NAME
+git\-annex wanted \- get or set preferred content expression
+.PP
+.SH SYNOPSIS
+git annex wanted \fBrepository [expression]\fP
+.PP
+.SH DESCRIPTION
+When run with an expression, configures the content that is preferred
+to be held in the archive. See git\-annex\-preferred\-content(1)
+.PP
+For example:
+.PP
+ git annex wanted . "include=*.mp3 or include=*.ogg"
+.PP
+Without an expression, displays the current preferred content setting
+of the repository.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

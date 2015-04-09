@@ -1,0 +1,29 @@
+.TH git-annex-reinject 1
+.SH NAME
+git\-annex reinject \- sets content of annexed file
+.PP
+.SH SYNOPSIS
+git annex reinject \fBsrc dest\fP
+.PP
+.SH DESCRIPTION
+Moves the src file into the annex as the content of the dest file,
+which should be an already annexed file whose content is not present.
+.PP
+This can be useful if you have obtained the content of a file from
+elsewhere and want to put it in the local annex.
+.PP
+Automatically runs fsck on dest to check that the expected content was
+provided.
+.PP
+Example:
+.PP
+ git annex reinject /tmp/foo.iso foo.iso
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

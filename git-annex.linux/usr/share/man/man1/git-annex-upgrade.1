@@ -1,0 +1,29 @@
+.TH git-annex-upgrade 1
+.SH NAME
+git\-annex upgrade \- upgrade repository layout
+.PP
+.SH SYNOPSIS
+git annex upgrade
+.PP
+.SH DESCRIPTION
+Upgrades the repository to current layout.
+.PP
+Each git\-annex repository has an annex.version in its git configuration,
+that indicates the repository version. If git\-annex changes to a new
+layout, you must upgrade the repository before git\-annex can be used in it.
+.PP
+To see version information, run \fBgit annex version\fP. 
+.PP
+Currently, git\-annex supports upgrades all the way back to version 0, which
+was only used by its author. It's expected that git\-annex will always
+support upgrading from all past repository versions \-\- this is necessary to
+allow archives to be taken offline for years and later used.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

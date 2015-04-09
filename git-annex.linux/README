@@ -1,0 +1,20 @@
+You can put this directory into your PATH, or symlink the programs in this
+directory to anyplace already in your PATH, and use git-annex the same
+as if you'd installed it using a package manager.
+
+Or, you can use the runshell script in this directory to start a shell
+that is configured to use git-annex and the other utilities included in
+this bundle, including git, gpg, rsync, ssh, etc.
+
+This should work on any Linux system of the appropriate architecture.
+More or less.
+
+
+How it works: This directory tree contains a lot of libraries and programs
+that git-annex needs. But it's not a chroot. Instead, runshell sets a lot
+of environment variables to cause files from here to be used, and a shim
+around the binaries arranges for them to be run with the libraries in here.
+
+It shouldn't even be dependent on the host system's glibc libraries.
+All that's needed is a kernel that supports the glibc included in this
+bundle.

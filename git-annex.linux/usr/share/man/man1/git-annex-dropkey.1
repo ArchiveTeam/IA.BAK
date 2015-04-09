@@ -1,0 +1,26 @@
+.TH git-annex-dropkey 1
+.SH NAME
+git\-annex dropkey \- drops annexed content for specified keys
+.PP
+.SH SYNOPSIS
+git annex dropkey \fB[key ...]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command drops the annexed data for the specified
+keys from this repository.
+.PP
+This can be used to drop content for arbitrary keys, which do not need
+to have a file in the git repository pointing at them.
+.PP
+.PP
+
+exist; using it can easily result in data loss.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

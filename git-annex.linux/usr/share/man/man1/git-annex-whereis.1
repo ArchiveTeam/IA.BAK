@@ -1,0 +1,38 @@
+.TH git-annex-whereis 1
+.SH NAME
+git\-annex whereis \- lists repositories that have file content
+.PP
+.SH SYNOPSIS
+git annex whereis \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Displays information about where the contents of files are located.
+.PP
+For example:
+.PP
+ # git annex whereis
+ whereis my_cool_big_file (1 copy)
+ 	0c443de8\-e644\-11df\-acbf\-f7cd7ca6210d  \-\- laptop
+ whereis other_file (3 copies)
+ 	0c443de8\-e644\-11df\-acbf\-f7cd7ca6210d  \-\- laptop
+ 	62b39bbe\-4149\-11e0\-af01\-bb89245a1e61  \-\- usb drive [here]
+ 	7570b02e\-15e9\-11e0\-adf0\-9f3f94cb2eaa  \-\- backup drive
+.PP
+.SH OPTIONS
+.IP "\fB\-\-json\fP"
+.IP
+Enable JSON output. This is intended to be parsed by programs that use
+git\-annex. Each line of output is a JSON object.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to act on.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

@@ -1,0 +1,26 @@
+.TH git-annex-transferkeys 1
+.SH NAME
+git\-annex transferkeys \- transfers keys
+.PP
+.SH SYNOPSIS
+git annex transferkeys
+.PP
+.SH DESCRIPTION
+This plumbing\-level command is used by the assistant to transfer data.
+It is a long\-running process, which is fed instructions about the keys
+to transfer using an internal stdio protocol, which is
+intentionally not documented (as it may change at any time).
+.PP
+It's normal to have a transferkeys process running when the assistant is
+running.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+git\-annex\-assistant(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

@@ -1,0 +1,34 @@
+.TH git-annex-unused 1
+.SH NAME
+git\-annex unused \- look for unused file content
+.PP
+.SH SYNOPSIS
+git annex unused
+.PP
+.SH DESCRIPTION
+Checks the annex for data that does not correspond to any files present
+in any tag or branch, and prints a numbered list of the data.
+.PP
+After running this command, you can use the \fB\-\-unused\fP option with many 
+other git\-annex commands to operate on all the unused data that was found.
+.PP
+For example, to move all unused data to origin:
+.PP
+ git annex unused; git annex move \-\-unused \-\-to origin
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Only show unused temp and bad files.
+.IP
+.IP "\fB\-\-from=remote\fP"
+Check for unused data on a remote.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

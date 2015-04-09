@@ -1,0 +1,4 @@
+#!/bin/sh
+GIT_ANNEX_PROGRAMPATH="$0"
+export GIT_ANNEX_PROGRAMPATH
+exec "$GIT_ANNEX_DIR/exe/git-verify-pack" --library-path "$GIT_ANNEX_LD_LIBRARY_PATH" "$GIT_ANNEX_DIR/shimmed/git-verify-pack/git-verify-pack" "$@"

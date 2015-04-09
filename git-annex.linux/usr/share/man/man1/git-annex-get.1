@@ -1,0 +1,49 @@
+.TH git-annex-get 1
+.SH NAME
+git\-annex get \- make content of annexed files available
+.PP
+.SH SYNOPSIS
+git annex get \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Makes the content of annexed files available in this repository. This
+will involve copying them from a remote repository, or downloading them,
+or transferring them from some kind of key\-value store.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-auto\fP"
+.IP
+Rather than getting all files, get only files that don't yet have
+the desired number of copies, or that are preferred content of the
+repository. See git\-annex\-preferred\-content(1)
+.IP
+.IP "\fB\-\-from=remote\fP"
+Normally git\-annex will choose which remotes to get the content
+from. Use this option to specify which remote to use.
+.IP
+.IP "\fB\-\-all\fP"
+Rather than specifying a filename or path to get, this option can be
+used to get all available versions of all files.
+.IP
+This is the default behavior when running git\-annex in a bare repository.
+.IP
+.IP "\fB\-\-unused\fP"
+Operate on files found by last run of git\-annex unused.
+.IP
+.IP "\fB\-\-key=keyname\fP"
+Use this option to get a specified key.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to get.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+git\-annex\-drop(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

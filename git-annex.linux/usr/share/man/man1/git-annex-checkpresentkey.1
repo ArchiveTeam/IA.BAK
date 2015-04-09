@@ -1,0 +1,23 @@
+.TH git-annex-checkpresentkey 1
+.SH NAME
+git\-annex checkpresentkey \- check if key is present in remote
+.PP
+.SH SYNOPSIS
+git annex  \fBkey remote\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command verifies if the specified key's content
+is present in the specified remote.
+.PP
+Exits 0 if the content is verified present, or 1 if it is verified to not
+be present. If there is a problem checking the remote, the special
+exit code 100 is used, and an error message is output to stderr.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

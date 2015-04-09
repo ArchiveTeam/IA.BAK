@@ -1,0 +1,51 @@
+.TH git-annex-repair 1
+.SH NAME
+git\-annex repair \- recover broken git repository
+.PP
+.SH SYNOPSIS
+git annex repair
+.PP
+.SH DESCRIPTION
+This can repair many of the problems with git repositories that \fBgit fsck\fP
+detects, but does not itself fix. It's useful if a repository has become
+badly damaged. One way this can happen is if a repository used by git\-annex
+is on a removable drive that gets unplugged at the wrong time.
+.PP
+This command can actually be used inside git repositories that do not
+use git\-annex at all; when used in a repository using git\-annex, it
+does additional repairs of the git\-annex branch.
+.PP
+It works by deleting any corrupt objects from the git repository, and
+retrieving all missing objects it can from the remotes of the repository.
+.PP
+If that is not sufficient to fully recover the repository, it can also
+reset branches back to commits before the corruption happened, delete
+branches that are no longer available due to the lost data, and remove any
+missing files from the index. It will only do this if run with the
+\fB\-\-force\fP option, since that rewrites history and throws out missing data.
+Note that the \fB\-\-force\fP option never touches tags, even if they are no
+longer usable due to missing data.
+.PP
+After running this command, you will probably want to run \fBgit fsck\fP to
+verify it fixed the repository. Note that fsck may still complain about
+objects referenced by the reflog, or the stash, if they were unable to be
+recovered. This command does not try to clean up either the reflog or the
+stash.
+.PP
+It is also a good idea to run \fBgit annex fsck \-\-fast\fP after this command,
+to make sure that the git\-annex branch reflects reality.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-force\fP"
+.IP
+Enable repair actions that involve deleting data that has been
+lost due to git repository corruption.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

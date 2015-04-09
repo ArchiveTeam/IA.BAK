@@ -1,0 +1,21 @@
+.TH git-annex-lookupkey 1
+.SH NAME
+git\-annex lookupkey \- looks up key used for file
+.PP
+.SH SYNOPSIS
+git annex lookupkey \fB[file ...]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command looks up the key used for a file in the
+index. The key is output to stdout. If there is no key (because
+the file is not present in the index, or is not a git\-annex managed file),
+nothing is output, and it exits nonzero.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

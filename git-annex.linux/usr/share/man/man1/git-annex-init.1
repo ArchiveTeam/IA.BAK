@@ -1,0 +1,24 @@
+.TH git-annex-init 1
+.SH NAME
+git\-annex init \- initialize git\-annex
+.PP
+.SH SYNOPSIS
+git annex init \fB[description]\fP
+.PP
+.SH DESCRIPTION
+Until a repository (or one of its remotes) has been initialized,
+git\-annex will refuse to operate on it, to avoid accidentally
+using it in a repository that was not intended to have an annex.
+.PP
+It's useful, but not mandatory, to initialize each new clone
+of a repository with its own description. If you don't provide one,
+one will be generated using the username, hostname and the path.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

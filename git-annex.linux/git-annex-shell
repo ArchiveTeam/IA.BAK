@@ -1,0 +1,31 @@
+#!/bin/sh
+link="$(readlink -f "$0" 2>/dev/null || readlink "$0")" || true
+if [ -n "$link" ]; then
+	base="$(dirname "$link")"
+else
+	base="$(dirname "$0")"
+fi
+
+if [ ! -d "$base" ]; then
+	echo "** cannot find base directory (I seem to be $0)" >&2
+	exit 1
+fi
+if [ ! -e "$base/runshell" ]; then
+	echo "** cannot find $base/runshell" >&2
+	exit 1
+fi
+
+# Get absolute path to base, to avoid breakage when things change directories.
+orig="$(pwd)"
+cd "$base"
+base="$(pwd)"
+cd "$orig"
+
+# If this is a standalone app, set a variable that git-annex can use to
+# install itself.
+if [ -e "$base/bin/git-annex" ]; then
+	GIT_ANNEX_APP_BASE="$base"
+	export GIT_ANNEX_APP_BASE
+fi
+
+exec "$base/runshell" git-annex-shell "$@"

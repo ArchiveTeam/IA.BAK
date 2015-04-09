@@ -1,0 +1,29 @@
+.TH git-annex-fromkey 1
+.SH NAME
+git\-annex fromkey \- adds a file using a specific key
+.PP
+.SH SYNOPSIS
+git annex fromkey \fB[key file]\fP
+.PP
+.SH DESCRIPTION
+This plumbing\-level command can be used to manually set up a file
+in the git repository to link to a specified key.
+.PP
+If the key and file are not specified on the command line, they are
+instead read from stdin. Any number of lines can be provided in this
+mode, each containing a key and filename, sepearated by whitespace.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-force\fP"
+.IP
+Allow making a file link to a key whose content is not in the local
+repository. The key may not be known to git\-annex at all.  
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

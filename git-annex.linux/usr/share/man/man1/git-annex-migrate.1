@@ -1,0 +1,42 @@
+.TH git-annex-migrate 1
+.SH NAME
+git\-annex migrate \- switch data to different backend
+.PP
+.SH SYNOPSIS
+git annex migrate \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Changes the specified annexed files to use the default key\-value backend
+(or the one specified with \fB\-\-backend\fP). Only files whose content
+is currently available are migrated.
+.PP
+Note that the content is also still available using the old key after
+migration. Use \fBgit annex unused\fP to find and remove the old key.
+.PP
+Normally, nothing will be done to files already using the new backend.
+However, if a backend changes the information it uses to construct a key,
+this can also be used to migrate files to use the new key format.
+.PP
+When you have multiple repositories that each contain a copy of a file,
+it's best to run migrate in all of them.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-backend\fP"
+.IP
+Specify the new key\-value backend to use for migrated data.
+.IP
+.IP "\fB\-\-force\fP"
+Force migration of keys that are already using the new backend.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to migrate.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

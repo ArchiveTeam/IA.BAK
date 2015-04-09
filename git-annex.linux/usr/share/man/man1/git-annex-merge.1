@@ -1,0 +1,24 @@
+.TH git-annex-merge 1
+.SH NAME
+git\-annex merge \- automatically merge changes from remotes
+.PP
+.SH SYNOPSIS
+git annex merge
+.PP
+.SH DESCRIPTION
+This performs the same merging (and merge conflict resolution)
+that is done by the sync command, but without pushing or pulling any
+data.
+.PP
+One way to use this is to put \fBgit annex merge\fP into a repository's
+post\-receive hook. Then any syncs to the repository will update its
+working copy automatically.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

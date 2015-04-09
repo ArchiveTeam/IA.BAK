@@ -1,0 +1,142 @@
+.TH git-annex-matching-options 1
+.SH NAME
+git\-annex\-matching\-options \- specifying files to act on
+.PP
+.SH DESCRIPTION
+Many git\-annex commands support using these options to specify which
+files they act on.
+.PP
+Arbitrarily complicated expressions can be built using these options.
+For example:
+.PP
+ \-\-exclude '*.mp3' \-\-and \-\-not \-( \-\-in=usbdrive \-\-or \-\-in=archive \-)
+.PP
+The above example prevents git\-annex from working on mp3 files whose
+file contents are present at either of two repositories.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-exclude=glob\fP"
+.IP
+Skips files matching the glob pattern. The glob is matched relative to
+the current directory. For example:
+.IP
+ \-\-exclude='*.mp3' \-\-exclude='subdir/*'
+.IP
+Note that this will not match anything when using \-\-all or \-\-unused.
+.IP
+.IP "\fB\-\-include=glob\fP"
+Skips files not matching the glob pattern.  (Same as \fB\-\-not \-\-exclude\fP.)
+For example, to include only mp3 and ogg files:
+.IP
+ \-\-include='*.mp3' \-\-or \-\-include='*.ogg'
+.IP
+Note that this will not skip anything when using \-\-all or \-\-unused.
+.IP
+.IP "\fB\-\-in=repository\fP"
+Matches only files that git\-annex believes have their contents present
+in a repository. Note that it does not check the repository to verify
+that it still has the content.
+.IP
+The repository should be specified using the name of a configured remote,
+or the UUID or description of a repository. For the current repository,
+use \fB\-\-in=here\fP
+.IP
+.IP "\fB\-\-in=repository@{date}\fP"
+Matches files currently in the work tree whose content was present in
+the repository on the given date.
+.IP
+The date is specified in the same syntax documented in
+gitrevisions(7). Note that this uses the reflog, so dates far in the
+past cannot be queried.
+.IP
+For example, you might need to run \fBgit annex drop .\fP to temporarily
+free up disk space. The next day, you can get back the files you dropped
+using \fBgit annex get . \-\-in=here@{yesterday}\fP
+.IP
+.IP "\fB\-\-copies=number\fP"
+Matches only files that git\-annex believes to have the specified number
+of copies, or more. Note that it does not check remotes to verify that
+the copies still exist.
+.IP
+.IP "\fB\-\-copies=trustlevel:number\fP"
+Matches only files that git\-annex believes have the specified number of
+copies, on remotes with the specified trust level. For example,
+\fB\-\-copies=trusted:2\fP
+.IP
+To match any trust level at or higher than a given level,
+use 'trustlevel+'. For example, \fB\-\-copies=semitrusted+:2\fP
+.IP
+.IP "\fB\-\-copies=groupname:number\fP"
+Matches only files that git\-annex believes have the specified number of
+copies, on remotes in the specified group. For example,
+\fB\-\-copies=archive:2\fP
+.IP
+.IP "\fB\-\-lackingcopies=number\fP"
+Matches only files that git\-annex believes need the specified number or 
+more additional copies to be made in order to satisfy their numcopies
+settings.
+.IP
+.IP "\fB\-\-approxlackingcopies=number\fP"
+Like lackingcopies, but does not look at .gitattributes annex.numcopies
+settings. This makes it significantly faster.
+.IP
+.IP "\fB\-\-inbackend=name\fP"
+Matches only files whose content is stored using the specified key\-value
+backend.
+.IP
+.IP "\fB\-\-inallgroup=groupname\fP"
+Matches only files that git\-annex believes are present in all repositories
+in the specified group.
+.IP
+.IP "\fB\-\-smallerthan=size\fP"
+.IP "\fB\-\-largerthan=size\fP"
+Matches only files whose content is smaller than, or larger than the
+specified size.
+.IP
+The size can be specified with any commonly used units, for example,
+"0.5 gb" or "100 KiloBytes"
+.IP
+.IP "\fB\-\-metadata field=glob\fP"
+Matches only files that have a metadata field attached with a value that
+matches the glob. The values of metadata fields are matched case
+insensitively.
+.IP
+.IP "\fB\-\-want\-get\fP"
+Matches files that the preferred content settings for the repository
+make it want to get. Note that this will match even files that are
+already present, unless limited with e.g., \fB\-\-not \-\-in .\fP
+.IP
+Note that this will not match anything when using \-\-all or \-\-unused.
+.IP
+.IP "\fB\-\-want\-drop\fP"
+Matches files that the preferred content settings for the repository
+make it want to drop. Note that this will match even files that have
+already been dropped, unless limited with e.g., \fB\-\-in .\fP
+.IP
+Note that this will not match anything when using \-\-all or \-\-unused.
+.IP
+.IP "\fB\-\-not\fP"
+Inverts the next matching option. For example, to only act on
+files with less than 3 copies, use \fB\-\-not \-\-copies=3\fP
+.IP
+.IP "\fB\-\-and\fP"
+Requires that both the previous and the next matching option matches.
+The default.
+.IP
+.IP "\fB\-\-or\fP"
+Requires that either the previous, or the next matching option matches.
+.IP
+.IP "\fB\-(\fP"
+Opens a group of matching options.
+.IP
+.IP "\fB\-)\fP"
+Closes a group of matching options.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

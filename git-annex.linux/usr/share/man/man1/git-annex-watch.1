@@ -1,0 +1,38 @@
+.TH git-annex-watch 1
+.SH NAME
+git\-annex watch \- watch for changes
+.PP
+.SH SYNOPSIS
+git annex watch
+.PP
+.SH DESCRIPTION
+Watches for changes to files in the current directory and its subdirectories,
+and takes care of automatically adding new files, as well as dealing with
+deleted, copied, and moved files. With this running as a daemon in the
+background, you no longer need to manually run git commands when
+manipulating your files.
+.PP
+By default, all files in the directory will be added to the repository.
+(Including dotfiles.) To block some files from being added, use
+\fB.gitignore\fP files.
+.PP
+By default, all files that are added are added to the annex, the same
+as when you run \fBgit annex add\fP. If you configure annex.largefiles,
+files that it does not match will instead be added with \fBgit add\fP.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-foreground\fP"
+.IP
+Avoid forking to the background.
+.IP
+.IP "\fB\-\-stop\fP"
+Stop a running daemon.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

@@ -1,0 +1,34 @@
+.TH git-annex-testremote 1
+.SH NAME
+git\-annex testremote \- test transfers to/from a remote
+.PP
+.SH SYNOPSIS
+git annex testremote \fBremote\fP
+.PP
+.SH DESCRIPTION
+This tests a remote by generating some random objects and sending them to
+the remote, then redownloading them, removing them from the remote, etc.
+.PP
+It's safe to run in an existing repository (the repository contents are
+not altered), although it may perform expensive data transfers.
+.PP
+Testing a single remote will use the remote's configuration,
+automatically varying the chunk sizes, and with simple shared encryption
+enabled and disabled.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+Perform a smaller set of tests.
+.IP
+.IP "\fB\-\-size=NUnits\fP"
+Tune the base size of the generated objects. The default is 1MiB.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

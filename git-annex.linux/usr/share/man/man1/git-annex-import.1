@@ -1,0 +1,66 @@
+.TH git-annex-import 1
+.SH NAME
+git\-annex import \- move and add files from outside git working copy
+.PP
+.SH SYNOPSIS
+git annex import \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Moves files from somewhere outside the git working copy, and adds them to
+the annex. Individual files to import can be specified.
+If a directory is specified, the entire directory is imported.
+.PP
+ git annex import /media/camera/DCIM/*
+.PP
+When importing files, there's a possibility of importing a duplicate
+of a file that is already known to git\-annex \-\- its content is either
+present in the local repository already, or git\-annex knows of anther
+repository that contains it.
+.PP
+By default, importing a duplicate of a known file will result in
+a new filename being added to the repository, so the duplicate file
+is present in the repository twice. (With all checksumming backends,
+including the default SHA256E, only one copy of the data will be stored.)
+.PP
+Several options can be used to adjust handling of duplicate files.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-duplicate\fP"
+.IP
+Do not delete files from the import location.
+.IP
+This could allow importing the same files repeatedly
+to different locations in a repository. More likely, it could be used to
+import the same files to a number of different branches or separate git
+repositories.
+.IP
+.IP "\fB\-\-deduplicate\fP"
+Only import files that are not duplicates;
+duplicate files will be deleted from the import location.
+.IP
+.IP "\fB\-\-skip\-duplicates\fP"
+Only import files that are not duplicates; and avoid deleting
+duplicate files from the import location.
+.IP
+.IP "\fB\-\-clean\-duplicates\fP"
+Does not import any files, but any files found in the import location
+that are duplicates are deleted.
+.IP
+.IP "file matching options"
+Many of the git\-annex\-matching\-options(1)
+can be used to specify files to import.
+.IP
+ 	git annex import /dir \-\-include='*.png'
+.IP
+.SH CAVEATS
+Note that using \fB\-\-deduplicate\fP or \fB\-\-clean\-duplicates\fP with the WORM
+backend does not look at file content, but filename and mtime.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

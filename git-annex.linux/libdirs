@@ -1,0 +1,8 @@
+/lib/i386-linux-gnu
+/lib
+/usr/lib/i386-linux-gnu
+/usr/lib/i386-linux-gnu/i686/cmov
+/usr/lib
+/usr/lib/i386-linux-gnu/audit
+/usr/lib/i386-linux-gnu/gconv
+/etc/ld.so.conf.d

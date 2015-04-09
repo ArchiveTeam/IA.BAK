@@ -1,0 +1,50 @@
+.TH git-annex-mirror 1
+.SH NAME
+git\-annex mirror \- mirror content of files to/from another repository
+.PP
+.SH SYNOPSIS
+git annex mirror \fB[path ...] [\-\-to=remote|\-\-from=remote]\fP
+.PP
+.SH DESCRIPTION
+This causes a destination repository to mirror a source repository.
+.PP
+Each specified file in the source repository is mirrored to the destination
+repository. If a file's content is present in the source repository, it is
+copied to the destination repository. If a file's content is not present in
+the source repository, it will be dropped from the destination repository
+when the numcopies setting allows.
+.PP
+Note that mirror does not sync the git repository, but only the file
+contents.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-to=remote\fP"
+.IP
+Use the local repository as the source repository, and mirror its contents
+to the remote.
+.IP
+.IP "\fB\-\-from=remote\fP"
+Use the remote as the source repository, and mirror its contents to the local
+repository.
+.IP
+.IP "\fB\-\-all\fP"
+Mirror all objects stored in the git annex, not only objects used by
+currently existing files. 
+.IP
+However, this bypasses checking the .gitattributes annex.numcopies
+setting when dropping files.
+.IP
+This is the default behavior when running git\-annex in a bare repository.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to mirror.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

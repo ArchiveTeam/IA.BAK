@@ -1,0 +1,53 @@
+.TH git-annex-initremote 1
+.SH NAME
+git\-annex initremote \- creates a special (non\-git) remote
+.PP
+.SH SYNOPSIS
+git annex initremote \fBname type=value [param=value ...]\fP
+.PP
+.SH DESCRIPTION
+Creates a new special remote, and adds it to \fB.git/config\fP.
+.PP
+Example Amazon S3 remote:
+.PP
+ git annex initremote mys3 type=S3 encryption=hybrid keyid=me@example.com datacenter=EU
+.PP
+Many different types of special remotes are supported by git\-annex.
+For a list and details, see <https://git\-annex.branchable.com/special_remotes/>
+.PP
+The remote's configuration is specified by the parameters passed
+to this command. Different types of special remotes need different
+configuration values. The command will prompt for parameters as needed.
+.PP
+All special remotes support encryption. You can either specify
+\fBencryption=none\fP to disable encryption, or specify
+\fBencryption=hybrid keyid=$keyid ...\fP to specify a GPG key id (or an email
+address associated with a key).
+.PP
+There are actually three schemes that can be used for management of the
+encryption keys. When using the encryption=hybrid scheme, additional
+GPG keys can be given access to the encrypted special remote easily
+(without re\-encrypting everything). When using encryption=shared,
+a shared key is generated and stored in the git repository, allowing
+anyone who can clone the git repository to access it. Finally, when using
+encryption=pubkey, content in the special remote is directly encrypted
+to the specified GPG keys, and additional ones cannot easily be given
+access.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-fast\fP"
+.IP
+When initializing a remote that uses encryption, a cryptographic key is
+created. This requires sufficient entropy. If initremote seems to hang
+or take a long time while generating the key, you may want to Ctrl\-c it
+and re\-run with \fB\-\-fast\fP, which causes it to use a lower\-quality source of
+randomness. (Ie, /dev/urandom instead of /dev/random)
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

@@ -1,0 +1,44 @@
+.TH git-annex-drop 1
+.SH NAME
+git\-annex drop \- indicate content of files not currently wanted
+.PP
+.SH SYNOPSIS
+git annex drop \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Drops the content of annexed files from this repository, when
+possible.
+.PP
+git\-annex will refuse to drop content if it cannot verify it is
+safe to do so.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-from=remote\fP"
+.IP
+Rather than dropping the content of files in the local repository,
+this option can specifiy a remote from which the files'
+contents should be removed.
+.IP
+.IP "\fB\-\-auto\fP"
+Rather than trying to drop all specified files, drop only files that
+are not preferred content of the repository.
+See git\-annex\-preferred\-content(1)
+.IP
+.IP "\fB\-\-force\fP"
+Use this option with care! It bypasses safety checks, and forces
+git\-annex to delete the content of the specified files, even from
+the last repository that is storing their content. Data loss can
+result from using this option.
+.IP
+.IP "file matching options"
+The git\-annex\-matching\-options(1)
+can be used to specify files to drop.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

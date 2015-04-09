@@ -1,0 +1,28 @@
+.TH git-annex-status 1
+.SH NAME
+git\-annex status \- show the working tree status
+.PP
+.SH SYNOPSIS
+git annex status \fB[path ...]\fP
+.PP
+.SH DESCRIPTION
+Similar to \fBgit status \-\-short\fP, this command displays the status of the files
+in the working tree. Shows files that are not checked into git, files that have
+been deleted, and files that have been modified.
+.PP
+Particularly useful in direct mode.
+.PP
+.SH OPTIONS
+.IP "\fB\-\-json\fP"
+.IP
+Enable JSON output. This is intended to be parsed by programs that use
+git\-annex. Each line of output is a JSON object.
+.IP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+

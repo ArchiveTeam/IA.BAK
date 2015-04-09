@@ -1,0 +1,25 @@
+.TH git-annex-direct 1
+.SH NAME
+git\-annex direct \- switch repository to direct mode
+.PP
+.SH SYNOPSIS
+git annex direct
+.PP
+.SH DESCRIPTION
+Switches a repository to use direct mode, where rather than symlinks to
+files, the files are directly present in the repository.
+.PP
+As part of the switch to direct mode, any changed files will be committed.
+.PP
+Note that git commands that operate on the work tree will refuse to
+run in direct mode repositories. Use \fBgit annex proxy\fP to safely run such
+commands.
+.PP
+.SH SEE ALSO
+git\-annex(1)
+.PP
+.SH AUTHOR
+Joey Hess <id@joeyh.name>
+.PP
+.PP
+
