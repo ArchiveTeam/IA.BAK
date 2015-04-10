@@ -59,7 +59,7 @@ rundownloadfiles () {
 
 fsckme () {
 	set +e
-	flock -x -n .git/annex/fullfsck.lock git annex fsck --incremental-schedule 30d --time-limit 5h
+	${FLOCK} .git/annex/fullfsck.lock git annex fsck --incremental-schedule 30d --time-limit 5h
 	fsckresult=$?
 	set -e
 	if [ "$fsckresult" -eq 101 ]; then
@@ -68,7 +68,7 @@ fsckme () {
 }
 
 fastfsck () {
-	flock -x -n .git/annex/fastfsck.lock git annex fsck --fast --in here --quiet >/dev/null 2>/dev/null || true
+	${FLOCK} .git/annex/fastfsck.lock git annex fsck --fast --in here --quiet >/dev/null 2>/dev/null || true
 	git annex sync
 }
 
