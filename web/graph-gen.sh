@@ -86,6 +86,6 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 fi
 
 chmod 644 "$HTMLTMP"
-mv -f "$HTMLTMP" "$SHARD.html"
+mv -f "$HTMLTMP" "html/$SHARD.html"
 
 done
