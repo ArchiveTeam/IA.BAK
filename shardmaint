@@ -1,0 +1,9 @@
+#!/bin/sh
+# git repo grows in size fast while it's filling up; and compresses very
+# well. Save clients the transfer.
+base=/usr/local/IA.BAK
+cd "$base/pubkeys"
+git pull
+for SHARD in SHARD*; do
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
+done

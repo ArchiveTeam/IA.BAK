@@ -161,9 +161,3 @@ mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
 mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
-
-# git repo grows in size fast while it's filling up; and compresses very
-# well. Save clients the transfer.
-if [ "$SHARD" != ALL ]; then
-	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
-fi
