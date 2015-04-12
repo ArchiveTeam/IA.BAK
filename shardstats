@@ -56,7 +56,7 @@ if [ "$SHARD" != ALL ]; then
 	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard
 
 	TMP="$(tempfile)"
-	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+)/) { print ($1/1024/1024/1024/1024)."\n" }' < "$INFOTMP" > "$TMP"
+	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+)/) { print (int($1/10000000000)/100)."\n" }' < "$INFOTMP" > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
 
