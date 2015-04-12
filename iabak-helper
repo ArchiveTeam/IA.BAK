@@ -68,7 +68,14 @@ fsckme () {
 }
 
 fastfsck () {
-	${FLOCK} .git/annex/fastfsck.lock git annex fsck --fast --in here --quiet >/dev/null 2>/dev/null || true
+	# The point of this is just to report that the repository still
+	# exists, to prevent it from expiring.
+	# Even a fsck --fast --in here is a litte too slow to run
+	# frequently.
+	if [ ! -d .empty ]; then
+		mkdir .empty
+	fi
+	git annex fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
 	git annex sync
 }
 
@@ -164,7 +171,6 @@ if [ -n "$(sharddirs)" ]; then
 	# obvious problems, and report in that we still have the data
 	# we said we have.
 	for d in $(sharddirs); do
-		echo "Doing a fast fsck of $d ..."
 		(cd "$d" && fastfsck)
 	done
 	
