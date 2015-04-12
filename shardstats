@@ -43,20 +43,29 @@ if [ "$SHARD" != ALL ]; then
 	cd "$DIR"
 	mkdir -p ${STATS_DIR}/
 	INFOTMP="$(tempfile)"
-	su "$SHARD" -c -- "git annex info ." > "$INFOTMP"
+	su "$SHARD" -c -- "git annex info . --bytes" > "$INFOTMP"
+
 	TMP="$(tempfile)"
 	grep "numcopies " "$INFOTMP" > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD"
+
+	TMP="$(tempfile)"
+	grep " -- " "$INFOTMP" | perl -pe 's/^\s+//' > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard
+
 	TMP="$(tempfile)"
 	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+) tera/) { print "$1\n" }' < "$INFOTMP" > "$TMP"
-	rm -f "$INFOTMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
+
 	EXPIRETMP="$(tempfile)"
 	su "$SHARD" -c -- "git annex expire --no-act 7d web:never origin:never" > "$EXPIRETMP"
 	chmod 644 "$EXPIRETMP"
 	mv "$EXPIRETMP" "${STATS_DIR}/$SHARD".expire
+	
+	rm -f "$INFOTMP"
 fi
 
 NUMTMP="$(tempfile)"
@@ -73,10 +82,16 @@ else
 	done
 	chmod 644 "$STATTMP"
 	mv "$STATTMP" "${STATS_DIR}/ALL"
+
 	TMP="$(tempfile)"
 	perl -ne '$n+=$_; END { print "$n\n" }' "${STATS_DIR}"/SHARD[0-9]*.size > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.size"
+
+	TMP="$(tempfile)"
+	sort -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
 fi
 
 sendStat "filesize" "$(<${STATS_DIR}/${SHARD}.size)"
