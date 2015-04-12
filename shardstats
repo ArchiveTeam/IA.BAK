@@ -96,6 +96,10 @@ fi
 
 sendStat "filesize" "$(<${STATS_DIR}/${SHARD}.size)"
 
+while read size uuid rest; do
+	sendStat "leaderboard.${uuid}" $(echo $size | sed -e 's/://')
+done < "${STATS_DIR}/$SHARD.leaderboard"
+
 counts=()
 total=0
 filecount=0
