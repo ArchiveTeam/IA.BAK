@@ -15,7 +15,7 @@ sendStat () {
 	value=$2
 	stamp=${3:-$DATE}
 	if [ -z "$stat" -o -z "$value" ]; then
-		echo "missing argument to sendStat"
+		echo "missing argument to sendStat $1 $2"
 		exit
 	fi
 	MSG="iabak.shardstats.${stat}.${shard} ${value} ${stamp}"
