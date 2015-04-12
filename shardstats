@@ -51,7 +51,7 @@ if [ "$SHARD" != ALL ]; then
 	mv "$TMP" "${STATS_DIR}/$SHARD"
 
 	TMP="$(tempfile)"
-	grep " -- " "$INFOTMP" | perl -pe 's/^\s+//' > "$TMP"
+	grep " -- " "$INFOTMP" | grep -v 00000000-0000-0000-0000-000000000001 | perl -pe 's/^\s+//' > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard
 
