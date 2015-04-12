@@ -2,4 +2,8 @@
 set -e
 
 git pull origin || true
-./iabak-helper "$@"
+if nice true >/dev/null 2>/dev/null && ionice -c3 true >/dev/null 2>/dev/null; then
+	nice ionice -c3 ./iabak-helper "$@"
+else
+	./iabak-helper "$@"
+fi
