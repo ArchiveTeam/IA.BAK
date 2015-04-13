@@ -1,4 +1,10 @@
 #!/bin/sh
+# Extracts the collections listed in the file, or those passed at the
+# command line.
 list="$1"
-collections="$(cut -d '	' -f 2 "$list" | perl -pe 's/\n/|/g')"
+if [ -e "$list" ]; then
+	collections="$(cut -d '	' -f 2 "$list" | perl -pe 's/\n/|/g')"
+else
+	collections="$(echo "$list" | perl -pe 's/\n/|/g')"
+fi
 egrep "	($collections)	" md5_collection_url.txt.pick1.sorted.uniq
