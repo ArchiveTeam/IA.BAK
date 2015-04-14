@@ -149,7 +149,7 @@ sendStat "connections" "${count}" "$(date --date "${date}" +%s)"
 mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
 
 TMP="$(tempfile)"
-perl -e 'open(EXP, shift()); open(LEAD, shift()); while (<LEAD>) { my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /; $sz{$uuid}=$size } foreach (<EXP>) { my ($uuid)=m/^expire ([^ ]+) /; my $sz=$sz{$uuid}; $sz=0 if ! defined $sz; print "$sz: $_" }' "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard > | sort -rn | "$TMP"
+perl -e 'open(EXP, shift()); open(LEAD, shift()); while (<LEAD>) { my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /; $sz{$uuid}=$size } foreach (<EXP>) { my ($uuid)=m/^expire ([^ ]+) /; my $sz=$sz{$uuid}; $sz=0 if ! defined $sz; print "$sz: $_" }' "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard | sort -rn > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/$SHARD".expireleaderboard
 
