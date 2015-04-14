@@ -2,7 +2,7 @@
 
 # Quick and dirty graph generator. Should be rewritten at some point.
 
-NUMSHARDS=2
+NUMSHARDS=3
 
 cd /home/closure
 
