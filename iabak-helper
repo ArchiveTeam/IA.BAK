@@ -173,16 +173,16 @@ if [ -n "$(sharddirs)" ]; then
 	for d in $(sharddirs); do
 		(cd "$d" && fastfsck)
 	done
-	
-	# move clients on to next shard. TODO: dehardcode
-	if ! [ -e NOMORE ]; then
-		./checkoutshard shard2
-	fi
 
 	# Now the expensive processing of each shard.
 	for d in $(sharddirs); do
 		( handleshard "$d" )
 	done
+	
+	# move clients on to next shard. TODO: dehardcode
+	if ! [ -e NOMORE ]; then
+		./checkoutshard shard3
+	fi
 else
 	localdir="$(randomactive)"
 	if [ -z "$localdir" ]; then
