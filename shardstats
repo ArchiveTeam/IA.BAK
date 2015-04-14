@@ -35,7 +35,8 @@ if [ "$SHARD" != ALL ]; then
 	# need a non-bare clone to run git-annex info . in
 	if [ ! -d "$DIR" ]; then
 		mkdir -p "$(dirname "$DIR")"
-		(cd "$(dirname "$DIR")" && git clone "/home/$SHARD/$shard.git" && git config user.email stats@example.com && git config user.name stats && git config gc.auto 0)
+		(cd "$(dirname "$DIR")" && git clone "/home/$SHARD/$shard.git")
+		(cd "$DIR" && git config user.email stats@example.com && git config user.name stats && git config gc.auto 0)
 		chown -R "$SHARD:$SHARD" "$DIR"
 	else
 		(cd "$DIR" && su "$SHARD" -c -- "git fetch origin master git-annex" && su "$SHARD" -c -- "git merge origin/master")
