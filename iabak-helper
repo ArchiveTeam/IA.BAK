@@ -175,6 +175,13 @@ randomactive () {
 }
 
 if [ -n "$(sharddirs)" ]; then
+	if [ ! -e iabak-cronjob.log ]; then
+		echo 
+		echo "** Reminder: You should set up a cron job to run iabak-cronjob periodically!"
+		echo "             (See README.md for details)"
+		echo 
+	fi
+
 	installgitannex
 
 	# First do a fast fsck of all shards, in order to detect
@@ -213,8 +220,10 @@ else
 
 	installgitannex
 	./checkoutshard "$localdir"
-	cd "$localdir"
-	setup
-	periodicsync &
-	download
+	(
+		cd "$localdir"
+		setup
+		periodicsync &
+		download
+	)
 fi
