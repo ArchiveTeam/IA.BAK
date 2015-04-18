@@ -25,11 +25,9 @@ download () {
 	echo "(Also, you can safely run more than one of these at a time, to use more bandwidth!)"
 	echo ""
 	if rundownloaddirs; then
-		git annex sync
 		echo
 		echo "Wow! I'm done downloading this shard of the IA!"
 	else
-		git annex sync
 		echo 
 		echo "Download finished, but the backup of this shard is not fully complete."
 		echo "Some files may have failed to download, or all allocated disk space is in use."
@@ -59,7 +57,13 @@ rundownloadfiles () {
 
 fsckme () {
 	set +e
-	${FLOCK} .git/annex/fullfsck.lock git annex fsck --incremental-schedule 30d --time-limit 5h
+	if [ -e ../FSCKTIMELIMIT ]; then
+		FSCKTIMELIMIT="$(cat ../FSCKTIMELIMIT)"
+	fi
+	if [ -z "$FSCKTIMELIMIT" ]; then
+		FSCKTIMELIMIT=5h
+	fi
+	${FLOCK} .git/annex/fullfsck.lock git annex fsck --incremental-schedule 30d --time-limit "$FSCKTIMELIMIT"
 	fsckresult=$?
 	set -e
 	if [ "$fsckresult" -eq 101 ]; then
@@ -83,17 +87,17 @@ maint () {
 	echo "This shard is in maintenance mode; checking it."
 	fsckme
 
-	git annex sync
-	periodicsync &
-	if rundownloadfiles; then
+	if [ ! "$CRONJOB" ]; then
 		git annex sync
-		echo ""
-		echo "This shard remains in good shape!"
-	else
-		git annex sync
-		echo 
-		echo "Could not fully maintain this shard."
-		echo "Some files may have failed to download, or all allocated disk space is in use."
+		periodicsync &
+		if rundownloadfiles; then
+			echo ""
+			echo "This shard remains in good shape!"
+		else
+			echo 
+			echo "Could not fully maintain this shard."
+			echo "Some files may have failed to download, or all allocated disk space is in use."
+		fi
 	fi
 }
 
@@ -138,10 +142,14 @@ handleshard () {
 	cd "$shard"
 	case "$state" in
 		active)
-			download
+			if [ ! "$CRONJOB" ]; then
+				download
+			fi
 		;;
 		reserve)
-			download
+			if [ ! "$CRONJOB" ]; then
+				download
+			fi
 		;;
 		maint)
 			maint
@@ -153,6 +161,8 @@ handleshard () {
 			echo "unknown state $state for shard $shard" >&2
 		;;
 	esac
+
+	git annex sync
 }
 
 # Order with newest checked out shards first.
@@ -180,10 +190,15 @@ if [ -n "$(sharddirs)" ]; then
 	done
 	
 	# move clients on to next shard. TODO: dehardcode
-	if ! [ -e NOMORE ]; then
+	if ! [ -e NOMORE ] && [ ! "$CRONJOB" ]; then
 		./checkoutshard shard3
 	fi
 else
+	if [ "$CRONJOB" ]; then
+		echo "running as cron job, but have no shards, so doing nothing" >&2
+		exit 1
+	fi
+
 	localdir="$(randomactive)"
 	if [ -z "$localdir" ]; then
 		echo "No active shards are currently available. Please try again later!" >&2
