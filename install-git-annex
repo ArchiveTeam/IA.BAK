@@ -2,7 +2,7 @@
 set -e
 
 # should normally be 0
-NEED_PRERELEASE=1
+NEED_PRERELEASE=0
 
 if [ -d git-annex.linux ]; then
 	# if an installed version exists, check the version-number
