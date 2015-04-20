@@ -13,7 +13,7 @@ export PATH
 if FLOCK=$(which flock); then
 	FLOCK="${FLOCK} -x -n"
 else
-	FLOCK=$(readlink -f ./flock.pl)
+	FLOCK="$(pwd)/flock.pl"
 fi
 
 download () {
