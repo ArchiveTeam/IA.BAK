@@ -1,6 +1,7 @@
 id_rsa
 id_rsa.pub
 .iabak-install-git-annex
+.registrationemail
 /shard*
 git-annex.linux/
 *~

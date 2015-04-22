@@ -26,6 +26,34 @@ export PATH
 top="$(pwd)"
 prevshard="$(ls -1 shard* 2>/dev/null | head -n 1)"
 
+getemail () {
+	printf "email address> "
+	read e1
+	printf "re-enter email address to verify> "
+	read e2
+	if [ "$e1" = "$e2" ] && [ ! -z "$e1" ]; then
+		echo "Invalid entry!" >&2
+		exit 1
+	fi
+	echo "$e1" > .registrationemail
+}
+
+if [ ! -e .registrationemail ]; then
+	echo ""
+	echo "To register to participate in the IA.BAK project, please"
+	echo "enter a contact email address."
+	echo ""
+	echo "We will keep this email private, and only use it to contact"
+	echo "you if there is a problem with your portion of the Internet"
+	echo "Archive backup."
+	echo ""
+	echo "It's important we have a way to get in touch with you,"
+	echo "so that this backup can be as reliable as possible!"
+	echo ""
+	getemail
+fi
+registrationemail="$(cat .registrationemail)"
+
 checkssh () {
 	repourl="$1"
 	
@@ -36,16 +64,11 @@ checkssh () {
 	user="$(echo "$repourl" | cut -d : -f 1)"
 	dir="$(echo "$repourl" | cut -d : -f 2)"
 
-	echo "Checking ssh to server at $repourl..."
+	echo "Checking ssh to server at $repourl..."a
 	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
-		echo "Seem you have not signed up for access to $repourl yet. Let's fix that.."
-		echo "** Go on IRC #internetarchive.bak and ask to sign up to $SHARD **"
-		echo "Paste the following ssh public key when asked:"
-		echo "------------------>8----------------------"
-		cat id_rsa.pub
-		echo "------------------>8----------------------"
-		printf "Hit Enter once you're signed up! "
-		read l
+		echo "Seem you're not set up yet for access to $repourl yet. Let's fix that.."
+		runshell wget -O- "http://iabak.archiveteam.org/cgi-bin/register.cgi?shard=$SHARD&email=$registrationemail"
+		sleep 1
 		runshell wget -q -O- http://iabak.archiveteam.org/cgi-bin/pushme.cgi >/dev/null 2>&1 || true
 		checkssh "$repourl"
 	fi
