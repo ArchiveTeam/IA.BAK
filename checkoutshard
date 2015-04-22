@@ -33,6 +33,7 @@ registrationemail="$(cat .registrationemail)"
 
 checkssh () {
 	repourl="$1"
+	uuid="$2"
 	
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
@@ -44,10 +45,10 @@ checkssh () {
 	echo "Checking ssh to server at $repourl..."
 	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
 		echo "Seem you're not set up yet for access to $repourl yet. Let's fix that.."
-		wget -O- "http://iabak.archiveteam.org/cgi-bin/register.cgi?shard=$SHARD&email=$registrationemail&pubkey=$(tr '+' '_' < id_rsa.pub)"
+		wget -O- "http://iabak.archiveteam.org/cgi-bin/register.cgi?shard=$SHARD&uuid=$uuid&email=$registrationemail&pubkey=$(tr '+' '_' < id_rsa.pub)"
 		sleep 1
 		wget -q -O- http://iabak.archiveteam.org/cgi-bin/pushme.cgi >/dev/null 2>&1 || true
-		checkssh "$repourl"
+		checkssh "$repourl" "$uuid"
 	fi
 }
 
@@ -61,8 +62,6 @@ localdir="$1"
 repourl="$2"
 status="$3"
 
-checkssh "$repourl"
-
 # This is slightly weird way to clone, but it allows using our
 # dedicated ssh key without installing it in ~/.ssh/
 git init "$localdir"
@@ -71,6 +70,8 @@ git config user.name "$(whoami)"
 git config user.email "$(whoami)@iabak"
 git config gc.auto 0
 git annex init
+uuid="$(git config annex.uuid)"
+(cd .. && checkssh "$repourl" "$uuid")
 cp -a ../id_rsa .git/annex/id_rsa
 cp -a ../id_rsa.pub .git/annex/id_rsa.pub
 git remote add origin "$repourl"
