@@ -24,7 +24,7 @@ esac
 export PATH
 
 top="$(pwd)"
-prevshard="$(ls -1 shard* 2>/dev/null | head -n 1)"
+prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
 
 if [ ! -e .registrationemail ]; then
 	./prompt-email

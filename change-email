@@ -1,0 +1,17 @@
+#!/bin/sh
+# Change registration email address.
+set -e
+
+./prompt-email
+registrationemail="$(cat .registrationemail)"
+
+for shard in $(echo shard* 2>/dev/null); do
+	echo "Updating $shard"
+	if [ -d "$shard" ]; then
+		SHARD="$(echo "$shard" | tr a-z A-Z)"
+		wget -O- "http://iabak.archiveteam.org/cgi-bin/register.cgi?shard=$SHARD&email=$registrationemail&pubkey=$(tr '+' '_' < id_rsa.pub)"
+	fi
+done
+
+echo ""
+echo "Your email address should be updated now."
