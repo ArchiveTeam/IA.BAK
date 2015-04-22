@@ -21,6 +21,7 @@ if ($sanitized_pubkey eq "" || $sanitized_email eq "") {
 }
 
 chdir("/home/registrar/users/") || oops("chdir: $!");
+system("git pull");
 if (! -d $shard) {
 	mkdir("$shard") || oops("mkdir: $!");
 }
