@@ -1,5 +1,7 @@
 #!/bin/sh
 set -e
-while sleep 1h; do
+
+# OSX has a really stupid sleep command; 1h won't work there.
+while sleep 3600; do
 	git annex sync
 done
