@@ -17,7 +17,7 @@ if ($shard !~ /^SHARD\d+$/) {
 $pubkey=~s/_/+/g; # + is space in CGI..
 my ($sanitized_pubkey)=$pubkey=~/^(ssh-rsa [^\s]+)/;
 my ($sanitized_email)=$email=~/^([^\s]+)/;
-my ($sanitized_uuid)=$uuid=~/^([-A-Za-z0-9])$/;
+my ($sanitized_uuid)=$uuid=~/^([-A-Za-z0-9]+)$/;
 if ($sanitized_pubkey eq "" || $sanitized_email eq "" || $sanitized_uuid eq "") {
 	oops("bad inputs");
 }
