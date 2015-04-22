@@ -4,7 +4,7 @@ use strict;
 use CGI;
 
 my ($shard, $uuid, $email, $pubkey) = @ARGV;
-$pubkey=~s/+/_/g;
+$pubkey=~s/\+/_/g;
 @ARGV=();
 
 my $q=CGI->new;
