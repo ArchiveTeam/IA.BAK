@@ -174,7 +174,7 @@ handleshard () {
 
 # Order with newest checked out shards first.
 sharddirs () {
-	find . -maxdepth 1 -name shard\* -type d -printf '%C@ %P\n' | sort -rn | cut -d ' ' -f 2
+	perl -le 'foreach (@ARGV) { $ctime=((stat($_))[10]); print "$ctime $_" if -d $_ }' shard* | sort -rn | cut -d ' ' -f 2
 }
 
 randomactive () {
