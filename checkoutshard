@@ -17,7 +17,7 @@ PATH=$(pwd)/git-annex.linux:$PATH
 export PATH
 
 top="$(pwd)"
-prevshard="$(find . -maxdepth 1 -name shard\* -type d -printf "%P\n" | head -n 1)"
+prevshard="$(ls -1 shard* 2>/dev/null | head -n 1)"
 
 checkssh () {
 	repourl="$1"
