@@ -69,7 +69,7 @@ upgrade_avail () {
 	cmd="$1"
 	infourl="$2"
 
-	installedVersion="$($cmd version --raw 2>/dev/null | cut -d '-' -f 1)"
+	installedVersion="$($cmd version --raw 2>/dev/null | cut -d '-' -f 1 | cut -d . -f 2)"
 	if [ -z "$installedVersion" ]; then
 		installedVersion=0
 	fi
