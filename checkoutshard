@@ -45,7 +45,7 @@ checkssh () {
 	echo "Checking ssh to server at $repourl..."
 	if ! ssh -i id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no "$user" git-annex-shell -c configlist "$dir"; then
 		echo "Seem you're not set up yet for access to $repourl yet. Let's fix that.."
-		wget -O- "http://iabak.archiveteam.org/cgi-bin/register.cgi?shard=$SHARD&uuid=$uuid&email=$registrationemail&pubkey=$(tr '+' '_' < id_rsa.pub)"
+		wget -O- "$(./register-helper.pl "$SHARD" "$uuid" "$registrationemail" "$(cat id_rsa.pub)")"
 		sleep 1
 		wget -q -O- http://iabak.archiveteam.org/cgi-bin/pushme.cgi >/dev/null 2>&1 || true
 		checkssh "$repourl" "$uuid"
