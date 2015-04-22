@@ -13,7 +13,14 @@ if [ -d "$shard" ]; then
 	exit 0
 fi
 
-PATH=$(pwd)/git-annex.linux:$PATH
+case "$(uname)" in
+	Darwin)
+		PATH=$(pwd)/git-annex.osx:$PATH
+		;;
+	*)
+		PATH=$(pwd)/git-annex.linux:$PATH
+		;;
+esac
 export PATH
 
 top="$(pwd)"
