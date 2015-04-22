@@ -10,6 +10,11 @@ and run the `iabak` script to get started.
 You can stop running it once it's downloaded enough. Just hit ctrl-C at any
 time.
 
+This script has been tested on:
+
+* Linux (any not too minimal distribution)
+* OSX
+
 ## care and feeding of your backup
 
 To be sure that your backup still exists and is still in good shape,
