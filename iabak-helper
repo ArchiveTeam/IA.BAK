@@ -3,6 +3,9 @@ set -e
 
 NUMCOPIES=4
 
+LANG=C
+export LANG
+
 echo "Welcome to iabak version 0.1"
 echo "ALPHA TEST, use with caution"
 echo
