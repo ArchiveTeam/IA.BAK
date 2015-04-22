@@ -13,6 +13,7 @@ my $pubkey = $q->param("pubkey");
 if ($shard !~ /^SHARD\d+$/) {
 	oops("bad SHARD $shard");
 }
+$pubkey=~s/_/+/g; # + is space in CGI..
 my ($sanitized_pubkey)=$pubkey=~/^(ssh-rsa [^\s]+)/;
 my ($sanitized_email)=$email=~/^([^\s]+)/;
 if ($sanitized_pubkey eq "" || $sanitized_email eq "") {
