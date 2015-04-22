@@ -26,33 +26,8 @@ export PATH
 top="$(pwd)"
 prevshard="$(ls -1 shard* 2>/dev/null | head -n 1)"
 
-getemail () {
-	printf "email address> "
-	read e1
-	printf "re-enter email address to verify> "
-	read e2
-	if [ "$e1" = "$e2" ] && [ ! -z "$e1" ]; then
-		echo "Thanks!"
-	else
-		echo "Invalid entry!" >&2
-		exit 1
-	fi
-	echo "$e1" > .registrationemail
-}
-
 if [ ! -e .registrationemail ]; then
-	echo ""
-	echo "To register to participate in the IA.BAK project, please"
-	echo "enter a contact email address."
-	echo ""
-	echo "We will keep this email private, and only use it to contact"
-	echo "you if there is a problem with your portion of the Internet"
-	echo "Archive backup."
-	echo ""
-	echo "It's important we have a way to get in touch with you,"
-	echo "so that this backup can be as reliable as possible!"
-	echo ""
-	getemail
+	./prompt-email
 fi
 registrationemail="$(cat .registrationemail)"
 
