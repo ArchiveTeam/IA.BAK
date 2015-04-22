@@ -26,7 +26,7 @@ if (! -d $shard) {
 	mkdir("$shard") || oops("mkdir: $!");
 }
 open (OUT, ">>$shard/pubkeys") || oops("open: $!");
-print OUT "$sanitized_pubkey $sanitized_email";
+print OUT "$sanitized_pubkey $sanitized_email\n";
 close OUT;
 system("git add $shard/pubkeys; git -c user.email=registrar\@iabak -c user.name=registrar commit -m registration; git push origin master");
 print "** REGISTRATION SUCCEEDED **";
