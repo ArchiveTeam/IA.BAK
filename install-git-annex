@@ -60,6 +60,7 @@ osx_install () {
 			touch git-annex.osx/.prerelease
 		fi
 		rm -f git-annex.dmg
+		rm -rf git-annex.osx.mnt
 		echo "Installed in $(pwd)/git-annex.osx"
 		echo
 	fi
