@@ -8,6 +8,10 @@ getemail () {
 		echo "That does not look like an email address. Try again.." >&2
 		getemail
 	fi
+	if ! echo "$e1" | grep -q '\.'; then
+		echo "That does not look like an fully qualified domain. Try again.." >&2
+		getemail
+	fi
 	if echo "$e1" | grep -q ' '; then
 		echo "Please enter a bare email@example.com address. It cannot contain any spaces." >&2
 		getemail
