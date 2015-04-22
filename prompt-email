@@ -4,13 +4,21 @@ set -e
 getemail () {
 	printf "email address> "
 	read e1
+	if ! echo "$e1" | grep -q '@'; then
+		echo "That does not look like an email address. Try again.." >&2
+		getemail
+	fi
+	if echo "$e1" | grep -q ' '; then
+		echo "Please enter a bare email@example.com address. It cannot contain any spaces." >&2
+		getemail
+	fi
 	printf "re-enter email address to verify> "
 	read e2
 	if [ "$e1" = "$e2" ] && [ ! -z "$e1" ]; then
 		echo "Thanks!"
 	else
-		echo "Invalid entry!" >&2
-		exit 1
+		echo "Emails don't match! Try again.." >&2
+		getemail
 	fi
 	echo "$e1" > .registrationemail
 }
