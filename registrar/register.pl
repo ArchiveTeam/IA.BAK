@@ -3,6 +3,7 @@ use warnings;
 use strict;
 use CGI;
 
+$ENV{REQUEST_METHOD}="GET";
 $ENV{QUERY_STRING}=shift @ARGV;
 
 my $q = CGI->new;
@@ -10,11 +11,11 @@ my $email = $q->param("email");
 my $shard = $q->param("shard");
 my $pubkey = $q->param("pubkey");
 if ($shard !~ /^SHARD\d+$/) {
-	oops("bad SHARD");
+	oops("bad SHARD $shard");
 }
 my ($sanitized_pubkey)=$pubkey=~/^(ssh-rsa [^\s]+)/;
 my ($sanitized_email)=$email=~/^([^\s]+)/;
-if ($sanitized_pubkey == "" || $sanitized_email == "") {
+if ($sanitized_pubkey eq "" || $sanitized_email eq "") {
 	oops("bad inputs");
 }
 
