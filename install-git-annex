@@ -35,7 +35,7 @@ linux_install () {
 
 osx_install () {
 	if [ -d git-annex.osx ]; then
-		if upgrade_avail ./git-annex.linux/git-annex https://downloads.kitenet.net/git-annex/OSX/current/10.10_Yosemite/git-annex.dmg.info; then
+		if upgrade_avail ./git-annex.osx/git-annex https://downloads.kitenet.net/git-annex/OSX/current/10.10_Yosemite/git-annex.dmg.info; then
 			rm -rf git-annex.osx
 		fi
 		if [ "$NEED_PRERELEASE" = 1 ] && ! [ -e git-annex.osx/.prerelease ]; then
