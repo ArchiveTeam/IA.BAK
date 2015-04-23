@@ -150,6 +150,9 @@ zgrep -h "Accepted publickey for $GREPSHARD" /var/log/auth.log.* /var/log/auth.l
 chmod 644 "$CONNS"
 data=$(tail -1 "$CONNS" | sed -e 's/^\s*\([0-9]*\) /\1\t/g' -e 's/:00$/:59:59/g')
 count="$(echo "$data" | cut -f 1)"
+if [ -z "$count" ]; then
+	count=0
+fi
 date="$(echo "$data" | cut -f 2)"
 sendStat "connections" "${count}" "$(date --date "${date}" +%s)"
 mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
