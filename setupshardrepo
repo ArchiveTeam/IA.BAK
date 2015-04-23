@@ -3,9 +3,10 @@
 set -e
 
 SHARD="$1"
-TAR="$2"
-if [ -z "$SHARD" ] || [ -z "$TAR" ]; then
-	echo "Usage: setupshardrepo SHARDn repo.tar.gz" >&2
+BAREREPO="$2"
+GITDIR="/home/$SHARD/$shard.git"
+if [ -z "$SHARD" ] || [ -z "$BAREREPO" ]; then
+	echo "Usage: setupshardrepo SHARDn /path/to/SHARDn.git" >&2
 	exit 1
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
@@ -13,7 +14,7 @@ shard="$(echo "$SHARD" | tr A-Z a-z)"
 useradd "$SHARD"
 mkdir /home/"$SHARD"
 cd /home/"$SHARD"
-tar xf "$TAR"
+mv "$BAREREPO" "$GITDIR"
 cat > /home/"$SHARD"/.gitconfig <<EOF
 [user]
 	email = $SHARD@ia-bak
@@ -22,7 +23,6 @@ EOF
 mkdir /home/"$SHARD"/.ssh
 chown -R "$SHARD:$SHARD" /home/"$SHARD"
 
-GITDIR="/home/$SHARD/$shard.git"
 ln -sf /usr/local/IA.BAK/hooks/update "$GITDIR/hooks/update"
 ln -sf /usr/local/IA.BAK/hooks/post-receive "$GITDIR/hooks/post-receive"
 
