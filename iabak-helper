@@ -115,6 +115,26 @@ periodicsync () {
 	${FLOCK} .git/annex/iasyncer.lock ../iabak-hourlysync || true
 }
 
+outofspace () {
+	reserve="$1"
+	which numfmt >/dev/null 2>&1 && [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]
+}
+
+stillhavespace () {
+	prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
+
+	if [ -n "$prevshard" ]; then
+		reserve="$(cd "$prevshard" && git config annex.diskreserve || true)"
+		if [ -n "$reserve" ] && outofspace "$reserve"; then
+			false
+		else
+			true
+		fi
+	else
+		true
+	fi
+}
+
 setup () {
 	echo ""
 	df -h .
@@ -125,7 +145,7 @@ setup () {
 	printf "keep free> "
 	read reserve
 	if [ -n "$reserve" ]; then
-		if which numfmt && [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]; then
+		if outofspace "$reserve"; then
 			echo "not enough diskspace to reserve"
 			setup
 		else
@@ -180,8 +200,18 @@ sharddirs () {
 	perl -le 'foreach (@ARGV) { $ctime=((stat($_))[10]); print "$ctime $_" if -d $_ }' shard* | sort -rn | cut -d ' ' -f 2
 }
 
-randomactive () {
-	grep " active$" repolist | cut -d ' ' -f 1 | perl -e '@l=<>; print $l[rand @l]'
+randomshard () {
+	wantstate="$1"	
+	grep " $wantstate$" repolist | cut -d ' ' -f 1 | perl -e 'while (<>) { chomp; if (! -d $_) { push @l, $_ } };  print $l[rand @l]'
+}
+
+randomnew () {
+	active="$(randomshard active)"
+	if [ -z "$active" ]; then
+		randomshard reserve
+	else
+		echo "$active"
+	fi
 }
 
 if [ -n "$(sharddirs)" ]; then
@@ -206,9 +236,24 @@ if [ -n "$(sharddirs)" ]; then
 		( handleshard "$d" )
 	done
 	
-	# move clients on to next shard. TODO: dehardcode
+	# Move clients on to next shards.
 	if ! [ -e NOMORE ] && [ ! "$CRONJOB" ]; then
-		./checkoutshard shard3
+		while stillhavespace; do
+			new="$(randomnew)"
+			if ! [ -z "$new" ]; then
+				echo ""
+				echo "Looks like you still have free disk space, so I will continue to fill it up!"
+				echo ""
+				./checkoutshard "$new"
+				( handleshard "$new" )
+			else
+				echo ""
+				echo "Looks like we ran out of shards for you to download before you ran out of disk space. Please try again later!" >&2
+				exit 0
+			fi
+		done
+		echo ""
+		echo "Filled up available disk space, so stopping here!"
 	fi
 else
 	if [ "$CRONJOB" ]; then
@@ -216,9 +261,9 @@ else
 		exit 1
 	fi
 
-	localdir="$(randomactive)"
+	localdir="$(randomnew)"
 	if [ -z "$localdir" ]; then
-		echo "No active shards are currently available. Please try again later!" >&2
+		echo "No new shards are currently available. Please try again later!" >&2
 		exit 1
 	fi
 
