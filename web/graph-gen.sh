@@ -2,8 +2,6 @@
 
 # Quick and dirty graph generator. Should be rewritten at some point.
 
-NUMSHARDS=3
-
 cd /home/closure
 
 CHRONOS=`date`
@@ -12,12 +10,12 @@ rm -f stats.tar.gz
 wget -q  http://iabak.archiveteam.org/stats.tar.gz
 tar xf stats.tar.gz
 
-for SHARDNUM in $(seq 0 $NUMSHARDS); do
-
-if [ "$SHARDNUM" = 0 ]; then
-	SHARD=ALL
+for SHARD in ALL $(cat ALL.shardlist); do
+	
+if [ "$SHARD" = ALL ]; then
+	SHARDNUM=0
 else
-	SHARD="SHARD$SHARDNUM"
+	SHARDNUM="$(echo "$SHARD" | sed 's/^SHARD//')"
 fi
 
 HTMLTMP="$(tempfile)"

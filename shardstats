@@ -93,6 +93,11 @@ else
 	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
+	
+	TMP="$(tempfile)"
+	find "${STATS_DIR}"/SHARD[0-9]* -printf '%f\n' | grep -v \\. > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/ALL.shardlist"
 fi
 
 sendStat "filesize" "$(<${STATS_DIR}/${SHARD}.size)"
