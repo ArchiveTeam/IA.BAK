@@ -6,8 +6,8 @@ set -e
 registrationemail="$(cat .registrationemail)"
 
 for shard in $(echo shard* 2>/dev/null); do
-	echo "Updating $shard"
 	if [ -d "$shard" ]; then
+		echo "Updating $shard"
 		SHARD="$(echo "$shard" | tr a-z A-Z)"
 		uuid="$(cd $shard && git config annex.uuid)"
 		wget -O- "$(./register-helper.pl "$SHARD" "$uuid" "$registrationemail" "$(cat id_rsa.pub)")"

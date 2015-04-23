@@ -27,7 +27,10 @@ top="$(pwd)"
 prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
 
 if [ ! -e .registrationemail ]; then
-	./prompt-email
+	#./prompt-email
+
+	# we have some older shards w/o emails, collect those
+	./change-email
 fi
 registrationemail="$(cat .registrationemail)"
 
