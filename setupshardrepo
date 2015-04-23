@@ -4,12 +4,12 @@ set -e
 
 SHARD="$1"
 BAREREPO="$2"
-GITDIR="/home/$SHARD/$shard.git"
 if [ -z "$SHARD" ] || [ -z "$BAREREPO" ]; then
 	echo "Usage: setupshardrepo SHARDn /path/to/SHARDn.git" >&2
 	exit 1
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
+GITDIR="/home/$SHARD/$shard.git"
 
 useradd "$SHARD"
 mkdir /home/"$SHARD"
