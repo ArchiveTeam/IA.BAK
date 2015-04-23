@@ -243,6 +243,7 @@ if [ -n "$(sharddirs)" ]; then
 			if ! [ -z "$new" ]; then
 				echo ""
 				echo "Looks like you still have free disk space, so I will continue to fill it up!"
+				echo "(ctrl-c and touch NOMORE to prevent this behavior..)"
 				echo ""
 				./checkoutshard "$new"
 				( handleshard "$new" )
