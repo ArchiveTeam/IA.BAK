@@ -36,6 +36,7 @@ my $msg="registration of $name on $shard";
 system("git", "add", "$shard/pubkeys");
 system("git", "-c", "user.email=registrar\@iabak", "-c", "user.name=registrar", "commit", "-m", "$msg");
 system("git", "push", "origin", "master");
+system(q{echo "$(git log --pretty=oneline -n2 | tac | cut -d ' '  -f 1 | tr '\n' ' ') refs/heads/master" | GIT_DIR=.git kgb-client --conf /etc/kgb-bot/kgb-client.conf --repository git --repo-id=iabak --password=iabak"});
 print "** REGISTRATION SUCCEEDED **";
 exit 0;
 
