@@ -26,4 +26,19 @@ chown -R "$SHARD:$SHARD" /home/"$SHARD"
 ln -sf /usr/local/IA.BAK/hooks/update "$GITDIR/hooks/update"
 ln -sf /usr/local/IA.BAK/hooks/post-receive "$GITDIR/hooks/post-receive"
 
+(
+
+set -e
+cd "/usr/local/IA.BAK/pubkeys"
+git pull
+if [ ! -e "$SHARD/pubkeys" ]; then	
+	mkdir "$SHARD"
+	touch "$SHARD/pubkeys"
+	git add "$SHARD/pubkeys"
+	git -c user.email=registrar@iabak -c user.name=registrar commit -m 'new shard pubkeys'
+	git push
+fi
+
+)
+
 /usr/local/IA.BAK/update-authorized_keys "$SHARD"
