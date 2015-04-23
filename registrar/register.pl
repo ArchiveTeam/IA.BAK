@@ -30,7 +30,12 @@ if (! -d $shard) {
 open (OUT, ">>$shard/pubkeys") || oops("open: $!");
 print OUT "$sanitized_pubkey $sanitized_email $sanitized_uuid\n";
 close OUT;
-system("git add $shard/pubkeys; git -c user.email=registrar\@iabak -c user.name=registrar commit -m registration; git push origin master");
+
+my ($name)=$email=~/(.*)@/;
+my $msg="registration of $name on $shard";
+system("git", "add", "$shard/pubkeys");
+system("git", "-c", "user.email=registrar\@iabak", "-c", "user.name=registrar", "commit", "-m", "$msg");
+system("git", "push", "origin", "master");
 print "** REGISTRATION SUCCEEDED **";
 exit 0;
 
