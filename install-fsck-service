@@ -1,0 +1,57 @@
+#!/bin/sh
+set -e
+
+PWD=$(pwd)
+
+install_systemd () {
+	local dir=~/.config/systemd/user
+	if SYSTEMCTL=$(which systemctl); then
+		if SYSTEMD_PATH=$(which systemd-path); then
+			dir=$("${SYSTEMD_PATH}" user-configuration)/systemd/user
+		fi
+		mkdir -p "${dir}"
+		file="${dir}/iabak-cronjob"
+		if [ ! -f "${file}.service" -o ! -f "${file}.timer" ]; then
+			cat <<-EOF >"${file}.service"
+				[Service]
+				Type=simple
+				WorkingDirectory=${PWD}
+				ExecStart=${PWD}/iabak-cronjob
+				EOF
+			cat <<-EOF >"${file}.timer"
+				[Timer]
+				OnCalendar=*-*-* 02:02:02
+				Persistent=true
+				[Install]
+				WantedBy=default.target
+				EOF
+			"${SYSTEMCTL}" --user daemon-reload
+			"${SYSTEMCTL}" --user enable iabak-cronjob.timer
+			echo "Systemd service iabak-cronjob installed and enabled."
+		else
+			echo "You've already got the iabak-cronjob service installed; I didn't need to do anything. Thanks!"
+		fi
+	else
+		echo "Your system doesn't use systemd; falling back to an old-school cron job."
+		return 1
+	fi
+}
+
+install_cron () {
+	if CRONTAB=$(which crontab); then
+		if ! "${CRONTAB}" -l 2>&- | grep "${PWD}/iabak-cronjob" -q; then
+			tmp=$(tempfile)
+			crontab -l >${tmp} 2>&- || true
+			echo "02 02 * * * ${PWD}/iabak-cronjob >${PWD}/iabak-cronjob.log 2>&1" >>${tmp}
+			crontab ${tmp}
+			echo "Cron job installed."
+		else
+			echo "You've already got the cron job installed; I didn't need to do anything. Thanks!"
+		fi
+	else
+		echo "Your system doesn't have crontab(1), this is a pretty bad sign."
+		return 1
+	fi
+}
+
+install_systemd || install_cron || echo "Installation failed. Please install cron and rerun install-fsck-service."

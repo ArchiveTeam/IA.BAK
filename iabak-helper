@@ -152,10 +152,17 @@ setup () {
 			git config annex.diskreserve "$reserve"
 		fi
 	fi
+	echo "Now we need to set up a service to regularly double-check the content of"
+	echo "your backup. This protects the backup against bit-rot."
+	./install-fsck-service
 }
 
 installgitannex () {
 	${FLOCK} .iabak-install-git-annex ./install-git-annex || true
+}
+
+installfsckservice () {
+  ${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
 }
 
 handleshard () {
