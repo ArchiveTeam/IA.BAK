@@ -1,9 +1,18 @@
 #!/bin/sh
-# git repo grows in size fast while it's filling up; and compresses very
-# well. Save clients the transfer.
+
 base=/usr/local/IA.BAK
 cd "$base/pubkeys"
 git pull
+
 for SHARD in SHARD*; do
+	# git repo grows in size fast while it's filling up; and compresses very
+	# well. Save clients the transfer.
 	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
+
+	# Expire shards that have not checked in recently enough.
+	# If an expired shard checks back in, this will de-expire it too.
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex expire --no-act 30d web:never origin:never'
+	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex sync'
 done
+
+
