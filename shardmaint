@@ -7,7 +7,7 @@ for shard in $(grep ' maint$' repolist | cut -d ' ' -f 1); do
 	SHARD="$(echo "$shard" | tr a-z A-Z)"
 	# Expire shards that have not checked in recently enough.
 	# If an expired shard checks back in, this will de-expire it too.
-	(cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex expire --no-act 30d web:never origin:never')
+	(cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex expire 30d web:never')
 done
 
 for shard in $(cut -d ' ' -f 1 repolist); do
