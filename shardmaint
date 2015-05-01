@@ -7,12 +7,12 @@ for shard in $(grep ' maint$' repolist | cut -d ' ' -f 1); do
 	SHARD="$(echo "$shard" | tr a-z A-Z)"
 	# Expire shards that have not checked in recently enough.
 	# If an expired shard checks back in, this will de-expire it too.
-	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex expire --no-act 30d web:never origin:never'
+	(cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git annex expire --no-act 30d web:never origin:never')
 done
 
 for shard in $(cut -d ' ' -f 1 repolist); do
 	SHARD="$(echo "$shard" | tr a-z A-Z)"
 	# git repo grows in size fast while it's filling up; and compresses very
 	# well. Save clients the transfer.
-	cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all'
+	(cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all')
 done
