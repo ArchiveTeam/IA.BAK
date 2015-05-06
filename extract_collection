@@ -5,6 +5,6 @@ list="$1"
 if [ -e "$list" ]; then
 	collections="$(cut -d '	' -f 2 "$list" | perl -pe 's/\n/|/g')"
 else
-	collections="$(echo "$list" | perl -pe 's/\n/|/g')"
+	collections="$(echo "$list" | perl -pe 's/\s+/|/g')"
 fi
 egrep "	($collections)	" md5_collection_url.txt.pick1.sorted.uniq
