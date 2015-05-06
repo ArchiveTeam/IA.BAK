@@ -17,7 +17,7 @@ git init "SHARD$num"
 cd "SHARD$num"
 git annex init
 ../importlist ../"SHARD$num.list"
-git commit -a -m "creating SHARD$num"
+git commit --quiet -a -m "creating SHARD$num"
 git annex dead .
 git gc --aggressive
 git annex info .
