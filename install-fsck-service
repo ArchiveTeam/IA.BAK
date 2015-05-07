@@ -20,7 +20,8 @@ install_systemd () {
 				EOF
 			cat <<-EOF >"${file}.timer"
 				[Timer]
-				OnCalendar=*-*-* 02:02:02
+				OnCalendar=*-*-* 00:00:00
+				AccuracySec=6h
 				Persistent=true
 				[Install]
 				WantedBy=default.target
