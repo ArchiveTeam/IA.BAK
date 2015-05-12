@@ -39,7 +39,7 @@ iabak is run.
 
 Running `iabak` will check out one shard of the IA at a time. Once it
 finishes the current shard, if you have more disk space available, it will
-find an check out another shard.
+find and check out another shard.
 
 To manually check out a particular shard, you can run the
 `checkoutshard` script, passing it the name of a shard, such as "shard3".
@@ -64,9 +64,9 @@ to them to tune its behavior.
 FSCKTIMELIMIT
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
-	it will spend up to 5 hours per shard per run of iabak
-	(iabak-cronjob does not perform these expensive fscks).
+	it will spend up to 5 hours per shard per run of iabak.
 	Feel free to set this to a smaller time limit like "1h" or "30m".
+	(Note that iabak-cronjob does not perform these expensive fscks.)
 
 	The goal is to verify the checksum of each file
 	in your backup once per month. If it's interrupted by this time
