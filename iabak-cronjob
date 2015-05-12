@@ -4,4 +4,4 @@ export CRONJOB
 
 base="$(dirname $0)"
 cd "$base"
-./iabak "$@" > "./iabak-cronjob.log" 2>&1
+./iabak "$@"
