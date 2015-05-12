@@ -21,7 +21,8 @@ To be sure that your backup still exists and is still in good shape,
 you shoud periodically run either `iabak` or `iabak-cronjob`. Either
 of these will check back in and verify that your repo exists. The
 difference is that `iabak-cronjob` avoids downloading any more data
-from the IA, and logs to `iabak-cronjob.log`.
+from the IA, avoids verifying the checksums of the files you are storing,
+and logs to `iabak-cronjob.log`.
 
 We recommend setting up a cron job that runs one of these at least once per
 week, so we can notice when repositories go missing or develop problems.
@@ -30,10 +31,17 @@ For example, to run it at 10:30am on Mondays, put this in crontab:
 
 	30 10 * * 1 /path/to/IA.BAK/iabak-cronjob
 
+The install-fsck-service installs a systemd timer or cron job that will run
+iabak-cronjob once a day. This is now set up automatically the first time
+iabak is run.
+
 ## checking out additional shards
 
-Running `iabak` will check out one shard of the IA at a time. If you have
-more disk space, you may want to add additional shards. To do so, run the
+Running `iabak` will check out one shard of the IA at a time. Once it
+finishes the current shard, if you have more disk space available, it will
+find an check out another shard.
+
+To manually check out a particular shard, you can run the
 `checkoutshard` script, passing it the name of a shard, such as "shard3".
 See the `repolist` file for a list of shards and their status.
 
@@ -56,9 +64,9 @@ to them to tune its behavior.
 FSCKTIMELIMIT
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
-	it will spend up to 5 hours per shard per run of
-	iabak/iabak-cronjob. Feel free to set this to a smaller time
-	limit like "1h" or "30m".
+	it will spend up to 5 hours per shard per run of iabak
+	(iabak-cronjob does not perform these expensive fscks).
+	Feel free to set this to a smaller time limit like "1h" or "30m".
 
 	The goal is to verify the checksum of each file
 	in your backup once per month. If it's interrupted by this time
