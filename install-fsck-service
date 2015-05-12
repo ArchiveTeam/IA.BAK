@@ -29,6 +29,7 @@ install_systemd () {
 			"${SYSTEMCTL}" --user daemon-reload
 			"${SYSTEMCTL}" --user enable iabak-cronjob.timer
 			echo "Systemd service iabak-cronjob installed and enabled."
+			echo "*** Note: you may need to run 'loginctl enable-linger $(whoami)' in order for this job to run while you are logged out."
 		else
 			echo "You've already got the iabak-cronjob service installed; I didn't need to do anything. Thanks!"
 		fi
