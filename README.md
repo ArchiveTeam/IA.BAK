@@ -17,6 +17,8 @@ This script has been tested on:
 
 ## care and feeding of your backup
 
+[![Join the chat at https://gitter.im/ArchiveTeam/IA.BAK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ArchiveTeam/IA.BAK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 To be sure that your backup still exists and is still in good shape,
 you shoud periodically run either `iabak` or `iabak-cronjob`. Either
 of these will check back in and verify that your repo exists. The
