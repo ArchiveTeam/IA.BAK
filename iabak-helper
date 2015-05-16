@@ -268,13 +268,7 @@ randomnew () {
 }
 
 if [ -n "$(sharddirs)" ]; then
-	if [ ! -e iabak-cronjob.log ]; then
-		echo 
-		echo "** Reminder: You should set up a cron job to run iabak-cronjob periodically!"
-		echo "             (See README.md for details)"
-		echo 
-	fi
-
+	./install-fsck-service
 	installgitannex
 
 	# First do a fast fsck of all shards, in order to detect
