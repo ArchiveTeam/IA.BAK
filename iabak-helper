@@ -26,8 +26,54 @@ else
 	FLOCK="$(pwd)/flock.pl"
 fi
 
+pow () {
+	local x=${1:-1} y=${2:-0} result=${3:-1}
+	if [ ${y} -gt 0 ]; then
+		echo "$(pow "${x}" "$((y-1))" "$((result*x))")"
+	else
+		echo "${result}"
+	fi
+}
+
+# I can wikipedia
+# sh is annoying, so you must call rand_update (and not from a
+# subshell) to update the state variable, then you can call rand to
+# read it
+RANDOM_SEED=$$
+rand_update () {
+	RANDOM_SEED="$((1664525 * RANDOM_SEED + 1013904223))"
+}
+rand () {
+	local max=${1}
+	if [ -z "${max}" ]; then
+		echo "${RANDOM_SEED}"
+	else
+		local r="$((RANDOM_SEED % max))"
+		if [ ${r} -lt 0 ]; then
+			echo "$((r * -1))"
+		else
+			echo "${r}"
+		fi
+	fi
+}
+
+# syncs a shard with random exponential backoff in case of failure, and a maximum of 4 retries.
+syncshard () {
+	# assumes that pwd is a shard
+	local retries=0
+	while [ ${retries} -lt 5 ]; do
+		if git annex sync; then
+			return 0
+		fi
+		retries=$((retries+1))
+		rand_update
+		sleep "$(rand "$(pow "2" "${retries}")")"
+	done
+	return 1
+}
+
 download () {
-	git annex sync
+	syncshard || echo "Warning: Failed to sync this shard; working off of data which is potentially out of date."
 	periodicsync &
 
 	echo "Here goes! Downloading from Internet Archive."
@@ -90,7 +136,7 @@ fastfsck () {
 		mkdir .empty
 	fi
 	git annex fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
-	git annex sync
+	syncshard || echo "Warning: failed to sync this shard; fsck results not recorded on server"
 }
 
 maint () {
@@ -98,7 +144,7 @@ maint () {
 	fsckme
 
 	if [ ! "$CRONJOB" ]; then
-		git annex sync
+		syncshard || (echo "Error: failed to sync shard in maintenance mode"; exit 1)
 		periodicsync &
 		if rundownloadfiles; then
 			echo ""
@@ -199,7 +245,7 @@ handleshard () {
 		;;
 	esac
 
-	git annex sync
+	syncshard || echo "Warning: failed to sync shard; results of download not known to be recoded on the server."
 }
 
 # Order with newest checked out shards first.
@@ -208,7 +254,7 @@ sharddirs () {
 }
 
 randomshard () {
-	wantstate="$1"	
+	wantstate="$1"
 	grep " $wantstate$" repolist | cut -d ' ' -f 1 | perl -e 'while (<>) { chomp; if (! -d $_) { push @l, $_ } };  print $l[rand @l]'
 }
 
