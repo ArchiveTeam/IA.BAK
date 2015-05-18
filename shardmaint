@@ -15,4 +15,5 @@ for shard in $(cut -d ' ' -f 1 repolist); do
 	# git repo grows in size fast while it's filling up; and compresses very
 	# well. Save clients the transfer.
 	(cd /home/"$SHARD"/"$shard".git && su "$SHARD" -c -- 'git gc --aggressive --prune=all')
+	(cd /srv/shard/$shard && su "$SHARD" -c -- 'git gc --aggressive --prune=all')
 done
