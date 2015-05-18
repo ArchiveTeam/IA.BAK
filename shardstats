@@ -62,7 +62,7 @@ if [ "$SHARD" != ALL ]; then
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
 
 	EXPIRETMP="$(tempfile)"
-	su "$SHARD" -c -- "git annex expire --no-act 7d web:never origin:never" > "$EXPIRETMP"
+	su "$SHARD" -c -- "git annex expire --no-act 21d web:never origin:never" > "$EXPIRETMP"
 	chmod 644 "$EXPIRETMP"
 	mv "$EXPIRETMP" "${STATS_DIR}/$SHARD".expire
 	
