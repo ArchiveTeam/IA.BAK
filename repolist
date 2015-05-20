@@ -1,6 +1,6 @@
 shard1 SHARD1@iabak.archiveteam.org:shard1 maint
 shard2 SHARD2@iabak.archiveteam.org:shard2 maint
 shard3 SHARD3@iabak.archiveteam.org:shard3 maint
-shard4 SHARD4@iabak.archiveteam.org:shard4 active
-shard5 SHARD5@iabak.archiveteam.org:shard5 reserve
+shard4 SHARD4@iabak.archiveteam.org:shard4 maint
+shard5 SHARD5@iabak.archiveteam.org:shard5 active
 shard6 SHARD6@iabak.archiveteam.org:shard6 reserve
