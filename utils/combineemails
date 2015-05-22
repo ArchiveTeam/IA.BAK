@@ -17,5 +17,5 @@ foreach my $email (keys %m) {
 	my $size=$m{$email};
 	my $tbsize=int($size / 10000000000) / 100;
 
-	print "$obscuredemail ${tbsize}TB";
+	print "$obscuredemail ${tbsize}TB\n";
 }
