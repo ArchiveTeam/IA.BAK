@@ -65,9 +65,16 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 
    SIZE="$(cat $SHARD.size)"
 
+   if [ -e "$SHARD.collections.active" ]; then
+	   COLLDESC=Active
+	   CFILE="$SHARD.collections.active"
+   else
+	   COLLDESC=Included
+	   CFILE="$SHARD.collections"
+   fi
    COLLECTIONS=""
-   for c in $(cat $SHARD.collections); do
-	   COLLECTIONS="$COLLECTIONS <a href=\"https://archive.org/collection/$c\">$c</a>"
+   for c in $(cat $CFILE); do
+	   COLLECTIONS="$COLLECTIONS<ul><a href=\"https://archive.org/collection/$c\">$c</a>"
    done
 
    if [ "$SHARD" = ALL ]; then
@@ -88,7 +95,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    done
    LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" >> "$HTMLTMP"
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLDESC!${COLLDESC}!g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" >> "$HTMLTMP"
 
 fi
 
