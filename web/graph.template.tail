@@ -54,10 +54,10 @@
           LEADERBOARD
           </ol>
           <a href="EXPIRELEADERBOARDURL">Expiring this week</a>:
+	  <i>(clients that have not checked in for a month)</i>
           <ol>
           EXPIRELEADERBOARD
           </ol>
-	  <i>* clients who have not checked in for a month</i>
 	</td>
       </tr>
     </table>
