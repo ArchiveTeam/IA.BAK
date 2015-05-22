@@ -18,9 +18,20 @@
     <center>
     <font size=+1><b>CURRENT BACKUP STATUS OF IA.BAK SHARDNAME</b><br>
     <i>Virtual Drive is currently: SIZE Terabytes</i><p>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
-    <div><img src="PROGRESS_GRAPHURL" width="900" height="500"/></div>
-    COLLDESC collections: COLLECTIONS
+    <table>
+      <tr>
+        <td>
+          <div id="chart_div" style="width: 900px; height: 500px;"></div>
+          <div><img src="PROGRESS_GRAPHURL" width="900" height="500"/></div>
+	</td>
+	<td>
+          COLLDESC collections:
+	  <ul>
+	  COLLECTIONS
+	  </ul>
+	</td>
+      </tr>
+    </table>
     <p>
     <p>
     <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
