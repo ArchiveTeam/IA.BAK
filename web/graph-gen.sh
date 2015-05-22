@@ -131,5 +131,5 @@ mv -f "$HTMLTMP" "html/$SHARD.html"
 
 done
 
-mv html/ALL.html index.html
+mv html/ALL.html html/index.html
 mv -f html/* /var/www/html/
