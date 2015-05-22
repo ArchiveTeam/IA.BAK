@@ -92,7 +92,7 @@ else
 	mv "$TMP" "${STATS_DIR}/ALL.size"
 	
 	TMP="$(tempfile)"
-	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
+	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard-raw > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.leaderboard-raw"
 	
