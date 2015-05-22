@@ -133,3 +133,4 @@ done
 
 mv html/ALL.html html/index.html
 mv -f html/* /var/www/html/
+rm -rf "$TMP"
