@@ -18,6 +18,8 @@ while (<>) {
 	$desc=~s/ \(.*//;
 	my $email=$m{$uuid};
 	if (! defined $email) {
+		$desc=~s/^-- //;
+		$desc=~s/@.*//;
 		$email="$desc (unregistered)";
 	}
 	print "$size $email\n" if $size > 0;
