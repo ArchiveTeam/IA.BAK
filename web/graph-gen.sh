@@ -82,7 +82,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    LEADERBOARD=""
    IFS="
 "
-   for l in $(head -n 10 "$SHARD.leaderboard"); do
+   for l in $(head -n 25 "$SHARD.leaderboard"); do
      l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
      LEADERBOARD="$LEADERBOARD<li>$l"
    done
