@@ -24,7 +24,7 @@
           <div id="chart_div" style="width: 900px; height: 500px;"></div>
           <div><img src="PROGRESS_GRAPHURL" width="900" height="500"/></div>
 	</td>
-	<td>
+	<td style="vertical-align:top">
           COLLDESC collections:
 	  <ul>
 	  COLLECTIONS
@@ -48,7 +48,7 @@
           <div id="us_div" style="width: 900px; height: 500px;"></div>
             <p>
 	</td>
-        <td>
+        <td style="vertical-align:top">
           <a href="LEADERBOARDURL">Leaderboard</a> top 25:
           <ol>
           LEADERBOARD
