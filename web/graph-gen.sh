@@ -80,8 +80,10 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    CONNECTIONSGRAPHURL="http://iabak.archiveteam.org:8080/render/?width=497&height=400&_salt=1428538747.86&tz=UTC&target=keepLastValue%28iabak.shardstats.connections.${SHARDSTATMATCH}%29&from=-2weeks"
 
    LEADERBOARD=""
+   IFS="
+"
    for l in $(head -n 10 "$SHARD.leaderboard"); do
-     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g")"
+     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
      LEADERBOARD="$LEADERBOARD<li>$l"
    done
    LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
