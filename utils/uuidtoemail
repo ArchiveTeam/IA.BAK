@@ -16,7 +16,7 @@ while (<>) {
 	my ($size, $uuid, $desc) = split(' ', $_, 3);
 	my $email=$m{$uuid};
 	if (! defined $email) {
-		$email="unknowns";
+		$email="unknown@$uuid";
 	}
 	print "$size $email\n";
 }
