@@ -1,12 +1,14 @@
 #!/bin/sh
-
 # Quick and dirty graph generator. Should be rewritten at some point.
-
-cd /home/closure
+set -e
 
 CHRONOS=`date`
+IABAK="/usr/local/IA.BAK"
 
-rm -f stats.tar.gz
+TMP=/tmp/graph-gen.$$
+cd "$TMP"
+mkdir html
+
 wget -q  http://iabak.archiveteam.org/stats.tar.gz
 tar xf stats.tar.gz
 
@@ -35,7 +37,7 @@ if [ -f $SHARD ]
 
 # Head!
 
-   cat html/graph.template.head | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" > "$HTMLTMP"
+   cat $IABAK/html/graph.template.head | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" > "$HTMLTMP"
 
 # Let's do GEO.....
     
@@ -49,7 +51,7 @@ if [ -f $SHARD ]
        echo "['${PUNKY}', ${COUNT}]," >> "$HTMLTMP"
        done
 
-       cat html/graph.template.middle >> "$HTMLTMP"
+       cat $IABAK/html/graph.template.middle >> "$HTMLTMP"
 
    for city in `cat $SHARD.geolist | grep "United States" | sed 's/.*\"zip_code\":\"//g' | sed 's/ /_/g' | cut -f1 -d'"' | sort -u`
        do
@@ -119,7 +121,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	MAINTSHARDS=""
    fi
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLDESC!${COLLDESC}!g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!EXPIRELEADERBOARDURL!${EXPIRELEADERBOARDURL}!" | sed "s/EXPIRELEADERBOARD/${EXPIRELEADERBOARD}/" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" | sed "s!MAINTSHARDS!${MAINTSHARDS}!" | sed "s!ACTIVESHARDS!${ACTIVESHARDS}!" >> "$HTMLTMP"
+   cat $IABAK/html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLDESC!${COLLDESC}!g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!EXPIRELEADERBOARDURL!${EXPIRELEADERBOARDURL}!" | sed "s/EXPIRELEADERBOARD/${EXPIRELEADERBOARD}/" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" | sed "s!MAINTSHARDS!${MAINTSHARDS}!" | sed "s!ACTIVESHARDS!${ACTIVESHARDS}!" >> "$HTMLTMP"
 
 fi
 
@@ -127,3 +129,5 @@ chmod 644 "$HTMLTMP"
 mv -f "$HTMLTMP" "html/$SHARD.html"
 
 done
+
+mv -f html/* /var/www/html/
