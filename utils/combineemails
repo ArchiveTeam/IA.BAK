@@ -13,7 +13,7 @@ while (<>) {
 
 foreach my $email (keys %m) {
 	my $obscuredemail=$email;
-	$obscuredemail=~s/@.*//;
+	$obscuredemail=~s/[+@].*//;
 
 	my $size=$m{$email};
 	my $tbsize=int($size / 10000000000) / 100;
