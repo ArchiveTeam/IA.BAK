@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+open(EXP, shift());
+open(LEAD, shift());
+my %sz;
+while (<LEAD>) {
+		my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /;
+		$sz{$uuid}=$size;
+}
+foreach (<EXP>) {
+	my ($uuid)=m/^expire ([^ ]+) /;
+	my $sz=$sz{$uuid};
+	$sz=0 if ! defined $sz;
+	print "$sz: $_"
+}

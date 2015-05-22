@@ -63,10 +63,15 @@ if [ "$SHARD" != ALL ]; then
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD.size"
 
-	EXPIRETMP="$(tempfile)"
-	su "$SHARD" -c -- "git annex expire --no-act 21d web:never origin:never" > "$EXPIRETMP"
-	chmod 644 "$EXPIRETMP"
-	mv "$EXPIRETMP" "${STATS_DIR}/$SHARD".expire
+	TMP="$(tempfile)"
+	su "$SHARD" -c -- "git annex expire --no-act 21d web:never origin:never" > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/$SHARD".expire
+	
+	TMP="$(tempfile)"
+	su "$SHARD" -c -- "git annex expire --no-act 14d web:never origin:never" > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/$SHARD".warning
 	
 	rm -f "$INFOTMP"
 fi
@@ -156,12 +161,21 @@ mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
 
 TMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
-	perl -e 'open(EXP, shift()); open(LEAD, shift()); while (<LEAD>) { my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /; $sz{$uuid}=$size } foreach (<EXP>) { my ($uuid)=m/^expire ([^ ]+) /; my $sz=$sz{$uuid}; $sz=0 if ! defined $sz; print "$sz: $_" }' "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn > "$TMP"
+	"$UTIL_DIR/expireleaderboard" "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn > "$TMP"
 else
 	cat ${STATS_DIR}/SHARD*.expireleaderboard-raw | sort -rn > "$TMP"
 fi
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/$SHARD".expireleaderboard-raw
+
+TMP="$(tempfile)"
+if [ "$SHARD" != ALL ]; then
+	"$UTIL_DIR/expireleaderboard" "${STATS_DIR}/$SHARD".warning "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn | grep -F -x -v -f "${STATS_DIR}/$SHARD".expireleaderboard-raw > "$TMP"
+else
+	cat ${STATS_DIR}/SHARD*.warningleaderboard-raw | sort -rn > "$TMP"
+fi
+chmod 644 "$TMP"
+mv "$TMP" "${STATS_DIR}/$SHARD".warningleaderboard-raw
 
 TMP="$(tempfile)"
 (cd "${PUBKEYS_DIR}"; git pull)
@@ -173,6 +187,11 @@ TMP="$(tempfile)"
 cat "${STATS_DIR}/${SHARD}.expireleaderboard-raw" | "$UTIL_DIR/uuidtoemail-expiring" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/([^\s]+) (.*)/$2 $1/; print "$_\n"' > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/${SHARD}.expireleaderboard"
+
+TMP="$(tempfile)"
+cat "${STATS_DIR}/${SHARD}.warningleaderboard-raw" | "$UTIL_DIR/uuidtoemail-expiring" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/([^\s]+) (.*)/$2 $1/; print "$_\n"' > "$TMP"
+chmod 644 "$TMP"
+mv "$TMP" "${STATS_DIR}/${SHARD}.warningleaderboard"
 
 if [ "$SHARD" != ALL ]; then
 	CTMP="$(tempfile)"
