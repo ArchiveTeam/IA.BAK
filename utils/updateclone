@@ -17,7 +17,7 @@ else
 	su "$SHARD" -c -- "git fetch origin master git-annex"
 	su "$SHARD" -c -- "git merge origin/master"
 	git show-ref > .git/new-refs
-	if ! cmp old-refs new-refs >/dev/null; then
+	if ! cmp .git/old-refs .git/new-refs >/dev/null; then
 		# indicate no change
 		exit 100
 	else
