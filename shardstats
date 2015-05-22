@@ -56,7 +56,7 @@ if [ "$SHARD" != ALL ]; then
 	TMP="$(tempfile)"
 	grep " -- " "$INFOTMP" | grep -v 00000000-0000-0000-0000-000000000001 | perl -pe 's/^\s+//' > "$TMP"
 	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard
+	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard-raw
 
 	TMP="$(tempfile)"
 	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+)/) { print (int($1/10000000000)/100)."\n" }' < "$INFOTMP" > "$TMP"
@@ -94,13 +94,7 @@ else
 	TMP="$(tempfile)"
 	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
 	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
-
-	TMP="$(tempfile)"
-	(cd "${PUBKEYS_DIR}"; git pull)
-	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard | "$UTIL_DIR/uuidtoemail" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn > "$TMP"
-	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/leaderboard"
+	mv "$TMP" "${STATS_DIR}/ALL.leaderboard-raw"
 	
 	TMP="$(tempfile)"
 	find "${STATS_DIR}"/SHARD[0-9]* -printf '%f\n' | grep -v \\. > "$TMP"
@@ -108,11 +102,17 @@ else
 	mv "$TMP" "${STATS_DIR}/ALL.shardlist"
 fi
 
+TMP="$(tempfile)"
+(cd "${PUBKEYS_DIR}"; git pull)
+cat "${STATS_DIR}/${SHARD}.leaderboard-raw" | "$UTIL_DIR/uuidtoemail" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn > "$TMP"
+chmod 644 "$TMP"
+mv "$TMP" "${STATS_DIR}/${SHARD}.leaderboard"
+
 sendStat "filesize" "$(<${STATS_DIR}/${SHARD}.size)"
 
 while read size uuid rest; do
 	sendStat "leaderboard.${uuid}" $(echo $size | sed -e 's/://')
-done < "${STATS_DIR}/$SHARD.leaderboard"
+done < "${STATS_DIR}/$SHARD.leaderboard-raw"
 
 counts=()
 total=0
@@ -167,7 +167,7 @@ mv "$CONNS" "${STATS_DIR}/$SHARD.clientconnsperhour"
 
 TMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
-	perl -e 'open(EXP, shift()); open(LEAD, shift()); while (<LEAD>) { my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /; $sz{$uuid}=$size } foreach (<EXP>) { my ($uuid)=m/^expire ([^ ]+) /; my $sz=$sz{$uuid}; $sz=0 if ! defined $sz; print "$sz: $_" }' "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard | sort -rn > "$TMP"
+	perl -e 'open(EXP, shift()); open(LEAD, shift()); while (<LEAD>) { my ($size, $uuid)=m/^(\d+): ([^ ]+) -- /; $sz{$uuid}=$size } foreach (<EXP>) { my ($uuid)=m/^expire ([^ ]+) /; my $sz=$sz{$uuid}; $sz=0 if ! defined $sz; print "$sz: $_" }' "${STATS_DIR}/$SHARD".expire "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn > "$TMP"
 else
 	cat ${STATS_DIR}/SHARD*.expireleaderboard | sort -rn > "$TMP"
 fi

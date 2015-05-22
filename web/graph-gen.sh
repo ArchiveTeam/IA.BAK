@@ -79,7 +79,14 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    fi
    CONNECTIONSGRAPHURL="http://iabak.archiveteam.org:8080/render/?width=497&height=400&_salt=1428538747.86&tz=UTC&target=keepLastValue%28iabak.shardstats.connections.${SHARDSTATMATCH}%29&from=-2weeks"
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" >> "$HTMLTMP"
+   LEADERBOARD=""
+   for l in $(head -n 10 "$SHARD.leaderboard"); do
+     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g")"
+     LEADERBOARD="$LEADERBOARD<li>$l"
+   done
+   LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
+
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s/LEADERBOARDURL/${LEADERBOARDURL}/" | sed "s/LEADERBOARD/${LEADERBOARD}/" >> "$HTMLTMP"
 
 fi
 
