@@ -165,12 +165,12 @@ mv "$TMP" "${STATS_DIR}/$SHARD".expireleaderboard-raw
 
 TMP="$(tempfile)"
 (cd "${PUBKEYS_DIR}"; git pull)
-cat "${STATS_DIR}/${SHARD}.leaderboard-raw" | "$UTIL_DIR/uuidtoemail" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/(.*) (.*)/$2 $1/; print "$_\n"' > "$TMP"
+cat "${STATS_DIR}/${SHARD}.leaderboard-raw" | "$UTIL_DIR/uuidtoemail" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/([^\s]+) (.*)/$2 $1/; print "$_\n"' > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/${SHARD}.leaderboard"
 
 TMP="$(tempfile)"
-cat "${STATS_DIR}/${SHARD}.expireleaderboard-raw" | "$UTIL_DIR/uuidtoemail-expiring" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/(.*) (.*)/$2 $1/; print "$_\n"' > "$TMP"
+cat "${STATS_DIR}/${SHARD}.expireleaderboard-raw" | "$UTIL_DIR/uuidtoemail-expiring" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn | perl -ne 'chomp; s/([^\s+]) (.*)/$2 $1/; print "$_\n"' > "$TMP"
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/${SHARD}.expireleaderboard"
 
