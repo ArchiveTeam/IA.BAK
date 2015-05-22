@@ -92,10 +92,15 @@ else
 	mv "$TMP" "${STATS_DIR}/ALL.size"
 	
 	TMP="$(tempfile)"
+	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
+
+	TMP="$(tempfile)"
 	(cd "${PUBKEYS_DIR}"; git pull)
 	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard | "$UTIL_DIR/uuidtoemail" "$PUBKEYS_DIR" | "$UTIL_DIR/combineemails" | sort -rn > "$TMP"
 	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
+	mv "$TMP" "${STATS_DIR}/leaderboard"
 	
 	TMP="$(tempfile)"
 	find "${STATS_DIR}"/SHARD[0-9]* -printf '%f\n' | grep -v \\. > "$TMP"
