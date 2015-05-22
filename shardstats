@@ -174,20 +174,27 @@ fi
 chmod 644 "$TMP"
 mv "$TMP" "${STATS_DIR}/$SHARD".expireleaderboard
 
-CTMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
+	CTMP="$(tempfile)"
 	ls -1 > "$CTMP"
+	chmod 644 "$CTMP"
+	mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
 else
+	CTMP="$(tempfile)"
+	ATMP="$(tempfile)"
 	(cd "${CLIENT_DIR}"; git pull)
 	for s in $(grep ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
 		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
+		cat "${STATS_DIR}/$s.collections" >> "$ATMP"
 	done
 	for s in $(grep -v ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
 		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
 	done
+	chmod 644 "$CTMP"
+	mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
+	chmod 644 "$ATMP"
+	mv "$ATMP" "${STATS_DIR}/$SHARD.collections.active"
 fi
-chmod 644 "$CTMP"
-mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
 mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
