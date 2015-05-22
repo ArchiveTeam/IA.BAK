@@ -6,6 +6,7 @@ set -e
 : ${GEOIP_DIR:=/srv/geoip}
 : ${SHARD_DIR:=/srv/shard}
 : ${CLIENT_DIR:=/usr/local/IA.BAK/client}
+: ${PUBKEYS_DIR:=/usr/local/IA.BAK/pubkeys}
 : ${GRAPHITE_HOST:=127.0.0.1}
 : ${GRAPHITE_PORT:=2003}
 DATE=$(date +%s)
@@ -88,9 +89,10 @@ else
 	perl -ne '$n+=$_; END { print "$n\n" }' "${STATS_DIR}"/SHARD[0-9]*.size > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.size"
-
+	
 	TMP="$(tempfile)"
-	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard > "$TMP"
+	(cd "${PUBKEYS_DIR}"; git pull)
+	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard | uuidtoemail "$PUBKEYS_DIR" | combineemails | sort -rn > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.leaderboard"
 	

@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+my %m;
+while (<>) {
+	my ($size, $email) = m/(\d+): (.*)/;
+	if (exists $m{$email}) {
+		$m{$email}+=$size;
+	}
+	else {
+		$m{$email}=$size;
+	}
+}
+
+foreach my $email (keys %m) {
+	my $obscuredemail=$email;
+	$obscuredemail=~s/@.*//;
+
+	my $size=$m{$email};
+	my $tbsize=int($size / 10000000000) / 100;
+
+	print "$obscuredemail ${tbsize}TB";
+}

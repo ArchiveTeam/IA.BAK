@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+my $pubkeys_dir=shift;
+
+my %m;
+foreach my $f (<$pubkeys_dir/*>) {
+	open (IN, "<", $f);
+	while (<IN>) {
+		my ($sshkeytype, $sshkey, $email, $uuid) = split(' ', $_, 4);
+		$m{$uuid} = $email;
+	}
+	close IN;
+}
+
+while (<>) {
+	my ($size, $uuid, $desc) = split(' ', $_, 3);
+	my $email=$m{uuid};
+	if (! defined $email) {
+		$email="unknowns";
+	}
+	print "$size $email";
+}
