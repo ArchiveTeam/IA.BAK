@@ -41,7 +41,7 @@ if [ "$SHARD" != ALL ]; then
 	EXITCODE="$?"
 	set -e
 	cd "$DIR"
-	if [ "$?" != 100 ]; then
+	if [ "$EXITCODE" != 100 ]; then
 		INFOTMP="$(tempfile)"
 		su "$SHARD" -c -- "git annex info . --bytes" > "$INFOTMP"
 
