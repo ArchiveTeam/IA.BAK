@@ -13,7 +13,7 @@ foreach my $f (<$pubkeys_dir/*/pubkeys>) {
 }
 
 while (<>) {
-	my ($size, $uuid, $desc) = split(' ', $_, 3);
+	my ($size, $expire, $uuid, $desc) = split(' ', $_, 4);
 	my $email=$m{$uuid};
 	if (! defined $email) {
 		$email="unknown\@$uuid";

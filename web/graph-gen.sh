@@ -95,6 +95,16 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    done
    LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
 
+   EXPIRELEADERBOARD=""
+   for l in $(cat "$SHARD.expireleaderboard"); do
+     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
+     LEADERBOARD="$LEADERBOARD<li>$l"
+   done
+   if [ -z "$EXPIRELEADERBOARD" ]; then
+	   EXPIRELEADERBOARD="none! :)"
+   fi
+   EXPIRELEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.expireleaderboard-raw"
+
    if [ "$SHARD" = ALL ]; then
 	ACTIVESHARDS="Active: "
 	for s in $(cat ALL.shardlist.active); do
@@ -109,7 +119,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	MAINTSHARDS=""
    fi
 
-   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLDESC!${COLLDESC}!g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" | sed "s!MAINTSHARDS!${MAINTSHARDS}!" | sed "s!ACTIVESHARDS!${ACTIVESHARDS}!" >> "$HTMLTMP"
+   cat html/graph.template.tail | sed "s/SHARDNAME/${SHARDNAME}/g" | sed "s!COLLDESC!${COLLDESC}!g" | sed "s!COLLECTIONS!${COLLECTIONS}!g" | perl -pe "s!CONNECTIONSGRAPHURL!${CONNECTIONSGRAPHURL}!g" | perl -pe "s!PROGRESS_GRAPHURL!${PROGRESS_GRAPHURL}!g" | sed "s/SIZE/${SIZE}/g" | sed "s/IA1/${IA1}/g" | sed "s/IA2/${IA2}/g" | sed "s/IA3/${IA3}/g" | sed "s/IA4/${IA4}/g" | sed "s/TIME/${CHRONOS}/g" | sed "s/CLICOUNT/${CLICOUNT}/g" | sed "s/CLAMBAKE/${COUNTRYS}/g" | sed "s!EXPIRELEADERBOARDURL!${EXPIRELEADERBOARDURL}!" | sed "s/EXPIRELEADERBOARD/${EXPIRELEADERBOARD}/" | sed "s!LEADERBOARDURL!${LEADERBOARDURL}!" | sed "s/LEADERBOARD/${LEADERBOARD}/" | sed "s!MAINTSHARDS!${MAINTSHARDS}!" | sed "s!ACTIVESHARDS!${ACTIVESHARDS}!" >> "$HTMLTMP"
 
 fi
 
