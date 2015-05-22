@@ -95,11 +95,6 @@ else
 	sort -r -n "${STATS_DIR}"/SHARD[0-9]*.leaderboard-raw > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/ALL.leaderboard-raw"
-	
-	TMP="$(tempfile)"
-	find "${STATS_DIR}"/SHARD[0-9]* -printf '%f\n' | grep -v \\. > "$TMP"
-	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/ALL.shardlist"
 fi
 
 TMP="$(tempfile)"
@@ -182,18 +177,33 @@ if [ "$SHARD" != ALL ]; then
 else
 	CTMP="$(tempfile)"
 	ATMP="$(tempfile)"
+	ALTMP="$(tempfile)"
+	MLTMP="$(tempfile)"
 	(cd "${CLIENT_DIR}"; git pull)
 	for s in $(grep ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
 		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
 		cat "${STATS_DIR}/$s.collections" >> "$ATMP"
+		echo "$s" >> "$ALTMP"
 	done
 	for s in $(grep -v ' active$' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
 		cat "${STATS_DIR}/$s.collections" >> "$CTMP"
 	done
+	for s in $(grep ' maint' "${CLIENT_DIR}/repolist" | cut -d ' ' -f 1 | tr a-z A-Z); do
+		echo "$s" >> "$MLTMP"
+	done
 	chmod 644 "$CTMP"
-	mv "$CTMP" "${STATS_DIR}/$SHARD.collections"
+	mv "$CTMP" "${STATS_DIR}/ALL.collections"
 	chmod 644 "$ATMP"
-	mv "$ATMP" "${STATS_DIR}/$SHARD.collections.active"
+	mv "$ATMP" "${STATS_DIR}/ALL.collections.active"
+	chmod 644 "$ALTMP"
+	mv "$ALTMP" "${STATS_DIR}/ALL.shardlist.active"
+	chmod 644 "$MLTMP"
+	mv "$MLTMP" "${STATS_DIR}/ALL.shardlist.maint"
+	
+	TMP="$(tempfile)"
+	find "${STATS_DIR}"/SHARD[0-9]* -printf '%f\n' | grep -v \\. > "$TMP"
+	chmod 644 "$TMP"
+	mv "$TMP" "${STATS_DIR}/ALL.shardlist"
 fi
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
