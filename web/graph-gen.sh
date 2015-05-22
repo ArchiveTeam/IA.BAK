@@ -98,7 +98,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    EXPIRELEADERBOARD=""
    for l in $(cat "$SHARD.expireleaderboard"); do
      l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
-     LEADERBOARD="$LEADERBOARD<li>$l"
+     EXPIRELEADERBOARD="$EXPIRELEADERBOARD<li>$l"
    done
    if [ -z "$EXPIRELEADERBOARD" ]; then
 	   EXPIRELEADERBOARD="none! :)"
