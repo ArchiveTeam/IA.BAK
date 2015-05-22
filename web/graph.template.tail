@@ -58,6 +58,11 @@
           <ol>
           EXPIRELEADERBOARD
           </ol>
+          <a href="WARNINGLEADERBOARDURL">Out of touch</a>:
+	  <i>(clients that have not checked in for 2 weeks)</i>
+          <ol>
+          WARNINGLEADERBOARD
+          </ol>
 	</td>
       </tr>
     </table>
