@@ -53,12 +53,12 @@
           <ol>
           LEADERBOARD
           </ol>
-          <a href="EXPIRELEADERBOARDURL">Expiring this week</a>:
+          <a href="EXPIRELEADERBOARDURL">Expiring this week</a>:<br>
 	  <i>(clients that have not checked in for a month)</i>
           <ol>
           EXPIRELEADERBOARD
           </ol>
-          <a href="WARNINGLEADERBOARDURL">Out of touch</a>:
+          <a href="WARNINGLEADERBOARDURL">Out of touch</a>:<br>
 	  <i>(clients that have not checked in for 2 weeks)</i>
           <ol>
           WARNINGLEADERBOARD
