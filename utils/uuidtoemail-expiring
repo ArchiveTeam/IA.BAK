@@ -13,6 +13,7 @@ foreach my $f (<$pubkeys_dir/*/pubkeys>) {
 }
 
 while (<>) {
+	chomp;
 	my ($size, $expire, $uuid, $desc) = split(' ', $_, 4);
 	$desc=~s/ \(.*//;
 	my $email=$m{$uuid};
