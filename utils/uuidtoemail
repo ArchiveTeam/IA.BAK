@@ -17,5 +17,5 @@ while (<>) {
 	if (! defined $email) {
 		$email="unknowns";
 	}
-	print "$size $email";
+	print "$size $email\n";
 }
