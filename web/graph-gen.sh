@@ -109,7 +109,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    EXPIRELEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.expireleaderboard-raw"
    
    WARNINGLEADERBOARD=""
-   for l in $(cat "$SHARD.expireleaderboard"); do
+   for l in $(cat "$SHARD.warningleaderboard"); do
      l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
      WARNINGLEADERBOARD="$WARNINGLEADERBOARD<li>$l"
    done
