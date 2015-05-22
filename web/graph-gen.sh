@@ -66,10 +66,10 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    SIZE="$(cat $SHARD.size)"
 
    if [ -e "$SHARD.collections.active" ]; then
-	   COLLDESC=Active
+	   COLLDESC="Currently downloading"
 	   CFILE="$SHARD.collections.active"
    else
-	   COLLDESC=Included
+	   COLLDESC="Included"
 	   CFILE="$SHARD.collections"
    fi
    COLLECTIONS=""
