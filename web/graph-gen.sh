@@ -74,7 +74,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    fi
    COLLECTIONS=""
    for c in $(cat $CFILE); do
-	   COLLECTIONS="$COLLECTIONS<ul><a href=\"https://archive.org/collection/$c\">$c</a>"
+	   COLLECTIONS="$COLLECTIONS<li><a href=\"https://archive.org/collection/$c\">$c</a>"
    done
 
    if [ "$SHARD" = ALL ]; then
