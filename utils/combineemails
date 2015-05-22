@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 my %m;
 while (<>) {
+	chomp;
 	my ($size, $email) = m/(\d+): (.*)/;
 	if (exists $m{$email}) {
 		$m{$email}+=$size;
@@ -17,5 +18,5 @@ foreach my $email (keys %m) {
 	my $size=$m{$email};
 	my $tbsize=int($size / 10000000000) / 100;
 
-	print "${tbsize}TB\n $obscuredemail";
+	print "${tbsize}TB $obscuredemail\n";
 }
