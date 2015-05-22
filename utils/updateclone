@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+DIR="$1"
+SHARD="$2"
+BAREREPO="$3"
+	
+# need a non-bare clone to run git-annex info . in
+if [ ! -d "$DIR" ]; then
+	mkdir -p "$(dirname "$DIR")"
+	(cd "$(dirname "$DIR")" && git clone "$BAREREPO")
+	(cd "$DIR" && git config user.email stats@example.com && git config user.name stats && git config gc.auto 0)
+	chown -R "$SHARD:$SHARD" "$DIR"
+else
+	cd "$DIR"
+	git show-ref > .git/old-refs
+	su "$SHARD" -c -- "git fetch origin master git-annex"
+	su "$SHARD" -c -- "git merge origin/master"
+	git show-ref > .git/new-refs
+	if ! cmp old-refs new-refs >/dev/null; then
+		# indicate no change
+		exit 100
+	else
+		exit 0
+	fi
+fi

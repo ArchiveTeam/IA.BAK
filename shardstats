@@ -32,48 +32,48 @@ if [ -z "$SHARD" ]; then
 fi
 shard="$(echo "$SHARD" | tr A-Z a-z)"
 
+mkdir -p ${STATS_DIR}/
+
 if [ "$SHARD" != ALL ]; then
 	DIR="${SHARD_DIR}/$shard"
-	# need a non-bare clone to run git-annex info . in
-	if [ ! -d "$DIR" ]; then
-		mkdir -p "$(dirname "$DIR")"
-		(cd "$(dirname "$DIR")" && git clone "/home/$SHARD/$shard.git")
-		(cd "$DIR" && git config user.email stats@example.com && git config user.name stats && git config gc.auto 0)
-		chown -R "$SHARD:$SHARD" "$DIR"
-	else
-		(cd "$DIR" && su "$SHARD" -c -- "git fetch origin master git-annex" && su "$SHARD" -c -- "git merge origin/master")
-	fi
+	set +e
+	"$UTIL_DIR/updateclone" "$DIR" "$SHARD" "/home/$SHARD/$shard.git"
+	EXITCODE="$?"
+	set -e
 	cd "$DIR"
-	mkdir -p ${STATS_DIR}/
-	INFOTMP="$(tempfile)"
-	su "$SHARD" -c -- "git annex info . --bytes" > "$INFOTMP"
+	if [ "$?" != 100 ]; then
+		INFOTMP="$(tempfile)"
+		su "$SHARD" -c -- "git annex info . --bytes" > "$INFOTMP"
 
-	TMP="$(tempfile)"
-	grep "numcopies " "$INFOTMP" > "$TMP"
-	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/$SHARD"
+		TMP="$(tempfile)"
+		grep "numcopies " "$INFOTMP" > "$TMP"
+		chmod 644 "$TMP"
+		mv "$TMP" "${STATS_DIR}/$SHARD"
 
-	TMP="$(tempfile)"
-	grep " -- " "$INFOTMP" | grep -v 00000000-0000-0000-0000-000000000001 | perl -pe 's/^\s+//' > "$TMP"
-	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard-raw
-
-	TMP="$(tempfile)"
-	perl -ne 'if (/size of annexed files in working tree: ([.0-9]+)/) { print (int($1/10000000000)/100)."\n" }' < "$INFOTMP" > "$TMP"
-	chmod 644 "$TMP"
-	mv "$TMP" "${STATS_DIR}/$SHARD.size"
-
+		TMP="$(tempfile)"
+		grep " -- " "$INFOTMP" | grep -v 00000000-0000-0000-0000-000000000001 | perl -pe 's/^\s+//' > "$TMP"
+		chmod 644 "$TMP"
+		mv "$TMP" "${STATS_DIR}/$SHARD".leaderboard-raw
+	
+		TMP="$(tempfile)"
+		perl -ne 'if (/size of annexed files in working tree: ([.0-9]+)/) { print (int($1/10000000000)/100)."\n" }' < "$INFOTMP" > "$TMP"
+		chmod 644 "$TMP"
+		mv "$TMP" "${STATS_DIR}/$SHARD.size"
+		
+		rm -f "$INFOTMP"
+	else
+		echo "No changes, avoided expensive stats gathering.."
+	fi
+	
 	TMP="$(tempfile)"
 	su "$SHARD" -c -- "git annex expire --no-act 21d web:never origin:never" > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD".expire
-	
+		
 	TMP="$(tempfile)"
 	su "$SHARD" -c -- "git annex expire --no-act 14d web:never origin:never" > "$TMP"
 	chmod 644 "$TMP"
 	mv "$TMP" "${STATS_DIR}/$SHARD".warning
-	
-	rm -f "$INFOTMP"
 fi
 
 NUMTMP="$(tempfile)"
