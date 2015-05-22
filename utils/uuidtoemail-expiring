@@ -14,9 +14,10 @@ foreach my $f (<$pubkeys_dir/*/pubkeys>) {
 
 while (<>) {
 	my ($size, $expire, $uuid, $desc) = split(' ', $_, 4);
+	$desc=~s/ \(.*//;
 	my $email=$m{$uuid};
 	if (! defined $email) {
-		$email="unknown\@$uuid";
+		$email="$desc (unregistered)";
 	}
 	print "$size $email\n" if $size > 0;
 }

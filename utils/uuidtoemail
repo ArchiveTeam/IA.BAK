@@ -16,7 +16,7 @@ while (<>) {
 	my ($size, $uuid, $desc) = split(' ', $_, 3);
 	my $email=$m{$uuid};
 	if (! defined $email) {
-		$email="unknown\@$uuid";
+		$email="$desc (unregistered)";
 	}
 	print "$size $email\n" if $size > 0;
 }
