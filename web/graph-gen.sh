@@ -76,7 +76,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	   CFILE="$SHARD.collections"
    fi
    COLLECTIONS=""
-   for c in $(cat $CFILE); do
+   for c in $(shuf $CFILE | head -n 25); do
 	   COLLECTIONS="$COLLECTIONS<li><a href=\"https://archive.org/collection/$c\">$c</a>"
    done
 
