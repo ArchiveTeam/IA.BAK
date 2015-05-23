@@ -41,8 +41,9 @@
 	  ACTIVESHARDS
 	  <p>
 	  MAINTSHARDS
-	  <div>
-          <a href="LEADERBOARDURL">Leaderboard</a> top 25:
+	  <p>
+          <a href="LEADERBOARDURL">Top 25 contributors</a>:
+	  <i>(<a href="#contribute">you can help!</a>)</i>
           <ol>
           LEADERBOARD
           </ol>
@@ -60,7 +61,7 @@
       </tr>
     </table>
     <p>
-     <font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
+     <a name=contribute><font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
     <table width=900><tr><td>
     <blockquote>
     This is an experimental project to see the feasibility and issues with making a backup of the
