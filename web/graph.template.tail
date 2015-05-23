@@ -35,12 +35,10 @@
 	  MAINTSHARDS
 	</td>
       </tr>
-    </table>
-    <p>
-    <p>
-    <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
-    <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
-    <table>
+      <tr colspan=2>
+        <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
+        <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
+      </tr>
       <tr>
         <td>
           <div id="regions_div" style="width: 900px; height: 500px;"></div>
