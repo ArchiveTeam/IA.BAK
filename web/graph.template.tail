@@ -80,8 +80,7 @@
     <br>
     <img src="CONNECTIONSGRAPHURL">
     <p>
-    Script Last Run: TIME <br>
-    <i>Script is run automatically every ten minutes</i>
+    Last update: TIME <br>
     </center>
   </body>
 </html>
