@@ -267,6 +267,22 @@ randomnew () {
 	fi
 }
 
+cleanup () {
+	echo "Cleaning up..."
+	for d in $(sharddirs); do
+		if [ -e "$d/.git/iabak-hourlysync.pid" ]; then
+			pid="$(cat "$d/.git/iabak-hourlysync.pid")"
+			# guard against stale pid file
+			if "$(ps "$pid")" | grep -q iabak-hourlysync; then
+				kill "$pid" || true
+			fi
+			rm -f "$pid" || true
+		fi
+	done
+}
+
+trap cleanup EXIT INT
+
 if [ -n "$(sharddirs)" ]; then
 	./install-fsck-service
 	installgitannex
