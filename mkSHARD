@@ -11,7 +11,7 @@ fi
 if [ -f "$list" ]; then
 	listfile="$list"
 	list=""
-	for l in $(cat listfile); do
+	for l in $(cat $listfile); do
 		list="$list $l"
 	done
 fi
