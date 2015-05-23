@@ -61,6 +61,10 @@ NOMORE
 Also, these files in the IA.BAK directory can have values written
 to them to tune its behavior.
 
+ANNEXGETOPTS
+	Options passed to `git annex get`.
+	This is useful to enable concurrent downloads of multiple files.
+	For example "-J10"
 FSCKTIMELIMIT
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
@@ -88,7 +92,10 @@ Run these commands in git repos like IA.BAK/shard1 etc.
 
 * git config annex.web-options=--limit-rate=200k
 
-  This will limit wget/curl to downloading at 200 kb/s. Adjust to suite. 
+  This will limit wget/curl to downloading at 200 kb/s. Adjust to suite.
+
+  Note that if concurrent downloads are enabled, each download thread will
+  use up to this rate limit.
 
 ## instructions for earlier users
 

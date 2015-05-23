@@ -2,6 +2,7 @@
 set -e
 
 NUMCOPIES=4
+ANNEXGETOPTS=
 
 LANG=C
 export LANG
@@ -19,6 +20,11 @@ case "$(uname)" in
 		;;
 esac
 export PATH
+
+if [ -e ANNEXGETOPTS ]; then
+	ANNEXGETOPTS=$(cat ANNEXGETOPTS)
+	export ANNEXGETOPTS
+fi
 
 if FLOCK=$(which flock); then
 	FLOCK="${FLOCK} -x -n"
@@ -93,9 +99,9 @@ download () {
 rundownloaddirs () {
 	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ] && dirname -z foo >/dev/null 2>&1 ; then
 		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
-		git annex find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get --
+		git annex find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
 	else
-		git annex get --not --copies "$NUMCOPIES"
+		git annex get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
 	fi
 }
 
@@ -105,9 +111,9 @@ rundownloadfiles () {
 		# don't use dirname here, because in maint mode,
 		# only 1 file from a dir might go missing and we 
 		# don't want to download the whole dir then
-		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get --
+		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
 	else
-		git annex get --not --copies "$NUMCOPIES"
+		git annex get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
 	fi
 }
 
