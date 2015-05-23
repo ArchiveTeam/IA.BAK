@@ -170,7 +170,7 @@ mv "$TMP" "${STATS_DIR}/$SHARD".expireleaderboard-raw
 
 TMP="$(tempfile)"
 if [ "$SHARD" != ALL ]; then
-	"$UTIL_DIR/expireleaderboard" "${STATS_DIR}/$SHARD".warning "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn | grep -F -x -v -f "${STATS_DIR}/$SHARD".expireleaderboard-raw > "$TMP"
+	"$UTIL_DIR/expireleaderboard" "${STATS_DIR}/$SHARD".warning "${STATS_DIR}/$SHARD".leaderboard-raw | sort -rn | (grep -F -x -v -f "${STATS_DIR}/$SHARD".expireleaderboard-raw || true) > "$TMP"
 else
 	cat ${STATS_DIR}/SHARD*.warningleaderboard-raw | sort -rn > "$TMP"
 fi
