@@ -24,12 +24,13 @@
 	  <center>
           <div id="chart_div" style="width: 900px; height: 500px;"></div>
           <div><img src="PROGRESS_GRAPHURL" width="900" height="500"/></div>
-            <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
-            <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
-            <div id="regions_div" style="width: 900px; height: 500px;"></div>
-              <p>
-            <div id="us_div" style="width: 900px; height: 500px;"></div>
-              <p>
+	  <p>
+          <font size=+1><b>CURRENT BACKUP GEOLOCATIONS</b><br>
+          <i>CLICOUNT Clients Operating in CLAMBAKE countries</i><p>
+          <div id="regions_div" style="width: 900px; height: 500px;"></div>
+          <p>
+          <div id="us_div" style="width: 900px; height: 500px;"></div>
+          <p>
 	  </center>
 	</td>
 	<td style="vertical-align:top">
