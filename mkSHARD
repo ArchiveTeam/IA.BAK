@@ -8,6 +8,21 @@ if [ -z "$list" ] || [ -z "$num" ]; then
 	exit 1
 fi
 
+if [ -f "$list" ]; then
+	listfile="$list"
+	list=""
+	for l in $(cat listfile); do
+		list="$list $l"
+	done
+fi
+
+for w in $list; do
+	if grep -Fx "$w" /var/www/html/stats/ALL.collections; then
+		echo "$w is already in a shard" >&2
+		exit 1
+	fi
+done
+
 rm -f 
 IFS="
 "
