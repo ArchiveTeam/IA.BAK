@@ -42,7 +42,7 @@ install_systemd () {
 install_cron () {
 	if CRONTAB=$(which crontab); then
 		if ! "${CRONTAB}" -l 2>&- | grep "${PWD}/iabak-cronjob" -q; then
-			tmp=$(tempfile)
+			tmp=$(tempfile || echo install-fsck-service-tmp-$$)
 			crontab -l >${tmp} 2>&- || true
 			echo "02 02 * * * ${PWD}/iabak-cronjob >${PWD}/iabak-cronjob.log 2>&1" >>${tmp}
 			crontab ${tmp}
