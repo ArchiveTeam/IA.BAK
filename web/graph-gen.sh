@@ -101,7 +101,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
    fi
    EXPIRELEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.expireleaderboard-raw"
    
-   WARNINGLEADERBOARD="$(cat "$SHARD.warningleaderboard" | $IABAK/utils/clientinfolinks)""
+   WARNINGLEADERBOARD="$(cat "$SHARD.warningleaderboard" | $IABAK/utils/clientinfolinks)"
    if [ -z "$WARNINGLEADERBOARD" ]; then
 	   WARNINGLEADERBOARD="none! :)"
    fi
