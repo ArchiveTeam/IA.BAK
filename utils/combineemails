@@ -14,7 +14,7 @@ while (<>) {
 
 foreach my $email (keys %m) {
 	my $sha1;
-	if ($email=~/ (unregistered)/) {
+	if ($email=~/ \(unregistered\)/) {
 		$sha1="N/A";
 	}
 	else {
