@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-import Digest::SHA;
+use Digest::SHA;
 my %m;
 while (<>) {
 	chomp;
