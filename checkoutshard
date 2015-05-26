@@ -83,7 +83,7 @@ git annex sync
 
 # Copy over any user configuration from a previous shard.
 cd "$top"
-if [ -n "$prevshard" ]; then
+if [ -n "$prevshard" ] && [ -d "$prevshard" ]; then
 	for c in annex.diskreserve annex.web-options; do
 		val="$(cd "$prevshard" && git config "$c" || true)"
 		if [ -n "$val" ]; then
