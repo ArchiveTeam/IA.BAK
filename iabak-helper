@@ -279,7 +279,7 @@ cleanup () {
 			if "$(ps "$pid")" | grep -q iabak-hourlysync; then
 				kill "$pid" || true
 			fi
-			rm -f "$pid" || true
+			rm -f "$d/.git/iabak-hourlysync.pid" || true
 		fi
 	done
 }
