@@ -13,7 +13,7 @@ while (<>) {
 	$clientinfo=~s/>//g;
 	$clientinfo=~s/\&//g;
 	$clientinfo=~s/\///g;
-	$clientinfo=~s/!//g;
+	$clientinfo=~s/@//g;
 
 	print "<li>";
 	if ($linksha1 eq "N/A") {
