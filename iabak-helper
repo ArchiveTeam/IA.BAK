@@ -204,9 +204,6 @@ setup () {
 			git config annex.diskreserve "$reserve"
 		fi
 	fi
-	echo "Now we need to set up a service to regularly double-check the content of"
-	echo "your backup. This protects the backup against bit-rot."
-	./install-fsck-service
 }
 
 installgitannex () {
@@ -214,7 +211,7 @@ installgitannex () {
 }
 
 installfsckservice () {
-  ${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
+	${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
 }
 
 handleshard () {
@@ -290,8 +287,8 @@ cleanup () {
 trap cleanup EXIT INT
 
 if [ -n "$(sharddirs)" ]; then
-	./install-fsck-service
 	installgitannex
+	installfsckservice
 
 	# First do a fast fsck of all shards, in order to detect
 	# obvious problems, and report in that we still have the data
@@ -344,6 +341,9 @@ else
 	read confirm
 
 	installgitannex
+	echo "Now we need to set up a service to regularly double-check the content of"
+	echo "your backup. This protects the backup against bit-rot."
+	installfsckservice
 	./checkoutshard "$localdir"
 	(
 		cd "$localdir"
