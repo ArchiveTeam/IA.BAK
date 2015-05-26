@@ -164,4 +164,10 @@ done
 
 mv html/ALL.html html/index.html
 mv -f html/* /var/www/html/
+
+mkdir -p html/client
+"$IABAK/utils/clientlist" "$IABAK/pubkeys" | "$IABAK/web/clientpages.pl" "$IABAK"
+mkdir -p /var/www/html/client
+mv -f html/client/* /var/www/html/client
+
 rm -rf "$TMP"

@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+my $pubkeys_dir=shift;
+
+my %m;
+foreach my $f (<$pubkeys_dir/*/pubkeys>) {
+	open (IN, "<", $f);
+	my $shard=$f;
+	$shard=~s/\/pubkeys$//;
+	$shard=~s/.*\///;
+	while (<IN>) {
+		chomp;
+		my ($sshkeytype, $sshkey, $email, $uuid) = split(' ', $_, 4);
+		push @{$m{$email}}, "$shard\:$uuid";
+	}
+	close IN;
+}
+
+foreach my $email (keys %m) {
+	print "$email";
+	foreach my $sharduuid (@{$m{$email}}) {
+		print " $sharduuid";
+	}
+	print "\n";
+}
