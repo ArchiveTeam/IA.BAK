@@ -26,8 +26,12 @@ install_systemd () {
 				[Install]
 				WantedBy=default.target
 				EOF
-			"${SYSTEMCTL}" --user daemon-reload
-			"${SYSTEMCTL}" --user enable iabak-cronjob.timer
+			if ! ( "${SYSTEMCTL}" --user daemon-reload && "${SYSTEMCTL}" --user enable iabak-cronjob.timer ); then
+				echo "Your systemd doesn't appear to be configured to run user jobs."
+				echo "Falling back to an old-school cron job."
+				rm -f "${file}.service" "${file}.timer"
+				return 1
+			fi
 			echo "Systemd service iabak-cronjob installed and enabled."
 			echo "*** Note: you may need to run 'loginctl enable-linger $(whoami)' in order for this job to run while you are logged out."
 		else
