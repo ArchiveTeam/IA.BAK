@@ -88,31 +88,20 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 	PROGRESS_GRAPHURL="http://iabak.archiveteam.org:8080/render/?width=900&height=500&_salt=1428622253.322&areaMode=stacked&from=-1weeks&vtitle=%25&yMax=100&yMin=0&title=SHARD$SHARDNUM%20progress%2C%20%25&target=legendValue%28alias%28color%28scale%28divideSeries%28diffSeries%28keepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%2CsumSeries%28keepLastValue%28iabak.shardstats.numcopies.0.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.numcopies.1.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.numcopies.2.shard$SHARDNUM%29%29%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%2300dd00%22%29%2C%22%3E%3D3%20backups%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.2.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%2393dd93%22%29%2C%222%20backups%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.1.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22%23e89393%22%29%2C%221%20backup%22%29%2C%22last%22%29&target=legendValue%28alias%28color%28scale%28divideSeries%28keepLastValue%28iabak.shardstats.numcopies.0.shard$SHARDNUM%29%2CkeepLastValue%28iabak.shardstats.filecount.shard$SHARDNUM%29%29%2C100%29%2C%22red%22%29%2C%22IA%20only%22%29%2C%22last%22%29"
    fi
    CONNECTIONSGRAPHURL="http://iabak.archiveteam.org:8080/render/?width=497&height=400&_salt=1428538747.86&tz=UTC&target=keepLastValue%28iabak.shardstats.connections.${SHARDSTATMATCH}%29&from=-2weeks"
-
-   LEADERBOARD=""
+   
    IFS="
 "
-   for l in $(head -n 25 "$SHARD.leaderboard"); do
-     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
-     LEADERBOARD="$LEADERBOARD<li>$l"
-   done
+
+   LEADERBOARD="$(head -n 25 "$SHARD.leaderboard" | $IABAK/utils/clientinfolinks)"
    LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
 
-   EXPIRELEADERBOARD=""
-   for l in $(cat "$SHARD.expireleaderboard"); do
-     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
-     EXPIRELEADERBOARD="$EXPIRELEADERBOARD<li>$l"
-   done
+   EXPIRELEADERBOARD="$(cat "$SHARD.expireleaderboard" | $IABAK/utils/clientinfolinks)"
    if [ -z "$EXPIRELEADERBOARD" ]; then
 	   EXPIRELEADERBOARD="none! :)"
    fi
    EXPIRELEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.expireleaderboard-raw"
    
-   WARNINGLEADERBOARD=""
-   for l in $(cat "$SHARD.warningleaderboard"); do
-     l="$(echo "$l" | sed "s/<//g" | sed "s/>//g" | sed "s/\///g" )"
-     WARNINGLEADERBOARD="$WARNINGLEADERBOARD<li>$l"
-   done
+   WARNINGLEADERBOARD="$(cat "$SHARD.warningleaderboard" | $IABAK/utils/clientinfolinks)""
    if [ -z "$WARNINGLEADERBOARD" ]; then
 	   WARNINGLEADERBOARD="none! :)"
    fi

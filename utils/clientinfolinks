@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+$|=1;
+
+while (<>) {
+	chomp;
+	my ($linksha1, $clientinfo)=split(' ', $_, 2);
+
+	# avoid xss and other unplesentness in user supplied input
+	$clientinfo=~s/<//g;
+	$clientinfo=~s/>//g;
+	$clientinfo=~s/\&//g;
+	$clientinfo=~s/\///g;
+
+	print "<li>";
+	if ($linksha1 eq "N/A") {
+		print $clientinfo;
+	}
+	else {
+		print "<a href=\"/client/$linksha1.html\">$clientinfo</a>";
+	}
+}
