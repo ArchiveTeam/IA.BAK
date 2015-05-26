@@ -31,9 +31,9 @@ For example, to run it at 10:30am on Mondays, put this in crontab:
 
 	30 10 * * 1 /path/to/IA.BAK/iabak-cronjob
 
-The install-fsck-service installs a systemd timer or cron job that will run
-iabak-cronjob once a day. This is now set up automatically the first time
-iabak is run.
+The `install-fsck-service` installs a systemd timer or cron job that will run
+`iabak-cronjob` once a day. This is now set up automatically the first time
+`iabak` is run.
 
 ## checking out additional shards
 
@@ -45,32 +45,32 @@ To manually check out a particular shard, you can run the
 `checkoutshard` script, passing it the name of a shard, such as "shard3".
 See the `repolist` file for a list of shards and their status.
 
-Once you have multiple shards checked out, the next time you run iabak,
+Once you have multiple shards checked out, the next time you run `iabak`,
 it will process all the shards.
 
 ## flag files
 
-You can touch these files in the IA.BAK directory to control iabak.
+You can touch these files in the IA.BAK directory to control `iabak`.
 
-NOSHUF	
+* `NOSHUF`	
 	Prevents shuffling files before downloading.
-NOMORE	
-	Prevents iabak from checking out additional shards as existing
+* `NOMORE`	
+	Prevents `iabak` from checking out additional shards as existing
 	shards complete.
 
 Also, these files in the IA.BAK directory can have values written
 to them to tune its behavior.
 
-ANNEXGETOPTS
+* `ANNEXGETOPTS`	
 	Options passed to `git annex get`.
 	This is useful to enable concurrent downloads of multiple files.
 	For example "-J10"
-FSCKTIMELIMIT
+* `FSCKTIMELIMIT`	
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
-	it will spend up to 5 hours per shard per run of iabak.
+	it will spend up to 5 hours per shard per run of `iabak`.
 	Feel free to set this to a smaller time limit like "1h" or "30m".
-	(Note that iabak-cronjob does not perform these expensive fscks.)
+	(Note that `iabak-cronjob` does not perform these expensive fscks.)
 
 	The goal is to verify the checksum of each file
 	in your backup once per month. If it's interrupted by this time
@@ -84,18 +84,16 @@ So you want to back up part of the IA, but don't want this to take over
 your whole disk or internet pipe? Here's some tuning options you can use..
 Run these commands in git repos like IA.BAK/shard1 etc.
 
-* git config annex.diskreserve 200GB
+* `git config annex.diskreserve 200GB`	
+	This will prevent git-annex from using up the last 200gb of your disk.
+	Adjust to suite. This is prompted for the first time you run `iabak`, and it
+	is automatically propigated to each new shard.
 
-  This will prevent git-annex from using up the last 200gb of your disk.
-  Adjust to suite. This is prompted for the first time you run iabak, and it
-  is automatically propigated to each new shard.
+* `git config annex.web-options=--limit-rate=200k`	
+	This will limit wget/curl to downloading at 200 kb/s. Adjust to suite.
 
-* git config annex.web-options=--limit-rate=200k
-
-  This will limit wget/curl to downloading at 200 kb/s. Adjust to suite.
-
-  Note that if concurrent downloads are enabled, each download thread will
-  use up to this rate limit.
+	Note that if concurrent downloads are enabled, each download thread will
+	use up to this rate limit.
 
 ## instructions for earlier users
 
@@ -105,4 +103,4 @@ with iabak.
 1. Clone this repo to the same drive you cloned shard1 to before.
 2. Stop any running git-annex process.
 3. Move the shard1 repo to IA.BAK/shard1
-4. Go to IA.BAK, and run ./iabak
+4. Go to IA.BAK, and run `./iabak`
