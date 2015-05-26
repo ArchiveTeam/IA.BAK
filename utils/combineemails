@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+import Digest::SHA;
 my %m;
 while (<>) {
 	chomp;
@@ -12,11 +13,18 @@ while (<>) {
 }
 
 foreach my $email (keys %m) {
+	my $sha1;
+	if ($email=~/ (unregistered)/) {
+		$sha1="N/A";
+	}
+	else {
+		$sha1=Digest::SHA::sha1_hex($email);
+	}
 	my $obscuredemail=$email;
 	$obscuredemail=~s/[+@].*//;
 
 	my $size=$m{$email};
 	my $tbsize=int($size / 10000000000) / 100;
 
-	print "${tbsize}TB $obscuredemail\n";
+	print "${tbsize}TB $sha1 $obscuredemail\n";
 }
