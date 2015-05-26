@@ -5,8 +5,16 @@ set -e
 NEED_PRERELEASE=0
 
 linux_install () {
+    ARCH=""
+    UNAME_M="$(uname -m)"
+    case $UNAME_M in
+        'x86_64') ARCH="amd64";;
+        arm*l) ARCH="armel";;
+        i*86) ARCH="i386";;
+        *) echo "ERROR: Unhandled architecture: $UNAME_M"; exit 1;;
+    esac
 	if [ -d git-annex.linux ]; then
-		if upgrade_avail ./git-annex.linux/git-annex https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz.info; then
+		if upgrade_avail ./git-annex.linux/git-annex https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-"$ARCH".tar.gz.info; then
 			rm -rf git-annex.linux
 		fi
 		if [ "$NEED_PRERELEASE" = 1 ] && ! [ -e git-annex.linux/.prerelease ]; then
@@ -16,18 +24,18 @@ linux_install () {
 
 	if [ ! -d git-annex.linux ]; then
 		echo "Installing a recent version of git-annex ..."
-		rm -f git-annex-standalone-i386.tar.gz
+		rm -f git-annex-standalone-"$ARCH".tar.gz
 		if [ "$NEED_PRERELEASE" = 1 ]; then
-			wget https://downloads.kitenet.net/git-annex/autobuild/i386/git-annex-standalone-i386.tar.gz
+			wget https://downloads.kitenet.net/git-annex/autobuild/"$ARCH"/git-annex-standalone-"$ARCH".tar.gz
 		else 
 			# released version
-			wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-i386.tar.gz
+			wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-"$ARCH".tar.gz
 		fi
-		tar xf git-annex-standalone-i386.tar.gz
+		tar xf git-annex-standalone-"$ARCH".tar.gz
 		if [ "$NEED_PRERELEASE" = 1 ]; then
 			touch git-annex.linux/.prerelease
 		fi
-		rm -f git-annex-standalone-i386.tar.gz
+		rm -f git-annex-standalone-"$ARCH".tar.gz
 		echo "Installed in $(pwd)/git-annex.linux"
 		echo
 	fi
