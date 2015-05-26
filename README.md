@@ -89,7 +89,7 @@ Run these commands in git repos like IA.BAK/shard1 etc.
 	Adjust to suite. This is prompted for the first time you run `iabak`, and it
 	is automatically propigated to each new shard.
 
-* `git config annex.web-options=--limit-rate=200k`	
+* `git config annex.web-options --limit-rate=200k`	
 	This will limit wget/curl to downloading at 200 kb/s. Adjust to suite.
 
 	Note that if concurrent downloads are enabled, each download thread will
