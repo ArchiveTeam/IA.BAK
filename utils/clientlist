@@ -17,8 +17,12 @@ foreach my $f (<$pubkeys_dir/*/pubkeys>) {
 
 foreach my $email (keys %m) {
 	print "$email";
+	my %seen;
 	foreach my $sharduuid (@{$m{$email}}) {
-		print " $sharduuid";
+		if (! $seen{$sharduuid}) {
+			print " $sharduuid";
+		}
+		$seen{$sharduuid}=1;
 	}
 	print "\n";
 }
