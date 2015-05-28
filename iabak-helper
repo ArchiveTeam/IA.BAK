@@ -84,7 +84,7 @@ download () {
 
 	echo "Here goes! Downloading from Internet Archive."
 	echo "(This can be safely interrupted at any time with ctrl-C)"
-	echo "(Also, you can safely run more than one of these at a time, to use more bandwidth!)"
+	echo "(Not using enough bandwith? Enable concurrent downloads with: echo -J5 > ANNEXGETOPTS)"
 	echo ""
 	if rundownloaddirs; then
 		echo
