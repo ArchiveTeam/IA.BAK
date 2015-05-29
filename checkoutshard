@@ -37,6 +37,7 @@ registrationemail="$(cat .registrationemail)"
 checkssh () {
 	repourl="$1"
 	uuid="$2"
+	delay="$3"
 	
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
@@ -51,7 +52,8 @@ checkssh () {
 		wget -O- "$(./register-helper.pl "$SHARD" "$uuid" "$registrationemail" "$(cat id_rsa.pub)")"
 		sleep 1
 		wget -q -O- http://iabak.archiveteam.org/cgi-bin/pushme.cgi >/dev/null 2>&1 || true
-		checkssh "$repourl" "$uuid"
+		sleep "$delay"
+		checkssh "$repourl" "$uuid" "$(($delay * 2))"
 	fi
 }
 
@@ -74,7 +76,7 @@ git config user.email "$(whoami)@iabak"
 git config gc.auto 0
 git annex init
 uuid="$(git config annex.uuid)"
-(cd .. && checkssh "$repourl" "$uuid")
+(cd .. && checkssh "$repourl" "$uuid" 2)
 cp -a ../id_rsa .git/annex/id_rsa
 cp -a ../id_rsa.pub .git/annex/id_rsa.pub
 git remote add origin "$repourl"
