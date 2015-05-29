@@ -136,7 +136,7 @@ sendStat "filestransfered" "${count}" "$(date --date "${date}" +%s)"
 
 mkdir -p "${GEOIP_DIR}"
 GEOLIST="$(tempfile)"
-for ip in $(zgrep 'Accepted publickey' /var/log/auth.log.* /var/log/auth.log | grep "$GREPSHARD" | awk '{print $11}' | sort -u); do
+for ip in $(journalctl _SYSTEMD_UNIT=ssh.service --since='-31 days'  | grep 'Accepted publickey' | grep "$GREPSHARD" | awk '{print $11}' | sort -u); do
 	if [ ! -e "${GEOIP_DIR}/$ip" ]; then
 		TMP="$(tempfile)"
 		wget -q -O "$TMP" "freegeoip.net/json/${ip}"
