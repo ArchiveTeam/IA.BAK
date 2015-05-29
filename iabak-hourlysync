@@ -1,9 +1,11 @@
 #!/bin/sh
 set -e
 
+. ./locks.sh
+
 echo $$ > .git/iabak-hourlysync.pid
 
 # OSX has a really stupid sleep command; 1h won't work there.
 while sleep 3600; do
-	git annex sync || true
+	${GIT_ANNEX} sync || true
 done

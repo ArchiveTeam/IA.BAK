@@ -26,11 +26,7 @@ if [ -e ANNEXGETOPTS ]; then
 	export ANNEXGETOPTS
 fi
 
-if FLOCK=$(which flock); then
-	FLOCK="${FLOCK} -x -n"
-else
-	FLOCK="$(pwd)/flock.pl"
-fi
+. ./locks.sh
 
 pow () {
 	local x=${1:-1} y=${2:-0} result=${3:-1}
@@ -68,7 +64,7 @@ syncshard () {
 	# assumes that pwd is a shard
 	local retries=0
 	while [ ${retries} -lt 5 ]; do
-		if git annex sync; then
+		if ${GITANNEX} sync; then
 			return 0
 		fi
 		retries=$((retries+1))
@@ -99,9 +95,9 @@ download () {
 rundownloaddirs () {
 	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ] && dirname -z foo >/dev/null 2>&1 ; then
 		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
-		git annex find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
+		${GITANNEX} find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 ${GIT} -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
 	else
-		git annex get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
+		${GITANNEX} get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
 	fi
 }
 
@@ -109,11 +105,11 @@ rundownloadfiles () {
 	echo "Checking for any files that still need to be downloaded..."
 	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
 		# don't use dirname here, because in maint mode,
-		# only 1 file from a dir might go missing and we 
+		# only 1 file from a dir might go missing and we
 		# don't want to download the whole dir then
-		git annex find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
+		${GITANNEX} find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 ${GIT} -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
 	else
-		git annex get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
+		${GITANNEX} get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
 	fi
 }
 
@@ -125,7 +121,7 @@ fsckme () {
 	if [ -z "$FSCKTIMELIMIT" ]; then
 		FSCKTIMELIMIT=5h
 	fi
-	${FLOCK} .git/annex/fullfsck.lock git annex fsck --incremental-schedule 30d --time-limit "$FSCKTIMELIMIT"
+	${FLOCK_EX} .git/annex/fullfsck.lock ${GITANNEX} fsck --incremental-schedule 30d --time-limit "$FSCKTIMELIMIT"
 	fsckresult=$?
 	set -e
 	if [ "$fsckresult" -eq 101 ]; then
@@ -141,7 +137,7 @@ fastfsck () {
 	if [ ! -d .empty ]; then
 		mkdir .empty
 	fi
-	git annex fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
+	${GITANNEX} fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
 	syncshard || echo "Warning: failed to sync this shard; fsck results not recorded on server"
 }
 
@@ -164,7 +160,7 @@ maint () {
 }
 
 periodicsync () {
-	${FLOCK} .git/annex/iasyncer.lock ../iabak-hourlysync || true
+	(cd .. && ${FLOCK_EX} .git/annex/iasyncer.lock ./iabak-hourlysync) || true
 }
 
 outofspace () {
@@ -176,7 +172,7 @@ stillhavespace () {
 	prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
 
 	if [ -n "$prevshard" ]; then
-		reserve="$(cd "$prevshard" && git config annex.diskreserve || true)"
+		reserve="$(cd "$prevshard" && ${GIT} config annex.diskreserve || true)"
 		if [ -n "$reserve" ] && outofspace "$reserve"; then
 			false
 		else
@@ -201,18 +197,18 @@ setup () {
 			echo "not enough diskspace to reserve"
 			setup
 		else
-			git config annex.diskreserve "$reserve"
+			${GIT} config annex.diskreserve "$reserve"
 		fi
 	fi
 }
 
 installgitannex () {
-	${FLOCK} .iabak-install-git-annex ./install-git-annex || true
+	${FLOCK_EX} .iabak-install-git-annex ./install-git-annex || true
 }
 
 installfsckservice () {
 	if [ ! "$CRONJOB" ]; then
-		${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
+		${FLOCK_EX} ./iabak-install-fsck-service ./install-fsck-service || true
 	fi
 }
 
