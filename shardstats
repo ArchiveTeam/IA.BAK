@@ -148,7 +148,7 @@ chmod 644 "$GEOLIST"
 mv "$GEOLIST" "${STATS_DIR}/$SHARD.geolist"
 
 CONNS="$(tempfile)"
-zgrep -h "Accepted publickey for $GREPSHARD" /var/log/auth.log.* /var/log/auth.log | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
+journalctl _SYSTEMD_UNIT=ssh.service --since='-31 days' | grep -h "Accepted publickey for $GREPSHARD" | perl -pe 's/:.*/:00/' | uniq  -c > "$CONNS"
 chmod 644 "$CONNS"
 data=$(tail -1 "$CONNS" | sed -e 's/^\s*\([0-9]*\) /\1\t/g' -e 's/:00$/:59:59/g')
 count="$(echo "$data" | cut -f 1)"
