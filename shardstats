@@ -119,7 +119,7 @@ while read mult count; do
 	if (($mult>$maxcopies)); then
 		maxcopies=$mult
 	fi
-done < <(tail -n +2 "${STATS_DIR}/$SHARD" | sed -e "s/\s*numcopies [+]\([0-9]*\):/\1/g")
+done < <(tail -n +2 "${STATS_DIR}/$SHARD" | sed -e "s/\s*numcopies [+-]\([0-9]*\):/\1/g")
 sendStat "numcopies.total" "${total}"
 sendStat "filecount" "${filecount}"
 i=0
