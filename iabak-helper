@@ -211,7 +211,9 @@ installgitannex () {
 }
 
 installfsckservice () {
-	${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
+	if [ ! "$CRONJOB" ]; then
+		${FLOCK} ./iabak-install-fsck-service ./install-fsck-service || true
+	fi
 }
 
 handleshard () {
