@@ -261,6 +261,7 @@ sharddirs () {
 
 randomshard () {
 	wantstate="$1"
+	git pull >&2 || true
 	grep " $wantstate$" repolist | cut -d ' ' -f 1 | perl -e 'while (<>) { chomp; if (! -d $_) { push @l, $_ } };  print $l[rand @l]'
 }
 
