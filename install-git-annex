@@ -2,7 +2,7 @@
 set -e
 
 # should normally be 0
-NEED_PRERELEASE=0
+NEED_PRERELEASE=1
 
 linux_install () {
     ARCH=""

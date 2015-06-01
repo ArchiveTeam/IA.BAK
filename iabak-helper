@@ -204,6 +204,7 @@ setup () {
 
 installgitannex () {
 	${FLOCK_EX} .iabak-install-git-annex ./install-git-annex || true
+	git annex version
 }
 
 installfsckservice () {
