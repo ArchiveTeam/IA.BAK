@@ -86,11 +86,11 @@ Run these commands in git repos like IA.BAK/shard1 etc.
 
 * `git config annex.diskreserve 200GB`	
 	This will prevent git-annex from using up the last 200gb of your disk.
-	Adjust to suite. This is prompted for the first time you run `iabak`, and it
+	Adjust to suit. This is prompted for the first time you run `iabak`, and it
 	is automatically propigated to each new shard.
 
 * `git config annex.web-options --limit-rate=200k`	
-	This will limit wget/curl to downloading at 200 kb/s. Adjust to suite.
+	This will limit wget/curl to downloading at 200 kb/s. Adjust to suit.
 
 	Note that if concurrent downloads are enabled, each download thread will
 	use up to this rate limit.
