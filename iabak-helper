@@ -97,6 +97,8 @@ download () {
 }
 
 rundownloaddirs () {
+	# Commented out until the next git-annex release which adds --incomplete
+	#git annex get --incomplete
 	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ] && dirname -z foo >/dev/null 2>&1 ; then
 		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
 		git annex find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 git -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
