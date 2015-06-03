@@ -93,7 +93,7 @@ cat $SHARD.clientconnsperhour | sed -e 's/^[ \t]*//' | awk '{print $2, $3, $4, "
 "
 
    LEADERBOARD="$(head -n 25 "$SHARD.leaderboard" | $IABAK/utils/clientinfolinks)"
-   LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard"
+   LEADERBOARDURL="http://iabak.archiveteam.org/stats/$SHARD.leaderboard-raw"
 
    EXPIRELEADERBOARD="$(cat "$SHARD.expireleaderboard" | $IABAK/utils/clientinfolinks)"
    if [ -z "$EXPIRELEADERBOARD" ]; then
