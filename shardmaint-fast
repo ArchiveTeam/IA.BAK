@@ -3,7 +3,7 @@
 cd /usr/local/IA.BAK/client
 git pull
 
-for shard in $(grep ' maint$' repolist | cut -d ' ' -f 1); do
+for shard in $(egrep ' (maint|active)$' repolist | cut -d ' ' -f 1); do
 	SHARD="$(echo "$shard" | tr a-z A-Z)"
 	# Expire shards that have not checked in recently enough.
 	# If an expired shard checks back in, this will de-expire it too.
