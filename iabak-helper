@@ -364,8 +364,8 @@ fi
 
 function bytesFromSize() {
     declare -a size
-    size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([0-9]\)\([A-Z]\)/\1 \2/')"
-    count="$(echo ${size} | cut -f 1 -d ' ')"
+    size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/')"
+    count="$(echo ${size} | cut -f 1 -d ' ' | cut -f 1 -d '.')"
     unit="$(echo ${size} | cut -f 2 -d ' ')"
     exponent=1
     case ${unit} in
