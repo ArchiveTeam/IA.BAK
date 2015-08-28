@@ -79,7 +79,7 @@ cd "$localdir"
 ${GIT} config user.name "$(whoami)"
 ${GIT} config user.email "$(whoami)@iabak"
 ${GIT} config gc.auto 0
-${GIT_ANNEX} init
+${GITANNEX} init
 uuid="$(git config annex.uuid)"
 (cd .. && checkssh "$repourl" "$uuid" 2)
 cp -a ../id_rsa .git/annex/id_rsa
