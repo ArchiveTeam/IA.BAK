@@ -40,11 +40,14 @@ checkssh () {
 	repourl="$1"
 	uuid="$2"
 	delay="$3"
-	
+
 	if [ ! -e id_rsa ]; then
 		ssh-keygen -q  -P "" -t rsa -f ./id_rsa
+		# we expect ssh-keygen to do this for us, but not every version does, it seems.
+		chmod go-rwx id_rsa
+		chmod go-wx id_rsa.pub
 	fi
-	
+
 	user="$(echo "$repourl" | cut -d : -f 1)"
 	dir="$(echo "$repourl" | cut -d : -f 2)"
 
