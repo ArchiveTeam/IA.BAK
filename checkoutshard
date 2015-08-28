@@ -23,6 +23,8 @@ case "$(uname)" in
 esac
 export PATH
 
+. ./locks.sh
+
 top="$(pwd)"
 prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
 
@@ -69,19 +71,19 @@ status="$3"
 
 # This is slightly weird way to clone, but it allows using our
 # dedicated ssh key without installing it in ~/.ssh/
-git init "$localdir"
+${GIT} init "$localdir"
 cd "$localdir"
-git config user.name "$(whoami)"
-git config user.email "$(whoami)@iabak"
-git config gc.auto 0
-git annex init
+${GIT} config user.name "$(whoami)"
+${GIT} config user.email "$(whoami)@iabak"
+${GIT} config gc.auto 0
+${GIT_ANNEX} init
 uuid="$(git config annex.uuid)"
 (cd .. && checkssh "$repourl" "$uuid" 2)
 cp -a ../id_rsa .git/annex/id_rsa
 cp -a ../id_rsa.pub .git/annex/id_rsa.pub
-git remote add origin "$repourl"
-git config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
-git annex sync
+${GIT} remote add origin "$repourl"
+${GIT} config remote.origin.annex-ssh-options "-i .git/annex/id_rsa"
+${GIT} annex sync
 
 # Copy over any user configuration from a previous shard.
 cd "$top"
@@ -89,7 +91,7 @@ if [ -n "$prevshard" ] && [ -d "$prevshard" ]; then
 	for c in annex.diskreserve annex.web-options; do
 		val="$(cd "$prevshard" && git config "$c" || true)"
 		if [ -n "$val" ]; then
-			(cd "$localdir" && git config "$c" "$val")
+			(cd "$localdir" && ${GIT} config "$c" "$val")
 		fi
 	done
 fi
