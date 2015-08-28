@@ -26,12 +26,19 @@ linux_install () {
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex-standalone-"$ARCH".tar.gz
 		if [ "$NEED_PRERELEASE" = 1 ]; then
-			wget https://downloads.kitenet.net/git-annex/autobuild/"$ARCH"/git-annex-standalone-"$ARCH".tar.gz
-		else 
+			URL="https://downloads.kitenet.net/git-annex/autobuild/${ARCH}/git-annex-standalone-${ARCH}.tar.gz"
+		else
 			# released version
-			wget https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-"$ARCH".tar.gz
+			URL="https://downloads.kitenet.net/git-annex/linux/current/git-annex-standalone-${ARCH}.tar.gz"
 		fi
-		tar xf git-annex-standalone-"$ARCH".tar.gz
+		if ! $(wget "${URL}"); then
+			echo "wget failed to download git-annex; clear the erroneous condition and try again."
+			exit 1
+		fi
+		if ! tar xf git-annex-standalone-"$ARCH".tar.gz; then
+			echo "tar failed to extract git-annex; clear the erroneous condition and try again."
+			exit 1
+		fi
 		if [ "$NEED_PRERELEASE" = 1 ]; then
 			touch git-annex.linux/.prerelease
 		fi
@@ -55,14 +62,21 @@ osx_install () {
 		echo "Installing a recent version of git-annex ..."
 		rm -f git-annex.dmg
 		if [ "$NEED_PRERELEASE" = 1 ]; then
-			wget https://downloads.kitenet.net/git-annex/autobuild/x86_64-apple-yosemite/git-annex.dmg
-		else 
+			URL="https://downloads.kitenet.net/git-annex/autobuild/x86_64-apple-yosemite/git-annex.dmg"
+		else
 			# released version
-			wget https://downloads.kitenet.net/git-annex/OSX/current/10.10_Yosemite/git-annex.dmg
+			URL="https://downloads.kitenet.net/git-annex/OSX/current/10.10_Yosemite/git-annex.dmg"
+		fi
+		if ! $(wget "${URL}"); then
+			echo "wget failed to download git-annex; clear the erroneous condition and try again."
+			exit 1
 		fi
 		mkdir git-annex.osx.mnt
 		hdiutil attach git-annex.dmg -mountpoint git-annex.osx.mnt
-		cp -r git-annex.osx.mnt/git-annex.app/Contents/MacOS/ git-annex.osx
+		if ! $(cp -r git-annex.osx.mnt/git-annex.app/Contents/MacOS/ git-annex.osx); then
+			echo "failed to extract git-annex; clear the erroneous condition and try again."
+			exit 1
+		fi
 		hdiutil eject git-annex.osx.mnt
 		if [ "$NEED_PRERELEASE" = 1 ]; then
 			touch git-annex.osx/.prerelease
