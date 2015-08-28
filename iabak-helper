@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 NUMCOPIES=4
@@ -170,7 +170,11 @@ periodicsync () {
 
 outofspace () {
 	reserve="$1"
-	which numfmt >/dev/null 2>&1 && [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]
+	if [ which numfmt >/dev/null 2>&1]; then
+            [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]
+        else
+            [ $(bytesFromSize $(df -Ph . | tail -1 | awk '{print $4}')) -lt $(bytesFromSize ${reserve}) ]
+        fi
 }
 
 stillhavespace () {
@@ -192,18 +196,29 @@ setup () {
 	echo ""
 	df -h .
 	echo "How much of this disk space do you want to keep free, and not use for IA backup?"
-	echo "(You can free up space at any time.)"
-	echo "To use entire disk, just hit Enter, or type in something like"
-	echo "200G or 1T"
-	printf "keep free> "
-	read reserve
+	echo "(You can free up space at any time by simply deleting files from the archives.)"
+	echo "To use entire disk, just hit Enter, or type in something like 100M, 200G, or 1T."
+	echo "You must input a value of at least 100 megabytes."
+        askreserve
+}
+
+askreserve () {
+	read -e -p "keep free: " -i "100M" reserve
 	if [ -n "$reserve" ]; then
+            if [ $(bytesFromSize ${reserve}) -lt 100000000 ]; then
+                echo "*** you must reserve at least 100M ***"
+                askreserve
+            else
 		if outofspace "$reserve"; then
-			echo "not enough diskspace to reserve"
-			setup
+			echo "*** not enough diskspace to reserve ***"
+			askreserve
 		else
 			git config annex.diskreserve "$reserve"
 		fi
+            fi
+        else
+            echo "*** sorry, you may not leave this blank ***"
+            askreserve
 	fi
 }
 
@@ -357,3 +372,20 @@ else
 		download
 	)
 fi
+
+function bytesFromSize() {
+    declare -a size
+    size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/')"
+    count="$(echo ${size} | cut -f 1 -d ' ' | cut -f 1 -d '.')"
+    unit="$(echo ${size} | cut -f 2 -d ' ')"
+    exponent=1
+    case ${unit} in
+        B) exponent=1;;
+        K) exponent=3;;
+        M) exponent=6;;
+        G) exponent=9;;
+        T) exponent=12;;
+        *) exponent=15;;
+    esac
+    echo $((${count} * $(pow 10 ${exponent})))
+}
