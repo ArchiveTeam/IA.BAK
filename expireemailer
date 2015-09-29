@@ -5,6 +5,7 @@
 use warnings;
 use strict;
 use Mail::Sendmail;
+use Digest::SHA;
 
 my $dry_run=1;
 
@@ -28,8 +29,9 @@ foreach my $email (keys %m) {
 	my $size=$m{$email};
 	next if $size < 10000000; # too small amount to bother them
 	my $tbsize=int($size / 10000000000) / 100;
-	
-	if (open(IN, "<expireemailer.state/$email")) {
+
+	my $sha1=Digest::SHA::sha1_hex($email);
+	if (open(IN, "<expireemailer.state/$sha1")) {
 		my $lastreminder=<IN>;
 		close IN;
 		chomp $lastreminder;
@@ -75,7 +77,7 @@ EOF
 		}
 	}
 	mkdir("expireemailer.state");
-	open(OUT, ">expireemailer.state/$email");
+	open(OUT, ">expireemailer.state/$sha1");
 	print OUT time()."\n";
 	close OUT;
 }
