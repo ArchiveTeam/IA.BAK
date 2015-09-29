@@ -7,7 +7,7 @@ use strict;
 use Mail::Sendmail;
 use Digest::SHA;
 
-my $dry_run=1;
+my $dry_run=0;
 
 my %m;
 open (IN, 'curl http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw | ./utils/uuidtoemail-expiring pubkeys |') || die "curl: $!";
@@ -41,7 +41,8 @@ foreach my $email (keys %m) {
 	}
 
 	my %email = (
-		To => $email,
+		#To => $email,
+		To => "joey\@kitenet.net",
 		From => 'reminder@iabak.archiveteam.org',
 		Subject => "IA.BAK expiry warning ${tbsize}TB",
 		Message => <<"EOF"
