@@ -41,8 +41,7 @@ foreach my $email (keys %m) {
 	}
 
 	my %email = (
-		#To => $email,
-		To => "joey\@kitenet.net",
+		To => $email,
 		From => 'reminder@iabak.archiveteam.org',
 		Subject => "IA.BAK expiry warning ${tbsize}TB",
 		Message => <<"EOF"
