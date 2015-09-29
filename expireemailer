@@ -29,7 +29,7 @@ foreach my $email (keys %m) {
 	next if $size < 10000000; # too small amount to bother them
 	my $tbsize=int($size / 10000000000) / 100;
 	
-	if (open(IN, "<expiremailer.state/$email")) {
+	if (open(IN, "<expireemailer.state/$email")) {
 		my $lastreminder=<IN>;
 		close IN;
 		chomp $lastreminder;
@@ -74,8 +74,8 @@ EOF
 			die "failed to send email: $!";
 		}
 	}
-	mkdir("expiremailer.state");
-	open(OUT, ">expiremailer.state/$email");
+	mkdir("expireemailer.state");
+	open(OUT, ">expireemailer.state/$email");
 	print OUT time()."\n";
 	close OUT;
 }
