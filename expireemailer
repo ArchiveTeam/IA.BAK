@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+#
+# Should be run in the IA.BAK directory, with a pubkeys/ checkout present.
+
+use warnings;
+use strict;
+use Mail::Sendmail;
+
+my $dry_run=1;
+
+my %m;
+open (IN, 'curl http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw | ./utils/uuidtoemail-expiring pubkeys |') || die "curl: $!";
+while (<IN>) {
+	chomp;
+	my ($size, $email) = m/(\d+): (.*)/;
+	if (exists $m{$email}) {
+		$m{$email}+=$size;
+	}
+	else {
+		$m{$email}=$size;
+	}
+}
+close IN;
+
+foreach my $email (keys %m) {
+	next if $email=~/ \(unregistered\)/;
+
+	my $size=$m{$email};
+	next if $size < 10000000; # too small amount to bother them
+	my $tbsize=int($size / 10000000000) / 100;
+	
+	if (open(IN, "<expiremailer.state/$email")) {
+		my $lastreminder=<IN>;
+		close IN;
+		chomp $lastreminder;
+		# Don't send reminder if the last one was sent less than a
+		# week ago.
+		next if time - $lastreminder < 604800;
+	}
+
+	my %email = (
+		To => $email,
+		From => 'reminder@iabak.archiveteam.org',
+		Subject => "IA.BAK expiry warning ${tbsize}TB",
+		Message => <<"EOF"
+Thanks for participating in the Internet Archive backup program.
+Unfortunately, we have not been receiving activity pings from you recently,
+and your ${tbsize}TB of backed up data will be expiring from our system
+soon.
+
+If you still want to participate, please run the iabak program ASAP,
+to let us know you still are maintaining your portion of the Internet
+Archive backup.
+
+If the drive you were providing for the backup has been lost, or died, or
+you deleted the backup to reclaim the space, that's ok. Just ignore this
+email (we may mail you about it one more time), and let it expire.
+
+If you need help, don't reply to this email. 
+Join #internetarchive.bak on EFNet (IRC) to get help.
+EOF
+	);
+	if ($dry_run) {
+		print "(Not sending email; in dry run mode.)\n";
+		print "\n";
+		foreach my $k (keys %email) {
+			print "$k: $email{$k}\n";
+		}
+		print "\n";
+	}
+	else {
+		my $ret=sendmail(%email);
+		if (! $ret) {
+			die "failed to send email: $!";
+		}
+	}
+	mkdir("expiremailer.state");
+	open(OUT, ">expiremailer.state/$email");
+	print OUT time()."\n";
+	close OUT;
+}
