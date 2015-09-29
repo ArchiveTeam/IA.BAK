@@ -10,7 +10,7 @@ use Digest::SHA;
 my $dry_run=0;
 
 my %m;
-open (IN, 'curl http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw | ./utils/uuidtoemail-expiring pubkeys |') || die "curl: $!";
+open (IN, 'curl --silent http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw | ./utils/uuidtoemail-expiring pubkeys |') || die "curl: $!";
 while (<IN>) {
 	chomp;
 	my ($size, $email) = m/(\d+): (.*)/;
