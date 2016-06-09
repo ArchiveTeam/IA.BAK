@@ -59,6 +59,23 @@ rand () {
 	fi
 }
 
+bytesFromSize() {
+	declare -a size
+	size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/')"
+	count="$(echo ${size} | cut -f 1 -d ' ' | cut -f 1 -d '.')"
+	unit="$(echo ${size} | cut -f 2 -d ' ')"
+	exponent=1
+	case ${unit} in
+		B) exponent=1;;
+		K) exponent=3;;
+		M) exponent=6;;
+		G) exponent=9;;
+		T) exponent=12;;
+		*) exponent=15;;
+	esac
+	echo $((${count} * $(pow 10 ${exponent})))
+}
+
 # syncs a shard with random exponential backoff in case of failure, and a maximum of 4 retries.
 syncshard () {
 	# assumes that pwd is a shard
@@ -368,20 +385,3 @@ else
 		download
 	)
 fi
-
-function bytesFromSize() {
-    declare -a size
-    size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/')"
-    count="$(echo ${size} | cut -f 1 -d ' ' | cut -f 1 -d '.')"
-    unit="$(echo ${size} | cut -f 2 -d ' ')"
-    exponent=1
-    case ${unit} in
-        B) exponent=1;;
-        K) exponent=3;;
-        M) exponent=6;;
-        G) exponent=9;;
-        T) exponent=12;;
-        *) exponent=15;;
-    esac
-    echo $((${count} * $(pow 10 ${exponent})))
-}
