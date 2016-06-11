@@ -317,9 +317,8 @@ cleanup () {
 	done
 }
 
-trap cleanup EXIT INT
-
 if [ -n "$(sharddirs)" ]; then
+	trap cleanup EXIT INT
 	installgitannex
 	installfsckservice
 
@@ -373,6 +372,7 @@ else
 	printf "Press Enter to confirm, or ctrl-C to cancel."
 	read confirm
 
+	trap cleanup EXIT INT
 	installgitannex
 	echo "Now we need to set up a service to regularly double-check the content of"
 	echo "your backup. This protects the backup against bit-rot."
