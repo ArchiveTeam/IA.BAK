@@ -183,7 +183,7 @@ periodicsync () {
 
 outofspace () {
 	reserve="$1"
-	if [ which numfmt >/dev/null 2>&1]; then
+	if [ which numfmt >/dev/null 2>&1 ]; then
             [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]
         else
             [ $(bytesFromSize $(df -Ph . | tail -1 | awk '{print $4}')) -lt $(bytesFromSize ${reserve}) ]
