@@ -59,21 +59,25 @@ rand () {
 	fi
 }
 
-bytesFromSize() {
-	declare -a size
-	size="$(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/')"
-	count="$(echo ${size} | cut -f 1 -d ' ' | cut -f 1 -d '.')"
-	unit="$(echo ${size} | cut -f 2 -d ' ')"
-	exponent=1
-	case ${unit} in
-		B) exponent=1;;
-		K) exponent=3;;
-		M) exponent=6;;
-		G) exponent=9;;
-		T) exponent=12;;
-		*) exponent=15;;
-	esac
-	echo $((${count} * $(pow 10 ${exponent})))
+bytesFromSize () {
+    if which numfmt >/dev/null 2>&1; then
+        echo "$1" | numfmt --from=si
+    else
+        declare -a size
+        size=($(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/'))
+        count="$(echo ${size[0]} | cut -f 1 -d '.')"
+        unit="${size[1]}"
+        exponent=1
+        case ${unit} in
+            B) exponent=0;;
+            K) exponent=3;;
+            M) exponent=6;;
+            G) exponent=9;;
+            T) exponent=12;;
+            *) exponent=15;;
+        esac
+        echo $((${count} * $(pow 10 ${exponent})))
+    fi
 }
 
 # syncs a shard with random exponential backoff in case of failure, and a maximum of 4 retries.
@@ -182,12 +186,8 @@ periodicsync () {
 }
 
 outofspace () {
-	reserve="$1"
-	if [ which numfmt >/dev/null 2>&1]; then
-            [ $(df -Ph . | tail -1 | awk '{print $4}' | numfmt --from=si) -lt $(echo $reserve | numfmt --from=si) ]
-        else
-            [ $(bytesFromSize $(df -Ph . | tail -1 | awk '{print $4}')) -lt $(bytesFromSize ${reserve}) ]
-        fi
+    reserve="$1"
+    [ $(bytesFromSize $(df -Ph . | tail -1 | awk '{print $4}')) -lt $(bytesFromSize ${reserve}) ]
 }
 
 stillhavespace () {
