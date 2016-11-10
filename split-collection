@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+set -x
+
+collection=${1}
+itemfile=${collection}-ids.txt
+ia-mine --secure -s "collection:${1}" --itemlist >"${itemfile}"
+chunks=(($(wc -l "${itemfile}")/100000))
+split -nl/${chunks} -d --additional-suffix=.txt "${itemfile}" "${collection}-meta-"
+for f in ${collection}-meta-*.json; do
+    ia-mine --secure "${f}" > "$(basename "${f/meta/files/}" .json).txt"
+done
