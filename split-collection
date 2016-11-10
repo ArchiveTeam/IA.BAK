@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 set -x
 
@@ -7,7 +7,7 @@ itemfile=${collection}-ids.txt
 ia-mine --secure -c -s "collection:${collection}" --itemlist >"${itemfile}"
 lines=$(wc -l "${itemfile}" | cut -d ' ' -f 1)
 chunks=$((lines/100000))
-split -nl/${chunks} -d --additional-suffix=.txt "${itemfile}" "${collection}-meta-"
+split -nl/${chunks} -d --additional-suffix=.json "${itemfile}" "${collection}-meta-"
 for f in ${collection}-meta-*.json; do
-    ia-mine --secure -c "${f}" > "$(basename "${f/meta/files/}" .json).txt"
+    ia-mine --secure -c "${f}" > "$(basename "${f/meta/files}" .json).tsv"
 done
