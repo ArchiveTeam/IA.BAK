@@ -6,4 +6,4 @@ set -e
 
 : ${SHARD_DIR:=/srv/shard}
 
-find ${SHARD_DIR} -maxdepth 3 -type -d -iname $1
+find ${SHARD_DIR} -maxdepth 3 -type d -iname $1
