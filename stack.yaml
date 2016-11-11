@@ -1,0 +1,5 @@
+resolver: lts-5.10
+packages:
+- '.'
+extra-deps:
+- propellor-3.2.2
