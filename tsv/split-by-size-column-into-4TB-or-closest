@@ -30,6 +30,10 @@ $stdin.each_line do |l|
   buffer << l
 end
 
+if !buffer.empty?
+  buffers << [buffer, accum]
+end
+
 buffers.each.with_index do |(buffer, sz), i|
   puts "writing #{i}: size = #{sz}"
 
