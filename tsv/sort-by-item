@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+buckets = {}
+
+$stdin.each_line do |l|
+  parts = l.split("\t")
+  parts[3] =~ %r{/download/(.+?)/}
+  item = $1
+
+  buckets[item] ||= []
+  buckets[item] << l
+end
+
+buckets.keys.sort.each do |b|
+  puts buckets[b]
+end
+
+# vim:ts=2:sw=2:et:ft=ruby

@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+accum = 0
+buffers = []
+buffer = []
+
+puts 'reading and splitting'
+
+LIMIT = 4 * (2**40) # evangelists got me
+
+current_item = nil
+item_changed = false
+
+$stdin.each_line do |l|
+  parts = l.split("\t")
+  parts[3] =~ %r{/download/(.+?)/}
+  item = $1
+
+  if current_item != item
+    current_item = item
+
+    if accum >= LIMIT
+      buffers << [buffer, accum]
+      buffer = []
+      accum = 0
+    end
+  end
+
+  accum += parts[1].to_i
+  buffer << l
+end
+
+buffers.each.with_index do |(buffer, sz), i|
+  puts "writing #{i}: size = #{sz}"
+
+  File.open(format('input.split.%03d.tsv', i), 'w') do |f|
+    buffer.each { |l| f.puts(l) }
+  end
+end
+
+# vim:ts=2:sw=2:et:ft=ruby

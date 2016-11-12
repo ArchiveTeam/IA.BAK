@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+files = ARGV
+
+mapping = {}
+
+files.each do |f|
+  File.open(f, 'r').each_line do |l|
+    parts = l.split("\t")
+    parts[3] =~ %r{/download/(.+?)/}
+    item = $1
+
+    if !mapping[item]
+      mapping[item] = f
+    else
+      if mapping[item] != f
+        puts "[ERROR] #{item} is found in #{mapping[item]} and #{f}"
+      end
+    end
+  end
+end
+
+# vim:ts=2:sw=2:et:ft=ruby
