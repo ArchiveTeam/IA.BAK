@@ -8,6 +8,7 @@ import qualified Propellor.Property.File as File
 import qualified Propellor.Property.Apache as Apache
 import qualified Propellor.Property.User as User
 import qualified Propellor.Property.Ssh as Ssh
+import qualified Propellor.Property.Sudo as Sudo
 
 repo :: String
 repo = "https://github.com/ArchiveTeam/IA.BAK/"
@@ -125,3 +126,11 @@ knownHosts =
 	[ host "gitlab.com" $ props
 		& Ssh.hostPubKey SshEcdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY="
 	]
+
+admin :: User -> Ssh.PubKeyText -> Property DebianLike
+admin u@(User n) k = propertyList ("admin user " ++ n) $ props
+	& User.accountFor u
+	& User.hasGroup u (Group "staff")
+	& Sudo.enabledFor u
+	& Ssh.authorizedKey u k
+	& Ssh.authorizedKey (User "root") k
