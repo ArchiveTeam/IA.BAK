@@ -36,7 +36,7 @@ iabak = host "iabak.archiveteam.org" $ props
 		]
 	& Apt.installed ["etckeeper", "sudo"]
 	-- vital but generic tools
-	& Apt.installed ["vim", "screen", "tmux", "less", "emacs-nox", "netcat", "nano"]
+	& Apt.installed ["vim", "screen", "tmux", "less", "emacs-nox", "netcat", "nano", "bc", "ruby"]
 	-- tools for creating shards
 	& Apt.installed ["jq", "python3", "python3-aiohttp"]
 	& User.hasSomePassword (User "root")
