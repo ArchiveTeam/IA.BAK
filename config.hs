@@ -38,7 +38,7 @@ iabak = host "iabak.archiveteam.org" $ props
 	-- vital but generic tools
 	& Apt.installed ["vim", "screen", "tmux", "less", "emacs-nox", "netcat", "nano", "bc", "ruby"]
 	-- tools for creating shards
-	& Apt.installed ["jq", "python3", "python3-aiohttp"]
+	& Apt.installed ["jq", "python3", "python3-aiohttp", "python-virtualenv"]
 	& User.hasSomePassword (User "root")
 	& GitHome.installedFor (User "joey")
 	& IABak.admin (User "joey") "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICfFntnesZcYz2B2T41ay45igfckXRSh5uVffkuCQkLv joey@darkstar"
