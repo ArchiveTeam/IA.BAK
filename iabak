@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-git pull origin || true
+git pull origin master || true
 if nice true >/dev/null 2>/dev/null && ionice -c3 true >/dev/null 2>/dev/null; then
 	nice ionice -c3 ./iabak-helper "$@"
 else
