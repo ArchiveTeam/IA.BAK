@@ -191,7 +191,7 @@ rundownloads () {
 		rv=0
 		while [[ ${offset} -lt ${numfiles} ]]; do
 			timestart=$(date +%s)
-			${GIT} -c annex.alwayscommit=false annex get ${ANNEXOPTS} -- "${files[@]:${offset}:${chunksize}}"
+			${GIT} -c annex.alwayscommit=false annex get ${ANNEXGETOPTS} -- "${files[@]:${offset}:${chunksize}}"
 			rv=$((${rv} && ${?}))
 			timeend=$(date +%s)
 			timeelapsed=$((${timeelapsed} + (${timeend} - ${timestart})))
