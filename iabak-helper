@@ -113,25 +113,96 @@ download () {
 	fi
 }
 
-rundownloaddirs () {
-	${GITANNEX} get --incomplete
-	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ] && dirname -z foo >/dev/null 2>&1 ; then
-		echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
-		${GITANNEX} find --print0 --not --copies "$NUMCOPIES" | xargs --no-run-if-empty -0 dirname -z -- | uniq -z | shuf -z | xargs --no-run-if-empty -n 100 -0 ${GIT} -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
+find_insufficient_copies () {
+	${GITANNEX} find --format='${bytesize} ${file}\000' --not --copies "$NUMCOPIES"
+}
+
+sumofbytes () {
+	awk 'BEGIN {RS=ORS="\000";FS=OFS=SUBSEP=" "} {arr[substr($0, index($0, " ")+1)]+=$1} END {for (i in arr) print arr[i],i}'
+}
+
+shuffle () {
+	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
+		#echo "(Oh good, you have shuf(1)! Randomizing order.. Will take a couple minutes..)"
+		shuf -z
 	else
-		${GITANNEX} get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
+		cat
 	fi
 }
 
+dirname_pipe () {
+	if dirname -z foo >/dev/null 2>&1; then
+		xargs --no-run-if-empty -0 dirname -z --
+	else
+		cat
+	fi
+}
+
+rundownloaddirs () {
+	echo "Continuing any downloads that were previously interrupted..."
+	${GITANNEX} get --incomplete
+	echo "Checking for any items that still need to be downloaded..."
+	find_insufficient_copies | dirname_pipe | sumofbytes | shuffle | rundownloads
+}
+
+
 rundownloadfiles () {
 	echo "Checking for any files that still need to be downloaded..."
-	if [ ! -e ../NOSHUF ] && [ -x /usr/bin/shuf ]; then
-		# don't use dirname here, because in maint mode,
-		# only 1 file from a dir might go missing and we
-		# don't want to download the whole dir then
-		${GITANNEX} find --print0 --not --copies "$NUMCOPIES" | shuf -z | xargs --no-run-if-empty -n 100 -0 ${GIT} -c annex.alwayscommit=false annex get $ANNEXGETOPTS --
-	else
-		${GITANNEX} get --not --copies "$NUMCOPIES" $ANNEXGETOPTS
+	# don't use dirname here, because in maint mode,
+	# only 1 file from a dir might go missing and we
+	# don't want to download the whole dir then
+	find_insufficient_copies | shuffle | rundownloads
+}
+
+rundownloads () {
+	timelimit=${1:-$((8*60*60))}
+	spacelimit=${2}
+
+	if [[ -z "${spacelimit}" ]]; then
+		available=$(($(bytesFromSize "$(diskfree)") - $(bytesFromSize "$(annexreserved ".")")))
+		if [[ ${available:-0} -gt $((8*4*1024*1024*1024)) ]]; then
+			available="$((8*4*1024*1024*1024))"
+		fi
+		if [[ ${available:-0} -gt 0 ]]; then
+			spacelimit="${available}"
+		else
+			echo "oops, out of disk space"
+			return 1
+		fi
+	fi
+
+	while :; do
+		spaceneeded=0
+		timeelapsed=0
+		files=()
+		while read -d $'\0' bytes filename && [[ $((${spaceneeded} + ${bytes})) -lt ${spacelimit} ]]; do
+			spaceneeded=$((${spaceneeded} + ${bytes}))
+			files+=(${filename})
+		done
+		numfiles=$((${#files[@]}))
+		if [[ ! ${numfiles} -gt 0 ]]; then
+			return ${rv}
+		fi
+		chunksize=$((1 + ${numfiles} / 10))
+		offset=0
+		rv=0
+		while [[ ${offset} -lt ${numfiles} ]]; do
+			timestart=$(date +%s)
+			${GIT} -c annex.alwayscommit=false annex get ${ANNEXOPTS} -- "${files[@]:${offset}:${chunksize}}"
+			rv=$((${rv} && ${?}))
+			timeend=$(date +%s)
+			timeelapsed=$((${timeelapsed} + (${timeend} - ${timestart})))
+			if [[ ${timeelapsed} -gt ${timelimit} ]]; then
+				break
+			else
+				offset=$((${offset} + ${chunksize}))
+			fi
+		done
+		timelimit=$((${timelimit} - ${timeelapsed}))
+		spacelimit=$((${spacelimit} - ${spaceneeded}))
+	done
+	if ! stillhavespace; then
+		return ${rv}
 	fi
 }
 
@@ -185,23 +256,36 @@ periodicsync () {
 	(cd .. && ${FLOCK_EX} .git/annex/iasyncer.lock ./iabak-hourlysync) || true
 }
 
+annexreserved () {
+    prevshard="${1}"
+    if [[ -z "${prevshard}" ]]; then
+        prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
+        if [[ -n "${prevshard}" ]]; then
+            (cd "${prevshard}" && ${GIT} config annex.diskreserve) || true
+        fi
+    else
+        ${GIT} config annex.diskreserve || true
+    fi
+}
+
+diskfree () {
+	df -Ph . | tail -1 | awk '{print $4}'
+}
+
 outofspace () {
     reserve="$1"
-    [ $(bytesFromSize $(df -Ph . | tail -1 | awk '{print $4}')) -lt $(bytesFromSize ${reserve}) ]
+    [[ -n "${reserve}" && $(bytesFromSize $(diskfree)) -lt $(bytesFromSize "${reserve}") ]]
 }
 
 stillhavespace () {
-	prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
-
-	if [ -n "$prevshard" ]; then
-		reserve="$(cd "$prevshard" && ${GIT} config annex.diskreserve || true)"
-		if [ -n "$reserve" ] && outofspace "$reserve"; then
-			false
-		else
-			true
+	prevshard=${1}
+	if [[ -z "${prevshard}" ]]; then
+		prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
+		if [[ -n "${prevshard}" ]]; then
+			outofspace "$(cd "${prevshard}" && ${GIT} config annex.diskreserve || true)"
 		fi
 	else
-		true
+		outofspace "$(${GIT} config annex.diskreserve || true)"
 	fi
 }
 
@@ -218,7 +302,7 @@ setup () {
 askreserve () {
 	read -e -p "keep free: " -i "100M" reserve
 	if [ -n "$reserve" ]; then
-            if [ $(bytesFromSize ${reserve}) -lt 100000000 ]; then
+            if [ $(bytesFromSize ${reserve}) -lt $(100*1024*1024) ]; then
                 echo "*** you must reserve at least 100M ***"
                 askreserve
             else
