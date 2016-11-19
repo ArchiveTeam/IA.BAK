@@ -143,7 +143,7 @@ dirname_pipe () {
 
 rundownloaddirs () {
 	echo "Continuing any downloads that were previously interrupted..."
-	${GITANNEX} get --incomplete
+	${GITANNEX} get ${ANNEXGETOPTS} --incomplete
 	echo "Checking for any items that still need to be downloaded..."
 	find_insufficient_copies | dirname_pipe | sumofbytes | shuffle | rundownloads
 }
