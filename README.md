@@ -64,7 +64,7 @@ to them to tune its behavior.
 * `ANNEXGETOPTS`	
 	Options passed to `git annex get`.
 	This is useful to enable concurrent downloads of multiple files.
-	For example "-J10"
+	For example "-J10" for concurrent downloads.
 * `FSCKTIMELIMIT`	
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
@@ -104,3 +104,11 @@ with iabak.
 2. Stop any running git-annex process.
 3. Move the shard1 repo to IA.BAK/shard1
 4. Go to IA.BAK, and run `./iabak`
+
+## FAQ
+
+1. Can I run this on BSD?
+	Not without some serious work. You'll need /bin/bash, GNU awk, and possibly other things I can't think of off the top of my head. Join the IRC channel and chat with other BSD users; they may have more up-to-date information.
+
+2. Can I store the backups on an NFS or SMB filesystem?
+	Kinda. If you're using SMB then you're on your own (but do send us a pull request). If you're using NFS then you'll have to install git-annex manually (as the default install tarball uses symlinks), and you'll have to add "-c annex.sshcaching=false" to the ANNEXGETOPTS file so that git-annex doesn't try to create unix sockets on your NFS filesystem.
