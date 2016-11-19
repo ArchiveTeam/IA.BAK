@@ -60,24 +60,27 @@ rand () {
 }
 
 bytesFromSize () {
-    if which numfmt >/dev/null 2>&1; then
-        echo "$1" | numfmt --from=si
-    else
-        declare -a size
-        size=($(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/'))
-        count="$(echo ${size[0]} | cut -f 1 -d '.')"
-        unit="${size[1]}"
-        exponent=1
-        case ${unit} in
-            B) exponent=0;;
-            K) exponent=3;;
-            M) exponent=6;;
-            G) exponent=9;;
-            T) exponent=12;;
-            *) exponent=15;;
-        esac
-        echo $((${count} * $(pow 10 ${exponent})))
-    fi
+	if [[ -z "$1" ]]; then
+		echo "0"
+	fi
+	if which numfmt >/dev/null 2>&1; then
+		echo "$1" | numfmt --from=si
+	else
+		declare -a size
+		size=($(echo ${1} | tr 'a-z' 'A-Z' | sed -e 's/\([.0-9]\)\([A-Z]\)/\1 \2/'))
+		count="$(echo ${size[0]} | cut -f 1 -d '.')"
+		unit="${size[1]}"
+		exponent=1
+		case ${unit} in
+			B) exponent=0;;
+			K) exponent=3;;
+			M) exponent=6;;
+			G) exponent=9;;
+			T) exponent=12;;
+			*) exponent=15;;
+		esac
+		echo $((${count} * $(pow 10 ${exponent})))
+	fi
 }
 
 # syncs a shard with random exponential backoff in case of failure, and a maximum of 4 retries.
@@ -257,15 +260,15 @@ periodicsync () {
 }
 
 annexreserved () {
-    prevshard="${1}"
-    if [[ -z "${prevshard}" ]]; then
-        prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
-        if [[ -n "${prevshard}" ]]; then
-            (cd "${prevshard}" && ${GIT} config annex.diskreserve) || true
-        fi
-    else
-        ${GIT} config annex.diskreserve || true
-    fi
+	prevshard="${1}"
+	if [[ -z "${prevshard}" ]]; then
+		prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
+		if [[ -n "${prevshard}" ]]; then
+			(cd "${prevshard}" && ${GIT} config annex.diskreserve) || echo "0"
+		fi
+	else
+		${GIT} config annex.diskreserve || echo "0"
+	fi
 }
 
 diskfree () {
@@ -273,8 +276,8 @@ diskfree () {
 }
 
 outofspace () {
-    reserve="$1"
-    [[ -n "${reserve}" && $(bytesFromSize $(diskfree)) -lt $(bytesFromSize "${reserve}") ]]
+	reserve="$1"
+	[[ -n "${reserve}" && $(bytesFromSize $(diskfree)) -lt $(bytesFromSize "${reserve}") ]]
 }
 
 stillhavespace () {
@@ -282,10 +285,10 @@ stillhavespace () {
 	if [[ -z "${prevshard}" ]]; then
 		prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
 		if [[ -n "${prevshard}" ]]; then
-			outofspace "$(cd "${prevshard}" && ${GIT} config annex.diskreserve || true)"
+			outofspace "$(cd "${prevshard}" && ${GIT} config annex.diskreserve || echo "0")"
 		fi
 	else
-		outofspace "$(${GIT} config annex.diskreserve || true)"
+		outofspace "$(${GIT} config annex.diskreserve || echo "0")"
 	fi
 }
 
