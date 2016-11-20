@@ -112,3 +112,9 @@ with iabak.
 
 * `Can I store the backups on an NFS or SMB filesystem?`
 	Kinda. If you're using SMB then you're on your own (but do send us a pull request). If you're using NFS then you'll have to install git-annex manually (as the default install tarball uses symlinks), and you'll have to add "-c annex.sshcaching=false" to the ANNEXGETOPTS file so that git-annex doesn't try to create unix sockets on your NFS filesystem.
+
+* `I keep seeing this error message from git-annex: "Unable to access these remotes: web"; what do I do?`
+	This indicates that a file used to exist on archive.org but has since been hidden for one reason or another. The message will also list which git remotes are believed to contain the file; if remotes other than the web remote are listed then you could contact that user and arrange for access to the file. The best way to do this is to set up mutual SSH access.
+
+* `What do I do when git-annex tells me "verification of content failed"?`
+	This means that git-annex tried to verify the content of a file it has downloaded, but failed to do so. Most likely the file has changed since we first added it to the shard. This is most common with torrent files and the *_meta.xml files.
