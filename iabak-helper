@@ -117,7 +117,7 @@ download () {
 }
 
 find_insufficient_copies () {
-	${GITANNEX} find --format='${bytesize} ${file}\000' --not --copies "$NUMCOPIES"
+	${GITANNEX} find --format='${bytesize} ${file}\000' --not --copies "$NUMCOPIES" --not --in=here
 }
 
 sumofbytes () {
@@ -281,15 +281,7 @@ outofspace () {
 }
 
 stillhavespace () {
-	prevshard=${1}
-	if [[ -z "${prevshard}" ]]; then
-		prevshard="$(echo shard* 2>/dev/null | cut -d ' ' -f 1)"
-		if [[ -n "${prevshard}" ]]; then
-			outofspace "$(cd "${prevshard}" && ${GIT} config annex.diskreserve || echo "0")"
-		fi
-	else
-		outofspace "$(${GIT} config annex.diskreserve || echo "0")"
-	fi
+	! outofspace "$(annexreserved)"
 }
 
 setup () {
