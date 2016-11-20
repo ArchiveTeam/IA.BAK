@@ -18,11 +18,11 @@ This script has been tested on:
 ## care and feeding of your backup
 
 To be sure that your backup still exists and is still in good shape,
-you shoud periodically run either `iabak` or `iabak-cronjob`. Either
-of these will check back in and verify that your repo exists. The
-difference is that `iabak-cronjob` avoids downloading any more data
-from the IA, avoids verifying the checksums of the files you are storing,
-and logs to `iabak-cronjob.log`.
+you shoud periodically run either `iabak` or `iabak-cronjob` or
+both. Either of these will check back in and verify that your repo
+exists. The difference is that `iabak-cronjob` avoids downloading any
+more data from the IA, avoids verifying the checksums of the files you
+are storing, and logs to `iabak-cronjob.log`.
 
 We recommend setting up a cron job that runs one of these at least once per
 week, so we can notice when repositories go missing or develop problems.
@@ -46,26 +46,26 @@ To manually check out a particular shard, you can run the
 See the `repolist` file for a list of shards and their status.
 
 Once you have multiple shards checked out, the next time you run `iabak`,
-it will process all the shards.
+it will process all them.
 
 ## flag files
 
 You can touch these files in the IA.BAK directory to control `iabak`.
 
-* `NOSHUF`	
+* `NOSHUF`
 	Prevents shuffling files before downloading.
-* `NOMORE`	
+* `NOMORE`
 	Prevents `iabak` from checking out additional shards as existing
 	shards complete.
 
 Also, these files in the IA.BAK directory can have values written
 to them to tune its behavior.
 
-* `ANNEXGETOPTS`	
+* `ANNEXGETOPTS`
 	Options passed to `git annex get`.
 	This is useful to enable concurrent downloads of multiple files.
 	For example "-J10" for concurrent downloads.
-* `FSCKTIMELIMIT`	
+* `FSCKTIMELIMIT`
 	Limits how much time is spent verifying checksums of
 	files in your backup. The default is "5h", which means
 	it will spend up to 5 hours per shard per run of `iabak`.
@@ -82,14 +82,14 @@ to them to tune its behavior.
 
 So you want to back up part of the IA, but don't want this to take over
 your whole disk or internet pipe? Here's some tuning options you can use..
-Run these commands in git repos like IA.BAK/shard1 etc.
+Run these commands in git repos like IA.BAK/shard1, IA.BAK/shard2, etc.
 
-* `git config annex.diskreserve 200GB`	
+* `git config annex.diskreserve 200GB`
 	This will prevent git-annex from using up the last 200gb of your disk.
 	Adjust to suit. This is prompted for the first time you run `iabak`, and it
 	is automatically propigated to each new shard.
 
-* `git config annex.web-options --limit-rate=200k`	
+* `git config annex.web-options --limit-rate=200k`
 	This will limit wget/curl to downloading at 200 kb/s. Adjust to suit.
 
 	Note that if concurrent downloads are enabled, each download thread will
@@ -107,8 +107,8 @@ with iabak.
 
 ## FAQ
 
-1. Can I run this on BSD?
+* `Can I run this on BSD?`
 	Not without some serious work. You'll need /bin/bash, GNU awk, and possibly other things I can't think of off the top of my head. Join the IRC channel and chat with other BSD users; they may have more up-to-date information.
 
-2. Can I store the backups on an NFS or SMB filesystem?
+* `Can I store the backups on an NFS or SMB filesystem?`
 	Kinda. If you're using SMB then you're on your own (but do send us a pull request). If you're using NFS then you'll have to install git-annex manually (as the default install tarball uses symlinks), and you'll have to add "-c annex.sshcaching=false" to the ANNEXGETOPTS file so that git-annex doesn't try to create unix sockets on your NFS filesystem.
