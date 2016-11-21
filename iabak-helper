@@ -178,7 +178,11 @@ rundownloads () {
 		spaceneeded=0
 		timeelapsed=0
 		files=()
-		while read -d $'\0' bytes filename && [[ $((${spaceneeded} + ${bytes})) -lt ${spacelimit} ]]; do
+		# queue files/items that fit within the spacelimit, without consuming the whole stream. note
+		# the ${numfiles} -eq 0 clause which makes us always accept the first file in the list, even
+		# if it's larger than the spacelimit. This ensures that we always download something, and
+		# don't completely neglect gigantic files.
+		while read -d $'\0' bytes filename && [[ ${numfiles} -eq 0 || $((${spaceneeded} + ${bytes})) -lt ${spacelimit} ]]; do
 			spaceneeded=$((${spaceneeded} + ${bytes}))
 			files+=(${filename})
 		done
