@@ -301,7 +301,7 @@ setup () {
 askreserve () {
 	read -e -p "keep free: " -i "100M" reserve
 	if [ -n "$reserve" ]; then
-            if [ $(bytesFromSize ${reserve}) -lt $(100*1024*1024) ]; then
+            if [ $(bytesFromSize ${reserve}) -lt $((100*1024*1024)) ]; then
                 echo "*** you must reserve at least 100M ***"
                 askreserve
             else
