@@ -15,6 +15,11 @@ This script has been tested on:
 * Linux (any not too minimal distribution)
 * OSX
 
+## System Requirements
+
+* RAM: 2GB (git-annex will need some ram while verifying the files you've downloaded.)
+* CPU: yes (the faster it can hash a file the better)
+
 ## care and feeding of your backup
 
 To be sure that your backup still exists and is still in good shape,
