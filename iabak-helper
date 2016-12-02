@@ -158,14 +158,10 @@ rundownloadfiles () {
 }
 
 rundownloads () {
-	timelimit=${1:-$((8*60*60))}
-	spacelimit=${2}
+	spacelimit=${1}
 
 	if [[ -z "${spacelimit}" ]]; then
 		available=$(($(bytesFromSize "$(diskfree)") - $(bytesFromSize "$(annexreserved ".")")))
-		if [[ ${available:-0} -gt $((8*4*1024*1024*1024)) ]]; then
-			available="$((8*4*1024*1024*1024))"
-		fi
 		if [[ ${available:-0} -gt 0 ]]; then
 			spacelimit="${available}"
 		else
@@ -176,7 +172,6 @@ rundownloads () {
 
 	while :; do
 		spaceneeded=0
-		timeelapsed=0
 		files=()
 		# queue files/items that fit within the spacelimit, without consuming the whole stream. note
 		# the ${numfiles} -eq 0 clause which makes us always accept the first file in the list, even
@@ -194,18 +189,10 @@ rundownloads () {
 		offset=0
 		rv=0
 		while [[ ${offset} -lt ${numfiles} ]]; do
-			timestart=$(date +%s)
 			${GIT} -c annex.alwayscommit=false annex get ${ANNEXGETOPTS} -- "${files[@]:${offset}:${chunksize}}"
 			rv=$((${rv} && ${?}))
-			timeend=$(date +%s)
-			timeelapsed=$((${timeelapsed} + (${timeend} - ${timestart})))
-			if [[ ${timeelapsed} -gt ${timelimit} ]]; then
-				break
-			else
-				offset=$((${offset} + ${chunksize}))
-			fi
+			offset=$((${offset} + ${chunksize}))
 		done
-		timelimit=$((${timelimit} - ${timeelapsed}))
 		spacelimit=$((${spacelimit} - ${spaceneeded}))
 	done
 	if ! stillhavespace; then
