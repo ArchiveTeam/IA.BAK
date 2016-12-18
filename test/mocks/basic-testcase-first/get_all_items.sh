@@ -1,0 +1,2 @@
+win311_masque_chessnet
+win32c
