@@ -29,7 +29,9 @@ gitServer = propertyList "iabak git server" $ props
 	& Git.cloned (User "root") repo "/usr/local/IA.BAK/client" (Just "master")
 	& Ssh.userKeys (User "root") (Context "IA.bak.users.git") sshKeys
 	& Ssh.knownHost knownHosts "gitlab.com" (User "root")
-	& Git.cloned (User "root") userrepo "/usr/local/IA.BAK/pubkeys" (Just "master")
+	& Git.cloned (User "root") userrepo pubkeyrepo (Just "master")
+	& pubkeyrepo `Git.repoConfigured` ("remote.registrar.url", "/home/registrar/users")
+	& pubkeyrepo `Git.repoConfigured` ("remote.registrar.fetch", "+refs/heads/*:refs/remotes/registrar/*")
 	& Apt.serviceInstalledRunning "apache2"
 	& "/usr/lib/cgi-bin/pushme.cgi" `File.isSymlinkedTo` File.LinkTarget "/usr/local/IA.BAK/pushme.cgi"
 	& File.containsLine "/etc/sudoers" "www-data ALL=NOPASSWD:/usr/local/IA.BAK/pushed.sh"
@@ -42,6 +44,8 @@ gitServer = propertyList "iabak git server" $ props
 	& Cron.niceJob "expireemailer" Cron.Daily (User "root") 
 		"/usr/local/IA.BAK"
 		"./expireemailer"
+  where
+	pubkeyrepo = "/usr/local/IA.BAK/pubkeys"
 
 registrationServer :: Property (HasInfo + DebianLike)
 registrationServer = propertyList "iabak registration server" $ props
