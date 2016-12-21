@@ -22,7 +22,7 @@ hosts =
 
 iabak :: Host
 iabak = host "iabak.archiveteam.org" $ props
-	& ipv4 "124.6.40.227"
+	& ipv4 "124.6.40.235"
 	& Hostname.sane
 	& osDebian Testing X86_64
 	& Systemd.persistentJournal
