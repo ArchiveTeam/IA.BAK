@@ -15,9 +15,25 @@
     </script>
   </head>
   <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header"><img heigth="40" width="45" src="http://archiveteam.org/images/Archiveteamsmall.png" alt="ArchiveTeam Logo"></div>
+        <ul class="nav navbar-nav">
+          <li><a href="/">Status</a></li>
+          <li><a href="#">Info</a></li>
+          <li><a href="http://archiveteam.org/index.php?title=INTERNETARCHIVE.BAK">Wiki Page</a></li>
+        </ul>
+    </div>
+   </nav>
+
     <center>
-    <font size=+1><b>CURRENT BACKUP STATUS OF IA.BAK SHARDNAME</b><br>
-    <i>Virtual Drive is currently: SIZE Terabytes</i><p>
+
+    <div>
+      <h1><b>CURRENT BACKUP STATUS OF IA.BAK SHARDNAME</b></h1><br>
+      <h3><i>Virtual Drive is currently:<b> SIZE Terabytes</b></i></h3><p>
+    </div>
+
     <table>
       <tr>
         <td style="vertical-align:top">
@@ -34,40 +50,69 @@
 	  </center>
 	</td>
 	<td style="vertical-align:top">
-          COLLDESC collections:
-	  <ul>
-	  COLLECTIONS
-	  </ul>
-	  <p>
-	  ACTIVESHARDS
-	  <p>
-	  MAINTSHARDS
-	  <p>
-          <a href="LEADERBOARDURL">Top 25 contributors</a>:<br>
-	  <i>(<a href="#contribute">you can help!</a>)</i>
-          <ol>
+    <div class="panel panel-primary">
+      <div class="panel-heading">COLLDESC collections:</div>
+      <div class="panel-body">
+	    <ul>
+	    COLLECTIONS
+	    </ul>
+    </div>
+  </div>
+  <div id="shards" class="panel panel-primary">
+    <div class="panel-heading">SHARDS</div>
+    <div class="panel-body">
+      <div id="active-shards" class="panel panel-info">
+        <div class="panel-heading">Active</div>
+        <div class="panel-body">
+          ACTIVESHARDS
+        </div>
+      </div>
+      <div id="maint-shards" class="panel panel-info">
+        <div class="panel-heading">Maint</div>
+        <div class="panel-body">
+          MAINTSHARDS
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-success">
+<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.leaderboard-raw">Top 25 contributors</a>:<br></div>
+<div class="panel-body">
+  <i>(<a href="#contribute">you can help!</a>)</i>
+        <ol>
           LEADERBOARD
-          </ol>
-          <a href="EXPIRELEADERBOARDURL">Expiring this week</a>:<br>
-	  <i>(clients that have not checked in for a month)</i>
+        </ol>
+</div>
+</div>
+
+<div class="panel panel-danger">
+<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw">Expiring this week</a>:<br><i>(clients that have not checked in for a month)</i></div>
+<div class="panel-body">
           <ol>
-          EXPIRELEADERBOARD
+            EXPIRELEADERBOARD
           </ol>
-          <a href="WARNINGLEADERBOARDURL">Out of touch</a>:<br>
-	  <i>(clients that have not checked in for 2 weeks)</i>
-          <ol>
-          WARNINGLEADERBOARD
-          </ol>
+      </div>
+</div>
+
+<div class="panel panel-warning">
+  <div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw">Out of touch</a>:<br><i>(clients that have not checked in for 2 weeks)</i></div>
+  <div class="panel-body">
+    <ol>
+      WARNINGLEADERBOARD
+    </ol>
+  </div>
+
 	</td>
       </tr>
     </table>
     <p>
-     <a name=contribute><font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
+     <a name=contribute><font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b></font></a><p>
     <table width=900><tr><td>
     <blockquote>
     This is an experimental project to see the feasibility and issues with making a backup of the
     <a href="http://archive.org">Internet Archive</a>. This project should be considered to be in
-    an alpha state. To read the original document suggesting the research, click 
+    an alpha state. To read the original document suggesting the research, click
     <a href="http://archiveteam.org/index.php?title=INTERNETARCHIVE.BAK">here</a>. Implementation
     ideas are discussed on <a href="http://archiveteam.org/index.php?title=Talk:INTERNETARCHIVE.BAK">this page</a>.
     <p>
@@ -77,11 +122,20 @@
     now, some things are still unclear or in need of clarification. Join #internetarchive.bak on EFNet (IRC) to get help.
     </blockquote></table>
     <p>
-    <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-month.png">
-    <br>
-    <img src="CONNECTIONSGRAPHURL">
+
+    <div class="container-fluid">
+      <img src="http://dit.serveert.me.uk:8081/munin/serveert.me.uk/dit.serveert.me.uk/iabak-month.png">
+      <img src="CONNECTIONSGRAPHURL">
+    </div>
+
     <p>
     Last update: TIME <br>
     </center>
+    <script type="text/javascript">
+      if (document.querySelectorAll("#active-shards .panel-body > *").length == 0 &&
+          document.querySelectorAll("#maint-shards .panel-body > *").length == 0) {
+        document.querySelector("#shards").classList.add("hidden");
+      }
+    </script>
   </body>
 </html>
