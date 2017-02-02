@@ -58,16 +58,16 @@
 	    </ul>
     </div>
   </div>
-  <div class="panel panel-primary">
+  <div id="shards" class="panel panel-primary">
     <div class="panel-heading">SHARDS</div>
     <div class="panel-body">
-      <div class="panel panel-info">
+      <div id="active-shards" class="panel panel-info">
         <div class="panel-heading">Active</div>
         <div class="panel-body">
           ACTIVESHARDS
         </div>
       </div>
-      <div class="panel panel-info">
+      <div id="maint-shards" class="panel panel-info">
         <div class="panel-heading">Maint</div>
         <div class="panel-body">
           MAINTSHARDS
@@ -107,7 +107,7 @@
       </tr>
     </table>
     <p>
-     <a name=contribute><font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b><p>
+     <a name=contribute><font size=+1><b>INFORMATION ON THE IA.BAK PROJECT</b></font></a><p>
     <table width=900><tr><td>
     <blockquote>
     This is an experimental project to see the feasibility and issues with making a backup of the
@@ -131,5 +131,11 @@
     <p>
     Last update: TIME <br>
     </center>
+    <script type="text/javascript">
+      if (document.querySelectorAll("#active-shards .panel-body > *").length == 0 &&
+          document.querySelectorAll("#maint-shards .panel-body > *").length == 0) {
+        document.querySelector("#shards").classList.add("hidden");
+      }
+    </script>
   </body>
 </html>
