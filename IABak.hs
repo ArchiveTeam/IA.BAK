@@ -28,7 +28,7 @@ adminList = propertyList "iabak admins" $ props
 
 commonTools :: Property DebianLike
 commonTools = propertyList "some vital but generic tools" $ props
-	& Apt.installed ["sudo", "etckeeper", "mosh", "vim", "emacs-nox", "nano", "screen", "tmux", "less", "netcat", "bc", "python3", "ruby"]
+	& Apt.installed ["sudo", "etckeeper", "mosh", "vim", "emacs-nox", "nano", "screen", "tmux", "less", "netcat", "bc", "python3", "ruby", "pv"]
 
 shardTools :: Property DebianLike
 shardTools = propertyList "tools specifically needed for creating new shards" $ props
