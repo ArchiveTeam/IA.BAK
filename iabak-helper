@@ -222,12 +222,22 @@ fastfsck () {
 	# The point of this is just to report that the repository still
 	# exists, to prevent it from expiring.
 	# Even a fsck --fast --in here is a litte too slow to run
-	# frequently.
+	# frequently, so fsck an empty directory.
 	if [ ! -d .empty ]; then
 		mkdir .empty
 	fi
-	${GITANNEX} fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
-	syncshard || echo "Warning: failed to sync this shard; fsck results not recorded on server"
+	# Only run the fast fsck once per week, to avoid unncessary churn
+	# in the git-annex branch. Look at the timestamp of the .empty
+	# directory.
+	if [ -n "$(find .empty -mtime 7)" ]; then
+		${GITANNEX} fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
+		if syncshard; then
+			touch .empty
+		else
+			echo "Warning: failed to sync this shard; fsck results not recorded on server"
+			# .empty not touched, so will try to sync next time
+		fi
+	fi
 }
 
 maint () {
