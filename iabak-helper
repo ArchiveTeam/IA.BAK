@@ -114,6 +114,8 @@ download () {
 		echo "Download finished, but the backup of this shard is not fully complete."
 		echo "Some files may have failed to download, or all allocated disk space is in use."
 	fi
+
+	syncshard || echo "Warning: failed to sync shard; results of download not known to be recoded on the server."
 }
 
 find_insufficient_copies () {
@@ -233,7 +235,6 @@ maint () {
 	fsckme
 
 	if [ ! "$CRONJOB" ]; then
-		syncshard || (echo "Error: failed to sync shard in maintenance mode"; exit 1)
 		periodicsync &
 		if rundownloadfiles; then
 			echo ""
@@ -349,8 +350,6 @@ handleshard () {
 			echo "unknown state $state for shard $shard" >&2
 		;;
 	esac
-
-	syncshard || echo "Warning: failed to sync shard; results of download not known to be recoded on the server."
 }
 
 # Order with newest checked out shards first.
