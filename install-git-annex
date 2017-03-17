@@ -96,7 +96,8 @@ upgrade_avail () {
 	if [ -z "$installedVersion" ]; then
 		installedVersion=0
 	fi
-	newVersion=$(wget $infourl -o /dev/null -O - | sed 's/.*distributionVersion = "[0-9].\([0-9]*\)".*/\1/')
+	# version is in line 4 of the file
+	newVersion=$(wget $infourl -o /dev/null -O - | head -n 4 | tail -n 1)
 	test -n "$newVersion" && test "$installedVersion" -lt "$newVersion"
 }
 
