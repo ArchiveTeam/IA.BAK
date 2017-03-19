@@ -96,6 +96,7 @@ upgrade_avail () {
 	if [ -z "$installedVersion" ]; then
 		installedVersion=0
 	fi
+	# version is in line 4 of the file
 	newVersion=$(wget $infourl -o /dev/null -O - | tail -3 | head -1 | cut -d '.' -f 2-)
 	test -n "$newVersion" && test "$installedVersion" -lt "$newVersion"
 }
