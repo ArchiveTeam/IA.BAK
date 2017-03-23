@@ -1,8 +1,9 @@
 #!/bin/sh
+date=$(date +%s)
 base=/usr/local/IA.BAK
 cd "$base/pubkeys"
 git pull
 for SHARD in SHARD*; do
-	"$base/shardstats" "$SHARD"
+	"$base/shardstats" "$SHARD" "$date"
 done
-"$base/shardstats" ALL
+"$base/shardstats" ALL "$date"

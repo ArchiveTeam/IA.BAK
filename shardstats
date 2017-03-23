@@ -11,11 +11,12 @@ set -e
 : ${GRAPHITE_HOST:=127.0.0.1}
 : ${GRAPHITE_PORT:=2003}
 DATE=$(date +%s)
+REPORTDATE="${2:-$DATE}"
 
 sendStat () {
 	stat=$1
 	value=$2
-	stamp=${3:-$DATE}
+	stamp=${3:-$REPORTDATE}
 	if [ -z "$stat" -o -z "$value" ]; then
 		echo "missing argument to sendStat $1 $2"
 		exit
