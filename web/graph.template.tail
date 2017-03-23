@@ -77,7 +77,7 @@
   </div>
 
   <div class="panel panel-success">
-<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.leaderboard-raw">Top 25 contributors</a>:<br></div>
+<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/SHARDNAME.leaderboard-raw">Top 25 contributors</a>:<br></div>
 <div class="panel-body">
   <i>(<a href="#contribute">you can help!</a>)</i>
         <ol>
@@ -87,7 +87,7 @@
 </div>
 
 <div class="panel panel-danger">
-<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw">Expiring this week</a>:<br><i>(clients that have not checked in for a month)</i></div>
+<div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/SHARDNAME.expireleaderboard-raw">Expiring this week</a>:<br><i>(clients that have not checked in for a month)</i></div>
 <div class="panel-body">
           <ol>
             EXPIRELEADERBOARD
@@ -96,7 +96,7 @@
 </div>
 
 <div class="panel panel-warning">
-  <div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/ALL.expireleaderboard-raw">Out of touch</a>:<br><i>(clients that have not checked in for 2 weeks)</i></div>
+  <div class="panel-heading"><a href="http://iabak.archiveteam.org/stats/SHARDNAME.expireleaderboard-raw">Out of touch</a>:<br><i>(clients that have not checked in for 2 weeks)</i></div>
   <div class="panel-body">
     <ol>
       WARNINGLEADERBOARD
