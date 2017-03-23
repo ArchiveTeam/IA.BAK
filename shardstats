@@ -232,3 +232,6 @@ fi
 
 (cd ${STATS_DIR} && tar czf "../stats.tar.gz.new" .)
 mv "${STATS_DIR}/../stats.tar.gz.new" "${STATS_DIR}/../stats.tar.gz"
+
+ENDDATE=$(date +%s)
+sendStat "statCollectionTime" "$((ENDDATE - DATE))"
