@@ -229,7 +229,7 @@ fastfsck () {
 	# Only run the fast fsck once per week, to avoid unncessary churn
 	# in the git-annex branch. Look at the timestamp of the .empty
 	# directory.
-	if [ -n "$(find .empty -mtime 7)" ]; then
+	if [ -n "$(find .empty -mtime +6)" ]; then
 		${GITANNEX} fsck --fast .empty --quiet >/dev/null 2>/dev/null || true
 		if syncshard; then
 			touch .empty
