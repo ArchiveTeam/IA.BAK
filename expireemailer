@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # Should be run in the IA.BAK directory, with a pubkeys/ checkout present.
-
+exit 0
 use warnings;
 use strict;
 use Mail::Sendmail;
