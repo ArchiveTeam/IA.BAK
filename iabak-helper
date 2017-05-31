@@ -315,8 +315,41 @@ askreserve () {
 	fi
 }
 
+_vercmp_part() {
+    (( $1 <  $2 )) && return 0
+    (( $1 == $2 )) && return 1
+    (( $1 >  $2 )) && return 2
+
+    return 3 # This should never happen
+}
+
+vercmp() {
+    local A=(${1//./ })
+    local B=(${2//./ })
+    local i=0
+
+    while (( i < ${#A[@]} )) && (( i < ${#B[@]})); do
+        _vercmp_part "${A[i]}" "${B[i]}"
+        result=$?
+        [[ $result =~ [023] ]] && echo $result && return
+        let i++
+    done
+
+    _vercmp_part "${#A[i]}" "${#B[i]}"
+    echo $?
+}
+
 installgitannex () {
-	${FLOCK_EX} .iabak-install-git-annex ./install-git-annex || true
+	if command -v git-annex >/dev/null 2>&1; then
+		local ver=$(git annex version --raw)
+		if (( $(vercmp "$ver" "5.20150916") == 2 )); then
+			${GITANNEX} version
+			return
+		fi
+	fi
+
+	${FLOCK_EX} .iabak-install-git-annex ./install-git-annex
+
 	${GITANNEX} version
 }
 
