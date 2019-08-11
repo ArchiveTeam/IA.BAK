@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-default">
       <div class="container-fluid">
-        <div class="navbar-header"><img heigth="40" width="45" src="http://archiveteam.org/images/Archiveteamsmall.png" alt="ArchiveTeam Logo"></div>
+        <div class="navbar-header"><img heigth="40" width="45" src="https://archiveteam.org/images/Archiveteamsmall.png" alt="ArchiveTeam Logo"></div>
         <ul class="nav navbar-nav">
           <li><a href="/">Status</a></li>
           <li><a href="#">Info</a></li>
