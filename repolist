@@ -1,4 +1,4 @@
-shard1 SHARD1@iabak.archiveteam.org:shard1 maint
+shard1 SHARD1@iabak.archiveteam.org:shard1 active
 shard2 SHARD2@iabak.archiveteam.org:shard2 maint
 shard3 SHARD3@iabak.archiveteam.org:shard3 maint
 shard4 SHARD4@iabak.archiveteam.org:shard4 maint
@@ -12,12 +12,12 @@ shard11 SHARD11@iabak.archiveteam.org:shard11 maint
 shard12 SHARD12@iabak.archiveteam.org:shard12 maint
 shard14 SHARD14@iabak.archiveteam.org:shard14 maint
 shard15 SHARD15@iabak.archiveteam.org:shard15 maint
-shard16 SHARD16@iabak.archiveteam.org:shard16 active
-shard17 SHARD17@iabak.archiveteam.org:shard17 active
+shard16 SHARD16@iabak.archiveteam.org:shard16 maint
+shard17 SHARD17@iabak.archiveteam.org:shard17 maint
 shard18 SHARD18@iabak.archiveteam.org:shard18 maint
 shard19 SHARD19@iabak.archiveteam.org:shard19 maint
-shard20 SHARD20@iabak.archiveteam.org:shard20 active
-shard21 SHARD21@iabak.archiveteam.org:shard21 active
-shard22 SHARD22@iabak.archiveteam.org:shard22 active
-shard23 SHARD23@iabak.archiveteam.org:shard23 active
-shard24 SHARD24@iabak.archiveteam.org:shard24 active
+shard20 SHARD20@iabak.archiveteam.org:shard20 maint
+shard21 SHARD21@iabak.archiveteam.org:shard21 maint
+shard22 SHARD22@iabak.archiveteam.org:shard22 maint
+shard23 SHARD23@iabak.archiveteam.org:shard23 maint
+shard24 SHARD24@iabak.archiveteam.org:shard24 maint
