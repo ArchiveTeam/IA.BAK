@@ -10,6 +10,8 @@ and run the `iabak` script to get started.
 You can stop running it once it's downloaded enough. Just hit ctrl-C at any
 time.
 
+Note: On newer version of perl, cgi is no longer included, please install `libcgi-pm-perl` or your distributions equivalent or else your SSH connection will not authenticate correctly.
+
 This script has been tested on:
 
 * Linux (any not too minimal distribution)
